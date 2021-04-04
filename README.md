@@ -1,2 +1,3 @@
 # pa10project
-for stugents of BMSDTU CAD>CAEPDM?PLM Department
+for stugents of BMSTU CAD>CAEPDM?PLM Department, Moscow
+C++ code only, C# code to be
