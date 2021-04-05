@@ -2,7 +2,7 @@
 
 В данном репозитории анализируется ТЗ проекта.
 
-Прототипы ПА10мини ьыли ращработаны на С++ м C#
+Прототипы ПА10мини были разработаны на С++ и C#
 
 For students of BMSTU CAD/CAE/PDM/PLM Department, Moscow
 Actually C++ code only, C# code to be in future
