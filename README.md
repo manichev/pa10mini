@@ -5,7 +5,6 @@
 Прототипы ПА10мини были разработаны на С++ и C#
 
 For students of BMSTU CAD/CAE/PDM/PLM Department, Moscow
-Actually C++ code only, C# code to be in future
 
 Проект PA10mini проверен на Windows XP (sp3) и Windows 7,8 (32 bit и 64 bit) строго с компилятором MicroSoft Visual Studio 2008  и конфигурацией win32.
 Из каталога .../distrib дистрибутивов:
@@ -25,5 +24,10 @@ C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE;C:\Program Files\Micros
 
 Если каталоги Windows, MicroSoft Visual Studio 2008 и Program Files (Program Files (x86)) находятся не на диске C:, то надо заменить С: на другой диск в соотвествующих путях и скорректировать makefile в каталоге: C:\PA10mini\PA10mini\manzhuk\fcttask
 
-Скачать все файлы проекта PA10mini yf C++ можно по ссылке:
+Скачать все файлы проекта PA10mini на C++ можно по ссылке:
 https://yadi.sk/d/G90W2UG0W_N-Zg
+Эти коды компилируются и работают, - репозиторий PA10mini
+
+Скачать все файлы проекта PA10mini на C# можно по ссылке:
+https://yadi.sk/d/dRNygY-HirlE0Q
+Это старые коды требуют отладки
