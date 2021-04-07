@@ -6,7 +6,7 @@
 
 For students of BMSTU CAD/CAE/PDM/PLM Department, Moscow
 
-Проект PA10mini проверен на Windows XP (sp3) и Windows 7,8 (32 bit и 64 bit) строго с компилятором MicroSoft Visual Studio 2008  и конфигурацией win32.
+Проект PA10mini на С++ проверен на Windows XP (sp3) и Windows 7,8 (32 bit и 64 bit) строго с компилятором MicroSoft Visual Studio 2008  и конфигурацией win32.
 Из каталога .../distrib дистрибутивов:
 1. MicroSoft Visual Studio 2008 желательно иметь на диске С:
 2. Инсталлировать Qt для MicroSoft Visual Studio 2008
