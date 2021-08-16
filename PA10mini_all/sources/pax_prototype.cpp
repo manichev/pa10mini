@@ -12,11 +12,11 @@
 
 extern Solver* solver;
 
-PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WFlags flags)
+PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
 {
-	QTextCodec *langcodec=QTextCodec::codecForName("CP1251");
-    QTextCodec::setCodecForTr(langcodec);
+    // QTextCodec *langcodec=QTextCodec::codecForName("CP1251");
+    // QTextCodec::setCodecForTr(langcodec);
 	ui.setupUi(this);
 	ui.progressBar->hide();
 	solver = new Solver(this);
@@ -30,7 +30,7 @@ PAX_Prototype::~PAX_Prototype()
 	delete solver;
 }
 
-void PAX_Prototype::showErr(QString& message)
+void PAX_Prototype::showErr(const QString& message)
 {
 	QMessageBox msgBox;
 	msgBox.setWindowTitle("Error");
@@ -40,6 +40,8 @@ void PAX_Prototype::showErr(QString& message)
 
 bool PAX_Prototype::eventFilter(QObject *object, QEvent *event)
 {
+    Q_UNUSED(object)
+
 	if( event->type() == QEvent::Close )
 	{
 		exit(0);

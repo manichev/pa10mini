@@ -1,5 +1,5 @@
 #include "pax_prototype.h"
-#include <QtGui/QApplication>
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {

@@ -43,7 +43,7 @@ public:
 	int addVariable(string& name_, bool isDerivative_);
 
 	//true if constant exists
-	bool DAESystem::constantExists(string& name_, double& value_);
+    bool constantExists(string& name_, double& value_);
 	//add new constant
 	void addConstant(string& name_, double value_);
 

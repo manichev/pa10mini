@@ -197,3 +197,17 @@ void EqualEdit::save()
 	txtFile.close();
 	wasChanged = false;
 }
+
+LineNumberArea::LineNumberArea(EqualEdit *editor) : QWidget(editor)
+{
+    m_EqualEdit = editor;
+}
+
+QSize LineNumberArea::sizeHint() const {
+    return QSize(m_EqualEdit->lineNumberAreaWidth(), 0);
+}
+
+void LineNumberArea::paintEvent(QPaintEvent *event)
+{
+    m_EqualEdit->lineNumberAreaPaintEvent(event);
+}

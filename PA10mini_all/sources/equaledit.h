@@ -8,12 +8,14 @@
 #include <QMessageBox>
 #include <QTextStream>
 
+class EqualEdit;
+
 class EqualEdit : public QPlainTextEdit
 {
 	Q_OBJECT
 
 public:
-	EqualEdit(QWidget *parent = 0);
+    EqualEdit(QWidget *parent = nullptr);
 
 	void lineNumberAreaPaintEvent(QPaintEvent *event);
 	int lineNumberAreaWidth();
@@ -27,7 +29,7 @@ public slots:
 	void textWasChanged();
 
 protected:
-	void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
 
 private slots:
 	void updateLineNumberAreaWidth(int newBlockCount);
@@ -43,22 +45,14 @@ private:
 class LineNumberArea : public QWidget
 {
 public:
-	LineNumberArea(EqualEdit *editor) : QWidget(editor)
-	{
-		EqualEdit = editor;
-	}
+    LineNumberArea(EqualEdit *editor);
 
-	QSize sizeHint() const {
-		return QSize(EqualEdit->lineNumberAreaWidth(), 0);
-	}
+    QSize sizeHint() const override;
 
 protected:
-	void paintEvent(QPaintEvent *event)
-	{
-		EqualEdit->lineNumberAreaPaintEvent(event);
-	}
+    void paintEvent(QPaintEvent *event) override;
 
 private:
-	EqualEdit *EqualEdit;
+    EqualEdit *m_EqualEdit;
 };
 #endif // EQUALEDIT_H

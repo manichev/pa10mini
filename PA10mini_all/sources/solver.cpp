@@ -1,10 +1,13 @@
 #include <stdexcept>
-#include <windows.h>
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+
+#ifdef WIN32
 #include <io.h>
+#include <windows.h>
+#endif
 
 #include "solver.h"
 
@@ -150,6 +153,7 @@ void Solver::create_fcttask()
 
 void Solver::solve()
 {
+#ifdef WIN32
 	double *z, *px, *z1, *px1, *f, *rj1, *rj2;
 	double t, h, tkv;
 
@@ -192,6 +196,7 @@ void Solver::solve()
 
 create_fcttask();
 //applying dll
+
 	HINSTANCE dll = LoadLibrary(L"manzhuk/fcttask/fcttask.dll");
 	void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
 		(void (*)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*))GetProcAddress(dll, "fcttask");	
@@ -236,6 +241,7 @@ create_fcttask();
 		delete outFile;
 		delete outTextStream;
 	}
+#endif
 }
 
 

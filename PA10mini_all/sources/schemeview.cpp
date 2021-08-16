@@ -201,8 +201,8 @@ void SchemeView::deleteItem()
 	
 	foreach(element, elements)
 	{
-		if(reinterpret_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
-			reinterpret_cast<CircuitItem*>(hoveredItem)->elementType() && element->elementType())
+        if(qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
+            qgraphicsitem_cast<CircuitItem*>(hoveredItem)->elementType() == element->elementType()) // cHANGE: && to ==
 		{
 			elements.removeOne(element);
 			delete element;
@@ -247,12 +247,12 @@ void SchemeView::checkgrid()
 			int id = -1;
 			foreach(item, items)
 			{
-				if(item->type() == CircuitItemType)
+                if(item->type() == CircuitItem::CircuitItemType)
 				{
 					if(reinterpret_cast<CircuitItem*>(item)->contact(QPointF(j,i)) != -1)
 						counter++;
 				}
-				else if(item->type() == CircuitItemNodeType)
+                else if(item->type() == CircuitItem::CircuitItemNodeType)
 				{
 					id = reinterpret_cast<CircuitNodeItem*>(item)->getId();
 				}
@@ -437,16 +437,16 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
 	}
 	else if(event->button() ==  Qt::RightButton )
 	{
-		hoveredItem = scene()->itemAt(mapToScene(event->pos()));
-		if(hoveredItem != 0)
+        hoveredItem = scene()->itemAt(mapToScene(event->pos()), QTransform());
+        if(hoveredItem != nullptr)
 		{
 			lastMousePos = event->globalPos();
 			switch(hoveredItem->type())
 			{
-			case CircuitItemType:
+            case CircuitItem::CircuitItemType:
 				itemMenu->exec(event->globalPos());
 				break;
-			case CircuitItemNodeType:
+            case CircuitItem::CircuitItemNodeType:
 				nodeMenu->exec(event->globalPos());
 				break;
 			}
@@ -467,12 +467,16 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
 
 void SchemeView::enterEvent (QEvent* event)
 {
+    Q_UNUSED(event)
+
     setMouseTracking(true);
 }
 
 
 void SchemeView::leaveEvent (QEvent* event)
 {
+    Q_UNUSED(event)
+
     setMouseTracking(false);
 }
 
@@ -504,7 +508,7 @@ qreal SchemeView::fullScale()
 	return sceneRect().height()/height()>sceneRect().width()/width()?height()/sceneRect().height():width()/sceneRect().width();
 }
 
-int SchemeView::recieveElementId(ElementType type)
+int SchemeView::recieveElementId(CircuitElementType type)
 {
 	CircuitItem* element;
 	int newId = 1;
@@ -532,7 +536,7 @@ void SchemeView::setScale (qreal s)
 
 void SchemeView::addR()
 {
-	int id = recieveElementId(R);
+    int id = recieveElementId(CircuitElementType::R);
 	RItem* tmp = new RItem(id, mapToScene(lastMousePos).toPoint());
 	scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
 	elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
@@ -541,7 +545,7 @@ void SchemeView::addR()
 
 void SchemeView::addG()
 {
-	int id = recieveElementId(G);
+    int id = recieveElementId(CircuitElementType::G);
 	GItem* tmp = new GItem(id, mapToScene(lastMousePos).toPoint());
 	scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
 	elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
@@ -550,7 +554,7 @@ void SchemeView::addG()
 
 void SchemeView::addL()
 {
-	int id = recieveElementId(L);
+    int id = recieveElementId(CircuitElementType::L);
 	LItem* tmp = new LItem(id, mapToScene(lastMousePos).toPoint());
 	scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
 	elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
@@ -559,7 +563,7 @@ void SchemeView::addL()
 
 void SchemeView::addC()
 {
-	int id = recieveElementId(C);
+    int id = recieveElementId(CircuitElementType::C);
 	CItem* tmp = new CItem(id, mapToScene(lastMousePos).toPoint());
 	scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
 	elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
@@ -568,7 +572,7 @@ void SchemeView::addC()
 
 void SchemeView::addU()
 {
-	int id = recieveElementId(E);
+    int id = recieveElementId(CircuitElementType::E);
 	EItem* tmp = new EItem(id, mapToScene(lastMousePos).toPoint());
 	scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
 	elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
@@ -577,7 +581,7 @@ void SchemeView::addU()
 
 void SchemeView::addI()
 {
-	int id = recieveElementId(I);
+    int id = recieveElementId(CircuitElementType::I);
 	IItem* tmp = new IItem(id, mapToScene(lastMousePos).toPoint());
 	scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
 	elements.push_back(reinterpret_cast<CircuitItem*>(tmp));

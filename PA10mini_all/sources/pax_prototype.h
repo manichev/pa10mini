@@ -1,7 +1,7 @@
 #ifndef PAX_PROTOTYPE_H
 #define PAX_PROTOTYPE_H
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QTextCodec>
 #include <QProgressBar>
 #include <QListWidget>
@@ -17,20 +17,22 @@ class PAX_Prototype : public QMainWindow
 	Q_OBJECT
 
 public:
-	PAX_Prototype(QWidget *parent = 0, Qt::WFlags flags = 0);
-	~PAX_Prototype();
+    PAX_Prototype(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
+    ~PAX_Prototype() override;
 public slots:
 	void activateSchemeMode();
 	void activateEqualMode();
 	void schemeToText();
 	void solve();
 	void openPlot();
-	void showErr(QString& message);
+    void showErr(const QString &message);
+
+protected:
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
 	Ui::PAX_PrototypeClass ui;
-	bool eventFilter(QObject *object, QEvent *event);
-	PlotWindow* plot;
+    PlotWindow* plot;
 };
 
 

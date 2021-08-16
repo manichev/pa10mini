@@ -468,8 +468,9 @@ namespace grammar {
           case 8:
 
     {
-					std::cout<<"Initial\n" ;
-					driver.daeSystem->setInitial(string(*(yysemantic_stack_[(3) - (1)].sval)),
+                    std::cout<<"Initial\n" ;
+                    std::string val = *(yysemantic_stack_[(3) - (1)].sval);
+                    driver.daeSystem->setInitial(val,
 						atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
 				}
     break;
@@ -607,7 +608,8 @@ namespace grammar {
 					}
 					else
 					{
-						int id = driver.daeSystem->addVariable(string(*(yysemantic_stack_[(1) - (1)].sval)), false);
+                        std::string val = *(yysemantic_stack_[(1) - (1)].sval);
+                        int id = driver.daeSystem->addVariable(val, false);
 						(yyval.mtree) = new Expression(id);
 					}
 				}
@@ -616,7 +618,8 @@ namespace grammar {
   case 33:
 
     {
-					int id = driver.daeSystem->addVariable(string(*(yysemantic_stack_[(2) - (1)].sval)), true);
+                    std::string val = *(yysemantic_stack_[(2) - (1)].sval);
+                    int id = driver.daeSystem->addVariable(val, true);
 					(yyval.mtree) = new Expression(-id); //negate for derivative variable
 				}
     break;

@@ -12,20 +12,21 @@
 
 #include "schemeview.h"
 
-enum	{	CircuitItemType = QGraphicsItem::UserType+1,
-			CircuitItemNodeType 
-		};
 
-enum ElementType	{
-		R, G, L, C, I, E
-	};
+enum class CircuitElementType {
+    R, G, L, C, I, E
+};
 
 class CircuitItem : public QGraphicsItem
 {
 public:
+    enum {
+        CircuitItemType = QGraphicsItem::UserType + 1,
+        CircuitItemNodeType
+    };
 
-	CircuitItem(QGraphicsItem *parent = 0);
-	~CircuitItem();
+    CircuitItem(QGraphicsItem *parent = nullptr);
+    ~CircuitItem() override;
 
 	void rotateRight();
 	void setPenWidth(qreal width);
@@ -38,12 +39,12 @@ public:
 	QString geti();
 
 	int getId();
-	ElementType elementType() {return elemType;};
+    CircuitElementType elementType() { return elemType; }
 	//QString getF();
 	//void setF(QString);
 //implemented virtual functions
-	QRectF boundingRect()  const;
-	int type() const;
+    QRectF boundingRect() const override;
+    int type() const override;
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	QString fDim;
 	QString fName;
@@ -54,13 +55,13 @@ public:
 	QString i;
 	QString i0;
 	QString u0;
-	ElementType elemType;
+    CircuitElementType elemType;
 
 protected:
-	void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
-	void mouseMoveEvent ( QGraphicsSceneMouseEvent * event );
-	void mousePressEvent ( QGraphicsSceneMouseEvent * event );
-	void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
+    void hoverEnterEvent(QGraphicsSceneHoverEvent * event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent * event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
 
 	inline void drawContacts(QPainter* painter);
 	inline void contactsShape(QPainterPath& path) const;
@@ -88,16 +89,16 @@ private:
 class CircuitNodeItem : public QGraphicsItem
 {
 public:
-	CircuitNodeItem(int id_, QPointF pos, QGraphicsItem *parent = 0);
-	~CircuitNodeItem();
+    CircuitNodeItem(int id_, QPointF pos, QGraphicsItem *parent = nullptr);
+    ~CircuitNodeItem() override;
 	void setGround(bool);
 	bool isGrounded();
 //implemented virtual functions
-	QRectF boundingRect()  const;
-	QPainterPath shape() const;
-	int type() const;
+    QRectF boundingRect() const override;
+    QPainterPath shape() const override;
+    int type() const override;
 	int getId();
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 
 private:
 	bool ground;
@@ -109,53 +110,53 @@ private:
 class RItem : CircuitItem
 {
 public:
-	RItem(int id, QPointF pos, QGraphicsItem *parent = 0);
+    RItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
 	QString equal();
-	QPainterPath shape() const;
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    QPainterPath shape() const override;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
 class CItem : CircuitItem
 {
 public:
-	CItem(int id, QPointF pos, QGraphicsItem *parent = 0);
+    CItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
 	QString equal();
-	QPainterPath shape() const;
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    QPainterPath shape() const override;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
 class LItem : CircuitItem
 {
 public:
-	LItem(int id, QPointF pos, QGraphicsItem *parent = 0);
+    LItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
 	QString equal();
-	QPainterPath shape() const;
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    QPainterPath shape() const override;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
 class GItem : CircuitItem
 {
 public:
-	GItem(int id, QPointF pos, QGraphicsItem *parent = 0);
+    GItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
 	QString equal();
-	QPainterPath shape() const;
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    QPainterPath shape() const override;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
 class EItem : CircuitItem
 {
 public:
-	EItem(int id, QPointF pos, QGraphicsItem *parent = 0);
+    EItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
 	QString equal();
-	QPainterPath shape() const;
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    QPainterPath shape() const override;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
 class IItem : CircuitItem
 {
 public:
-	IItem(int id, QPointF pos, QGraphicsItem *parent = 0);
+    IItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
 	QString equal();
-	QPainterPath shape() const;
-	void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    QPainterPath shape() const override;
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };

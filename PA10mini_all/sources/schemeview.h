@@ -20,15 +20,16 @@
 
 class CircuitItem;
 class CircuitNodeItem;
-enum ElementType;
+enum class CircuitElementType;
 
 class SchemeView : public QGraphicsView
 {
 	Q_OBJECT
 
 public:
-	SchemeView(QWidget *parent = 0);
-	~SchemeView();
+    //using enum CircuitElementType;
+    SchemeView(QWidget *parent = nullptr);
+    ~SchemeView() override;
 
 	void checkgrid();
 
@@ -50,19 +51,19 @@ public slots:
 	void addI();
 
 protected:
-    void mousePressEvent(QMouseEvent * event);
-    void mouseMoveEvent(QMouseEvent * event);
+    void mousePressEvent(QMouseEvent * event) override;
+    void mouseMoveEvent(QMouseEvent * event) override;
     void mouseReleaseEvent ( QMouseEvent * event );
     void wheelEvent ( QWheelEvent * event );
-    void enterEvent (QEvent* event);
-    void leaveEvent (QEvent* event);
+    void enterEvent (QEvent* event) override;
+    void leaveEvent (QEvent* event) override;
 
 private:
-	bool eventFilter(QObject *target, QEvent *event);
+    bool eventFilter(QObject *target, QEvent *event) override;
 	inline qreal getScale();
 	inline qreal fullScale();
 	void setScale (qreal s);
-	int recieveElementId(ElementType type);
+    int recieveElementId(CircuitElementType type);
 	void addNode(QPointF pos);
 
 	int gridW;

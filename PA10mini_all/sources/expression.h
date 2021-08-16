@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const enum ContentType
+enum ContentType
 {
     _variable,
 	_constant,
@@ -16,7 +16,7 @@ const enum ContentType
 };
 
 
-const enum Operator
+enum Operator
 {
 	_plus,
 	_minus,
@@ -26,7 +26,7 @@ const enum Operator
 };
 
 
-const enum Function
+enum Function
 {
 	_ln,
 	_sin,
@@ -102,8 +102,8 @@ private:
 	Expression* right;
 
 	void toConst(double value_);
-	void Expression::toLeft();
-	void Expression::toRight();
+    void toLeft();
+    void toRight();
 
 	//return pointer to derivative of src tree
 	void getderivative(int id_);
