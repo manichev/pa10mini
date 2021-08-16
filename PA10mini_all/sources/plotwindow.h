@@ -6,15 +6,15 @@
 
 class PlotWindow : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	PlotWindow(QWidget *parent = 0);
-	~PlotWindow();
-	void populate();
+    PlotWindow(QWidget *parent = 0);
+    ~PlotWindow();
+    void populate();
 
 private:
-	Ui::PlotWindow ui;
+    Ui::PlotWindow ui;
 };
 
 #endif // PLOTWINDOW_H

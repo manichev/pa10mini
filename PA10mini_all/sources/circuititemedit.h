@@ -7,18 +7,18 @@
 class CircuitItem;
 class CircuitItemEdit : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	CircuitItemEdit(CircuitItem*item_, QWidget *parent = 0);
-	~CircuitItemEdit();
+    CircuitItemEdit(CircuitItem*item_, QWidget *parent = 0);
+    ~CircuitItemEdit();
 
-	public slots:
-		void apply();
+    public slots:
+        void apply();
 
 private:
-	Ui::CircuitItemEdit ui;
-	CircuitItem* item;
+    Ui::CircuitItemEdit ui;
+    CircuitItem* item;
 };
 
 #endif // CIRCUITITEMEDIT_H

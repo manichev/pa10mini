@@ -43,12 +43,12 @@
 /* "%code requires" blocks.  */
 
 
-	namespace grammar
-	{
-		class Scanner;
-		class TextDriver;
-	}
-	#include "expression.h"
+    namespace grammar
+    {
+        class Scanner;
+        class TextDriver;
+    }
+    #include "expression.h"
 
 
 
@@ -78,8 +78,8 @@ namespace grammar {
     {
 
 
-	std::string* sval;
-	Expression* mtree;
+    std::string* sval;
+    Expression* mtree;
 
 
 
@@ -157,15 +157,15 @@ namespace grammar {
     /// \param yyvaluep     Its semantic value.
     /// \param yylocationp  Its location.
     virtual void yy_symbol_value_print_ (int yytype,
-					 const semantic_type* yyvaluep,
-					 const location_type* yylocationp);
+                     const semantic_type* yyvaluep,
+                     const location_type* yylocationp);
     /// \brief Report a symbol on the debug stream.
     /// \param yytype       The token type.
     /// \param yyvaluep     Its semantic value.
     /// \param yylocationp  Its location.
     virtual void yy_symbol_print_ (int yytype,
-				   const semantic_type* yyvaluep,
-				   const location_type* yylocationp);
+                   const semantic_type* yyvaluep,
+                   const location_type* yylocationp);
 #endif
 
 
@@ -263,9 +263,9 @@ namespace grammar {
     /// \param yyvaluep     Its semantic value.
     /// \param yylocationp  Its location.
     inline void yydestruct_ (const char* yymsg,
-			     int yytype,
-			     semantic_type* yyvaluep,
-			     location_type* yylocationp);
+                 int yytype,
+                 semantic_type* yyvaluep,
+                 location_type* yylocationp);
 
     /// Pop \a n symbols the three stacks.
     inline void yypop_ (unsigned int n = 1);

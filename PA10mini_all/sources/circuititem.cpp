@@ -149,7 +149,7 @@ void CircuitItem::drawContacts(QPainter* painter)
             painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contactsStart[i].x(), contactsStart[i].y()));
             painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contacts[i].x(), contacts[i].y()));
         }
-        else	if(contactsStart[i].x() > contacts[i].x() && i == 1)
+        else    if(contactsStart[i].x() > contacts[i].x() && i == 1)
         {
             painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contactsStart[i].x(), contactsStart[i].y()));
             painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contacts[i].x(), contacts[i].y()));
@@ -454,7 +454,7 @@ void CircuitNodeItem::setGround(bool ground_)
 
 QRectF CircuitNodeItem::boundingRect()  const
 {
-    return 	QRectF(-0.5, -0.5, 1.5, 1.5);
+    return     QRectF(-0.5, -0.5, 1.5, 1.5);
 }
 
 QPainterPath CircuitNodeItem::shape() const

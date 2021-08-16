@@ -32,9 +32,9 @@
 /* "%code top" blocks.  */
 
 
-	#define YYLEX_PARAM &yylval, &yylloc
-	#include "scanner.h"
-	#include "textdriver.h"
+    #define YYLEX_PARAM &yylval, &yylloc
+    #include "scanner.h"
+    #include "textdriver.h"
 
 
 
@@ -51,8 +51,8 @@
 /* User implementation prologue.  */
 
 
-	#undef yylex
-	#define yylex driver.lexer->lex
+    #undef yylex
+    #define yylex driver.lexer->lex
 
 
 
@@ -107,26 +107,26 @@
 /* A pseudo ostream that takes yydebug_ into account.  */
 # define YYCDEBUG if (yydebug_) (*yycdebug_)
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)	\
-do {							\
-  if (yydebug_)						\
-    {							\
-      *yycdebug_ << Title << ' ';			\
-      yy_symbol_print_ ((Type), (Value), (Location));	\
-      *yycdebug_ << std::endl;				\
-    }							\
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)    \
+do {                            \
+  if (yydebug_)                        \
+    {                            \
+      *yycdebug_ << Title << ' ';            \
+      yy_symbol_print_ ((Type), (Value), (Location));    \
+      *yycdebug_ << std::endl;                \
+    }                            \
 } while (false)
 
-# define YY_REDUCE_PRINT(Rule)		\
-do {					\
-  if (yydebug_)				\
-    yy_reduce_print_ (Rule);		\
+# define YY_REDUCE_PRINT(Rule)        \
+do {                    \
+  if (yydebug_)                \
+    yy_reduce_print_ (Rule);        \
 } while (false)
 
-# define YY_STACK_PRINT()		\
-do {					\
-  if (yydebug_)				\
-    yystack_print_ ();			\
+# define YY_STACK_PRINT()        \
+do {                    \
+  if (yydebug_)                \
+    yystack_print_ ();            \
 } while (false)
 
 #else /* !YYDEBUG */
@@ -138,12 +138,12 @@ do {					\
 
 #endif /* !YYDEBUG */
 
-#define yyerrok		(yyerrstatus_ = 0)
-#define yyclearin	(yychar = yyempty_)
+#define yyerrok        (yyerrstatus_ = 0)
+#define yyclearin    (yychar = yyempty_)
 
-#define YYACCEPT	goto yyacceptlab
-#define YYABORT		goto yyabortlab
-#define YYERROR		goto yyerrorlab
+#define YYACCEPT    goto yyacceptlab
+#define YYABORT        goto yyabortlab
+#define YYERROR        goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 
@@ -210,7 +210,7 @@ namespace grammar {
 
   inline void
   Parser::yy_symbol_value_print_ (int yytype,
-			   const semantic_type* yyvaluep, const location_type* yylocationp)
+               const semantic_type* yyvaluep, const location_type* yylocationp)
   {
     YYUSE (yylocationp);
     YYUSE (yyvaluep);
@@ -220,18 +220,18 @@ namespace grammar {
     switch (yytype)
       {
          default:
-	  break;
+      break;
       }
   }
 
 
   void
   Parser::yy_symbol_print_ (int yytype,
-			   const semantic_type* yyvaluep, const location_type* yylocationp)
+               const semantic_type* yyvaluep, const location_type* yylocationp)
   {
     *yycdebug_ << (yytype < yyntokens_ ? "token" : "nterm")
-	       << ' ' << yytname_[yytype] << " ("
-	       << *yylocationp << ": ";
+           << ' ' << yytname_[yytype] << " ("
+           << *yylocationp << ": ";
     yy_symbol_value_print_ (yytype, yyvaluep, yylocationp);
     *yycdebug_ << ')';
   }
@@ -239,7 +239,7 @@ namespace grammar {
 
   void
   Parser::yydestruct_ (const char* yymsg,
-			   int yytype, semantic_type* yyvaluep, location_type* yylocationp)
+               int yytype, semantic_type* yyvaluep, location_type* yylocationp)
   {
     YYUSE (yylocationp);
     YYUSE (yymsg);
@@ -251,8 +251,8 @@ namespace grammar {
     switch (yytype)
       {
   
-	default:
-	  break;
+    default:
+      break;
       }
   }
 
@@ -388,13 +388,13 @@ namespace grammar {
     /* Convert token to internal form.  */
     if (yychar <= yyeof_)
       {
-	yychar = yytoken = yyeof_;
-	YYCDEBUG << "Now at end of input." << std::endl;
+    yychar = yytoken = yyeof_;
+    YYCDEBUG << "Now at end of input." << std::endl;
       }
     else
       {
-	yytoken = yytranslate_ (yychar);
-	YY_SYMBOL_PRINT ("Next token is", yytoken, &yylval, &yylloc);
+    yytoken = yytranslate_ (yychar);
+    YY_SYMBOL_PRINT ("Next token is", yytoken, &yylval, &yylloc);
       }
 
     /* If the proper action on seeing token YYTOKEN is to reduce or to
@@ -407,10 +407,10 @@ namespace grammar {
     yyn = yytable_[yyn];
     if (yyn <= 0)
       {
-	if (yy_table_value_is_error_ (yyn))
-	  goto yyerrlab;
-	yyn = -yyn;
-	goto yyreduce;
+    if (yy_table_value_is_error_ (yyn))
+      goto yyerrlab;
+    yyn = -yyn;
+    goto yyreduce;
       }
 
     /* Shift the lookahead token.  */
@@ -471,148 +471,148 @@ namespace grammar {
                     std::cout<<"Initial\n" ;
                     std::string val = *(yysemantic_stack_[(3) - (1)].sval);
                     driver.daeSystem->setInitial(val,
-						atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
-				}
+                        atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
+                }
     break;
 
   case 11:
 
     {
-				std::cout<<"Const\n" ;
-					driver.daeSystem->addConstant(*(yysemantic_stack_[(3) - (1)].sval), atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
-				}
+                std::cout<<"Const\n" ;
+                    driver.daeSystem->addConstant(*(yysemantic_stack_[(3) - (1)].sval), atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
+                }
     break;
 
   case 16:
 
     {
-				std::cout<<"Equal\n";
-					driver.daeSystem->addEqual(new Expression(_minus, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree)));
-				}
+                std::cout<<"Equal\n";
+                    driver.daeSystem->addEqual(new Expression(_minus, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree)));
+                }
     break;
 
   case 17:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
+                }
     break;
 
   case 18:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
+                }
     break;
 
   case 19:
 
     {
-					(yyval.mtree) = new Expression(_plus, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_plus, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
+                }
     break;
 
   case 20:
 
     {
-					(yyval.mtree) = new Expression(_minus, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_minus, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
+                }
     break;
 
   case 21:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
+                }
     break;
 
   case 22:
 
     {
-					(yyval.mtree) = new Expression(_multiplication, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_multiplication, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
+                }
     break;
 
   case 23:
 
     {
-					(yyval.mtree) = new Expression(_division, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_division, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
+                }
     break;
 
   case 24:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
+                }
     break;
 
   case 25:
 
     {
-					Expression* tmp = new Expression(-1.0);
-					(yyval.mtree) = new Expression(_multiplication, tmp, (yysemantic_stack_[(2) - (2)].mtree));
-				}
+                    Expression* tmp = new Expression(-1.0);
+                    (yyval.mtree) = new Expression(_multiplication, tmp, (yysemantic_stack_[(2) - (2)].mtree));
+                }
     break;
 
   case 26:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(2) - (2)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(2) - (2)].mtree);
+                }
     break;
 
   case 27:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
+                }
     break;
 
   case 28:
 
     {
-					(yyval.mtree) = new Expression(_power, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_power, (yysemantic_stack_[(3) - (1)].mtree), (yysemantic_stack_[(3) - (3)].mtree));
+                }
     break;
 
   case 29:
 
     {
-					(yyval.mtree) = new Expression(atof((yysemantic_stack_[(1) - (1)].sval)->c_str()));
-					delete (yysemantic_stack_[(1) - (1)].sval);
-				}
+                    (yyval.mtree) = new Expression(atof((yysemantic_stack_[(1) - (1)].sval)->c_str()));
+                    delete (yysemantic_stack_[(1) - (1)].sval);
+                }
     break;
 
   case 30:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(3) - (2)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(3) - (2)].mtree);
+                }
     break;
 
   case 31:
 
     {
-					(yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
-				}
+                    (yyval.mtree) = (yysemantic_stack_[(1) - (1)].mtree);
+                }
     break;
 
   case 32:
 
     {
-					double value;
-					if(driver.daeSystem->constantExists(*(yysemantic_stack_[(1) - (1)].sval), value))
-					{
-						(yyval.mtree) = new Expression(value);
-					}
-					else
-					{
+                    double value;
+                    if(driver.daeSystem->constantExists(*(yysemantic_stack_[(1) - (1)].sval), value))
+                    {
+                        (yyval.mtree) = new Expression(value);
+                    }
+                    else
+                    {
                         std::string val = *(yysemantic_stack_[(1) - (1)].sval);
                         int id = driver.daeSystem->addVariable(val, false);
-						(yyval.mtree) = new Expression(id);
-					}
-				}
+                        (yyval.mtree) = new Expression(id);
+                    }
+                }
     break;
 
   case 33:
@@ -620,29 +620,29 @@ namespace grammar {
     {
                     std::string val = *(yysemantic_stack_[(2) - (1)].sval);
                     int id = driver.daeSystem->addVariable(val, true);
-					(yyval.mtree) = new Expression(-id); //negate for derivative variable
-				}
+                    (yyval.mtree) = new Expression(-id); //negate for derivative variable
+                }
     break;
 
   case 34:
 
     {
-					(yyval.mtree) = new Expression(_sin, (yysemantic_stack_[(4) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_sin, (yysemantic_stack_[(4) - (3)].mtree));
+                }
     break;
 
   case 35:
 
     {
-					(yyval.mtree) = new Expression(_cos, (yysemantic_stack_[(4) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_cos, (yysemantic_stack_[(4) - (3)].mtree));
+                }
     break;
 
   case 36:
 
     {
-					(yyval.mtree) = new Expression(_ln, (yysemantic_stack_[(4) - (3)].mtree));
-				}
+                    (yyval.mtree) = new Expression(_ln, (yysemantic_stack_[(4) - (3)].mtree));
+                }
     break;
 
 
@@ -675,7 +675,7 @@ namespace grammar {
     yyn = yyr1_[yyn];
     yystate = yypgoto_[yyn - yyntokens_] + yystate_stack_[0];
     if (0 <= yystate && yystate <= yylast_
-	&& yycheck_[yystate] == yystate_stack_[0])
+    && yycheck_[yystate] == yystate_stack_[0])
       yystate = yytable_[yystate];
     else
       yystate = yydefgoto_[yyn - yyntokens_];
@@ -692,10 +692,10 @@ namespace grammar {
     /* If not already recovering from an error, report this error.  */
     if (!yyerrstatus_)
       {
-	++yynerrs_;
-	if (yychar == yyempty_)
-	  yytoken = yyempty_;
-	error (yylloc, yysyntax_error_ (yystate, yytoken));
+    ++yynerrs_;
+    if (yychar == yyempty_)
+      yytoken = yyempty_;
+    error (yylloc, yysyntax_error_ (yystate, yytoken));
       }
 
     yyerror_range[1] = yylloc;
@@ -744,33 +744,33 @@ namespace grammar {
   | yyerrlab1 -- common code for both syntax error and YYERROR.  |
   `-------------------------------------------------------------*/
   yyerrlab1:
-    yyerrstatus_ = 3;	/* Each real token shifted decrements this.  */
+    yyerrstatus_ = 3;    /* Each real token shifted decrements this.  */
 
     for (;;)
       {
-	yyn = yypact_[yystate];
-	if (!yy_pact_value_is_default_ (yyn))
-	{
-	  yyn += yyterror_;
-	  if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == yyterror_)
-	    {
-	      yyn = yytable_[yyn];
-	      if (0 < yyn)
-		break;
-	    }
-	}
+    yyn = yypact_[yystate];
+    if (!yy_pact_value_is_default_ (yyn))
+    {
+      yyn += yyterror_;
+      if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == yyterror_)
+        {
+          yyn = yytable_[yyn];
+          if (0 < yyn)
+        break;
+        }
+    }
 
-	/* Pop the current state because it cannot handle the error token.  */
-	if (yystate_stack_.height () == 1)
-	  YYABORT;
+    /* Pop the current state because it cannot handle the error token.  */
+    if (yystate_stack_.height () == 1)
+      YYABORT;
 
-	yyerror_range[1] = yylocation_stack_[0];
-	yydestruct_ ("Error: popping",
-		     yystos_[yystate],
-		     &yysemantic_stack_[0], &yylocation_stack_[0]);
-	yypop_ ();
-	yystate = yystate_stack_[0];
-	YY_STACK_PRINT ();
+    yyerror_range[1] = yylocation_stack_[0];
+    yydestruct_ ("Error: popping",
+             yystos_[yystate],
+             &yysemantic_stack_[0], &yylocation_stack_[0]);
+    yypop_ ();
+    yystate = yystate_stack_[0];
+    YY_STACK_PRINT ();
       }
 
     yyerror_range[2] = yylloc;
@@ -782,7 +782,7 @@ namespace grammar {
 
     /* Shift the error token.  */
     YY_SYMBOL_PRINT ("Shifting", yystos_[yyn],
-		     &yysemantic_stack_[0], &yylocation_stack_[0]);
+             &yysemantic_stack_[0], &yylocation_stack_[0]);
 
     yystate = yyn;
     goto yynewstate;
@@ -1126,7 +1126,7 @@ namespace grammar {
   {
     *yycdebug_ << "Stack now";
     for (state_stack_type::const_iterator i = yystate_stack_.begin ();
-	 i != yystate_stack_.end (); ++i)
+     i != yystate_stack_.end (); ++i)
       *yycdebug_ << ' ' << *i;
     *yycdebug_ << std::endl;
   }
@@ -1139,13 +1139,13 @@ namespace grammar {
     int yynrhs = yyr2_[yyrule];
     /* Print the symbols being reduced, and their result.  */
     *yycdebug_ << "Reducing stack by rule " << yyrule - 1
-	       << " (line " << yylno << "):" << std::endl;
+           << " (line " << yylno << "):" << std::endl;
     /* The symbols being reduced.  */
     for (int yyi = 0; yyi < yynrhs; yyi++)
       YY_SYMBOL_PRINT ("   $" << yyi + 1 << " =",
-		       yyrhs_[yyprhs_[yyrule] + yyi],
-		       &(yysemantic_stack_[(yynrhs) - (yyi + 1)]),
-		       &(yylocation_stack_[(yynrhs) - (yyi + 1)]));
+               yyrhs_[yyprhs_[yyrule] + yyi],
+               &(yysemantic_stack_[(yynrhs) - (yyi + 1)]),
+               &(yylocation_stack_[(yynrhs) - (yyi + 1)]));
   }
 #endif // YYDEBUG
 
@@ -1211,5 +1211,5 @@ namespace grammar {
 
 void grammar::Parser::error( const grammar::Parser::location_type &l, const std::string &err_message )
 {
-	driver.error(l, err_message);
+    driver.error(l, err_message);
 }

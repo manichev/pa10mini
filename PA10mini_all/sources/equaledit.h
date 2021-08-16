@@ -12,34 +12,34 @@ class EqualEdit;
 
 class EqualEdit : public QPlainTextEdit
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
     EqualEdit(QWidget *parent = nullptr);
 
-	void lineNumberAreaPaintEvent(QPaintEvent *event);
-	int lineNumberAreaWidth();
-	QString getFileName();
+    void lineNumberAreaPaintEvent(QPaintEvent *event);
+    int lineNumberAreaWidth();
+    QString getFileName();
 
 public slots:
-	void open();
-	void save();
-	void saveAs();
-	void createNew();
-	void textWasChanged();
+    void open();
+    void save();
+    void saveAs();
+    void createNew();
+    void textWasChanged();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-	void updateLineNumberAreaWidth(int newBlockCount);
-	void highlightCurrentLine();
-	void updateLineNumberArea(const QRect &, int);
+    void updateLineNumberAreaWidth(int newBlockCount);
+    void highlightCurrentLine();
+    void updateLineNumberArea(const QRect &, int);
 
 private:
-	QWidget *lineNumberArea;
-	QString fileName;
-	bool wasChanged;
+    QWidget *lineNumberArea;
+    QString fileName;
+    bool wasChanged;
 };
 
 class LineNumberArea : public QWidget

@@ -24,31 +24,31 @@ enum class CircuitElementType;
 
 class SchemeView : public QGraphicsView
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
     //using enum CircuitElementType;
     SchemeView(QWidget *parent = nullptr);
     ~SchemeView() override;
 
-	void checkgrid();
+    void checkgrid();
 
 public slots:
-	QString getSystem();
-	void rotateItem();
-	void groundNode();
-	void ungroundNode();
-	void editCircuitItem();
+    QString getSystem();
+    void rotateItem();
+    void groundNode();
+    void ungroundNode();
+    void editCircuitItem();
 
-	void deleteItem();
+    void deleteItem();
 
-	//add slots
-	void addR();
-	void addG();
-	void addL();
-	void addC();
-	void addU();
-	void addI();
+    //add slots
+    void addR();
+    void addG();
+    void addL();
+    void addC();
+    void addU();
+    void addI();
 
 protected:
     void mousePressEvent(QMouseEvent * event) override;
@@ -60,27 +60,27 @@ protected:
 
 private:
     bool eventFilter(QObject *target, QEvent *event) override;
-	inline qreal getScale();
-	inline qreal fullScale();
-	void setScale (qreal s);
+    inline qreal getScale();
+    inline qreal fullScale();
+    void setScale (qreal s);
     int recieveElementId(CircuitElementType type);
-	void addNode(QPointF pos);
+    void addNode(QPointF pos);
 
-	int gridW;
-	int gridH;
+    int gridW;
+    int gridH;
 
-	bool isGrabbed;
-	bool isScaled;
-	QPoint	lastMousePos;
-	qreal scaleStep;
+    bool isGrabbed;
+    bool isScaled;
+    QPoint    lastMousePos;
+    qreal scaleStep;
 
-	QList<CircuitNodeItem*> nodes;
-	QList<CircuitItem*> elements;
-	QGraphicsItem* hoveredItem;
+    QList<CircuitNodeItem*> nodes;
+    QList<CircuitItem*> elements;
+    QGraphicsItem* hoveredItem;
 
-	QMenu* itemMenu;
-	QMenu* nodeMenu;
-	QMenu* mainMenu;
+    QMenu* itemMenu;
+    QMenu* nodeMenu;
+    QMenu* mainMenu;
 };
 
 #endif // PVIEW_H

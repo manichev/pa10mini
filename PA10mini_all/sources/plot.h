@@ -56,13 +56,13 @@ class Plot : public QwtPlot
 {
 public:
     Plot( QWidget *parent = NULL );
-	/*
-	number of curves
-	curves data with double arrays n curves + 1
-	length of arrays
-	*/
+    /*
+    number of curves
+    curves data with double arrays n curves + 1
+    length of arrays
+    */
 public slots:
-	void populate();
+    void populate();
 protected:
     virtual void resizeEvent( QResizeEvent * );
 
