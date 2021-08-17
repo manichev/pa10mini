@@ -8,16 +8,16 @@
 
 class SolverParam : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	SolverParam(QWidget *parent = 0);
-	~SolverParam();
+    SolverParam(QWidget *parent = 0);
+    ~SolverParam();
 public slots:
-	void check();
-	void apply();
+    void check();
+    void apply();
 private:
-	Ui::SolverParam ui;
+    Ui::SolverParam ui;
 };
 
 #endif // SOLVERPARAM_H

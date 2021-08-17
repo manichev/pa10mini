@@ -11,20 +11,20 @@
 
 class VariableChooser : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	VariableChooser(QWidget *parent = 0);
-	~VariableChooser();
+    VariableChooser(QWidget *parent = 0);
+    ~VariableChooser();
 
 public slots:
-	void apply();
-	void selectAll(int state);
+    void apply();
+    void selectAll(int state);
 
 private:
-	Ui::VariableChooser ui;
-	QList<QCheckBox*> checkBoxes;
-	QList<QLineEdit*> lines;
+    Ui::VariableChooser ui;
+    QList<QCheckBox*> checkBoxes;
+    QList<QLineEdit*> lines;
 };
 
 #endif // VARIABLECHOOSER_H

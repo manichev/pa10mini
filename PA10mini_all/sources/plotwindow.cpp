@@ -1,9 +1,9 @@
 #include "plotwindow.h"
 
 PlotWindow::PlotWindow(QWidget *parent)
-	: QWidget(parent)
+    : QWidget(parent)
 {
-	ui.setupUi(this);
+    ui.setupUi(this);
 }
 
 PlotWindow::~PlotWindow()
@@ -13,5 +13,5 @@ PlotWindow::~PlotWindow()
 
 void PlotWindow::populate()
 {
-	ui.plot->populate();
+    ui.plot->populate();
 }
