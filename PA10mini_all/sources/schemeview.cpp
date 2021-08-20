@@ -119,7 +119,8 @@ SchemeView::SchemeView(QWidget *parent)
     QList<QGraphicsLineItem *> gridLines;
     QPen gridPen;
     gridPen.setColor(QColor(222,222,222,255));
-    //gridPen.setStyle(Qt::DashLine);
+    gridPen.setStyle(Qt::DashLine);
+    gridPen.setWidthF(0.01);
 
     for(double x = 0; x <= gridW; x+=1.0)
         gridLines.push_back(scene()->addLine(x, 0.0, x, gridH, gridPen));
@@ -442,17 +443,19 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
             {
             case CircuitItem::CircuitItemType:
                 itemMenu->exec(event->globalPos());
-                break;
+                return;//break;
             case CircuitItem::CircuitItemNodeType:
                 nodeMenu->exec(event->globalPos());
+                return;//break;
+            case QGraphicsLineItem::Type:
                 break;
             }
         }
-        else
-        {
-            lastMousePos = event->pos();
-            mainMenu->exec(event->globalPos());
-        }
+        //else
+        //{
+        lastMousePos = event->pos();
+        mainMenu->exec(event->globalPos());
+        //}
     }
     else
     {
