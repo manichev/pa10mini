@@ -127,72 +127,69 @@ SchemeView::SchemeView(QWidget *parent)
         gridLines.push_back(scene()->addLine(0.0, y, gridW, y, gridPen));
     installEventFilter(this);
 
-//adding items for test
-    QGraphicsLineItem * tmp;
+    //settin up menus
+    //item
+    itemMenu = new QMenu(this);
 
-//settin up menus
-//item
-itemMenu = new QMenu(this);
+    QAction* rotateAction;
+    rotateAction = new QAction("Rotate", this);
+    connect(rotateAction, SIGNAL(triggered()), this, SLOT(rotateItem()));
+    itemMenu->addAction(rotateAction);
 
-QAction* rotateAction;
-rotateAction = new QAction("Rotate", this);
-connect(rotateAction, SIGNAL(triggered()), this, SLOT(rotateItem()));
-itemMenu->addAction(rotateAction);
+    QAction* editAction;
+    editAction = new QAction("Edit", this);
+    connect(editAction, SIGNAL(triggered()), this, SLOT(editCircuitItem()));
+    itemMenu->addAction(editAction);
 
-QAction* editAction;
-editAction = new QAction("Edit", this);
-connect(editAction, SIGNAL(triggered()), this, SLOT(editCircuitItem()));
-itemMenu->addAction(editAction);
+    QAction* deleteAction;
+    deleteAction = new QAction("Delete", this);
+    connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteItem()));
+    itemMenu->addAction(deleteAction);
+    //node
+    nodeMenu = new QMenu(this);
 
-QAction* deleteAction;
-deleteAction = new QAction("Delete", this);
-connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteItem()));
-itemMenu->addAction(deleteAction);
-//node
-nodeMenu = new QMenu(this);
+    QAction* groundAction;
+    groundAction = new QAction("Ground", this);
+    connect(groundAction, SIGNAL(triggered()), this, SLOT(groundNode()));
+    nodeMenu->addAction(groundAction);
 
-QAction* groundAction;
-groundAction = new QAction("Ground", this);
-connect(groundAction, SIGNAL(triggered()), this, SLOT(groundNode()));
-nodeMenu->addAction(groundAction);
+    QAction* ungroundAction;
+    ungroundAction = new QAction("Unground", this);
+    connect(ungroundAction, SIGNAL(triggered()), this, SLOT(ungroundNode()));
+    nodeMenu->addAction(ungroundAction);
 
-QAction* ungroundAction;
-ungroundAction = new QAction("Unground", this);
-connect(ungroundAction, SIGNAL(triggered()), this, SLOT(ungroundNode()));
-nodeMenu->addAction(ungroundAction);
+    //main
+    mainMenu = new QMenu(this);
 
-//main
-mainMenu = new QMenu(this);
+    QAction* addRAction;
+    addRAction = new QAction("Add R", this);
+    connect(addRAction, SIGNAL(triggered()), this, SLOT(addR()));
+    mainMenu->addAction(addRAction);
 
-QAction* addRAction;
-addRAction = new QAction("Add R", this);
-connect(addRAction, SIGNAL(triggered()), this, SLOT(addR()));
-mainMenu->addAction(addRAction);
+    QAction* addGAction;
+    addGAction = new QAction("Add G", this);
+    connect(addGAction, SIGNAL(triggered()), this, SLOT(addG()));
+    mainMenu->addAction(addGAction);
 
-QAction* addGAction;
-addGAction = new QAction("Add G", this);
-connect(addGAction, SIGNAL(triggered()), this, SLOT(addG()));
-mainMenu->addAction(addGAction);
+    QAction* addLAction;
+    addLAction = new QAction("Add L", this);
+    connect(addLAction, SIGNAL(triggered()), this, SLOT(addL()));
+    mainMenu->addAction(addLAction);
 
-QAction* addLAction;
-addLAction = new QAction("Add L", this);
-connect(addLAction, SIGNAL(triggered()), this, SLOT(addL()));
-mainMenu->addAction(addLAction);
+    QAction* addCAction;
+    addCAction = new QAction("Add C", this);
+    connect(addCAction, SIGNAL(triggered()), this, SLOT(addC()));
+    mainMenu->addAction(addCAction);
 
-QAction* addCAction;
-addCAction = new QAction("Add C", this);
-connect(addCAction, SIGNAL(triggered()), this, SLOT(addC()));
-mainMenu->addAction(addCAction);
+    QAction* addEAction;
+    addEAction = new QAction("Add E", this);
+    connect(addEAction, SIGNAL(triggered()), this, SLOT(addU()));
+    mainMenu->addAction(addEAction);
 
-QAction* addEAction;
-addEAction = new QAction("Add E", this);
-connect(addEAction, SIGNAL(triggered()), this, SLOT(addU()));
-mainMenu->addAction(addEAction);
-
-QAction* addIAction;
-addIAction = new QAction("Add I", this);
-connect(addIAction, SIGNAL(triggered()), this, SLOT(addI()));
-mainMenu->addAction(addIAction);
+    QAction* addIAction;
+    addIAction = new QAction("Add I", this);
+    connect(addIAction, SIGNAL(triggered()), this, SLOT(addI()));
+    mainMenu->addAction(addIAction);
 }
 
 void SchemeView::deleteItem()
@@ -461,7 +458,6 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
     {
         QGraphicsView::mouseReleaseEvent(event);
     }
-
 }
 
 

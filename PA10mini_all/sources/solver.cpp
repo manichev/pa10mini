@@ -49,6 +49,11 @@ void Solver::setSystem(DAESystem* system_)
 
 void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,double tk,double h,double *tkv,int ncon,int ip[])
 {
+    Q_UNUSED(h)
+    Q_UNUSED(tkv)
+    Q_UNUSED(ncon)
+    Q_UNUSED(ip)
+
     if(writeFile) {
         QString line;
         line.append(" ");
@@ -154,10 +159,10 @@ void Solver::create_fcttask()
 void Solver::solve()
 {
 #ifdef WIN32
-    double *z, *px, *z1, *px1, *f, *rj1, *rj2;
+    double *z=nullptr, *px=nullptr, *z1=nullptr, *px1=nullptr, *f=nullptr, *rj1=nullptr, *rj2=nullptr;
     double t, h, tkv;
 
-    int ncon, nbad, ier, *ip;
+    int ncon, nbad, ier, *ip=nullptr;
     if(writeFile)
     {
         outFile = new QFile(outFileName);
@@ -194,8 +199,8 @@ void Solver::solve()
     tout = t0 + (tk - t0)/maxPoints;
     tp = t0 + (tk-t0)/100;
 
-create_fcttask();
-//applying dll
+    create_fcttask();
+    //applying dll
 
     HINSTANCE dll = LoadLibrary(L"manzhuk/fcttask/fcttask.dll");
     void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
@@ -228,14 +233,22 @@ create_fcttask();
 //free dll
     FreeLibrary(dll);
 //free memory
-    delete z;
-    delete px;
-    delete z1;
-    delete px1;
-    delete f;
-    delete rj1;
-    delete rj2;
-    if(writeFile)
+
+    if (z)
+        delete[] z;
+    if (px)
+        delete[] px;
+    if (z1)
+        delete[] z1;
+    if (px1)
+        delete[] px1;
+    if (f)
+        delete[] f;
+    if (rj1)
+        delete[] rj1;
+    if (rj2)
+        delete[] rj2;
+    if (writeFile)
     {
         outFile->close();
         delete outFile;
@@ -243,7 +256,6 @@ create_fcttask();
     }
 #endif
 }
-
 
 Solver::~Solver(void)
 {

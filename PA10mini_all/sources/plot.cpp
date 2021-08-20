@@ -57,14 +57,13 @@ this->axisScaleDraw(QwtPlot::yLeft)->setMinimumExtent (50);
 
 void Plot::populate()
 {
-QColor QtColours[]= {QColor("red"), QColor("darkCyan"), QColor("cyan"), QColor("magenta"),
-                      QColor("darkRed"), QColor("darkMagenta"),
-                      QColor("green"), QColor("darkGreen"), QColor("yellow"),
-                      QColor("blue")};
-int start=0;
-int Index = 0;
-QColor Color;
-
+    QColor QtColours[]= {QColor("red"), QColor("darkCyan"), QColor("cyan"), QColor("magenta"),
+                          QColor("darkRed"), QColor("darkMagenta"),
+                          QColor("green"), QColor("darkGreen"), QColor("yellow"),
+                          QColor("blue")};
+    int start=0;
+    int Index = 0;
+    QColor Color;
 
     int n = solver->get_n();
     int m = solver->get_m();
