@@ -7,6 +7,8 @@
 #ifdef WIN32
 #include <io.h>
 #include <windows.h>
+#else
+#include <dlfcn.h>
 #endif
 
 #include "solver.h"
@@ -146,6 +148,7 @@ void Solver::create_fcttask()
     file << "}";
     file.close();
 
+#ifdef WIN32
     //compiling fcttask.dll
     remove("manzhuk/fcttask/fcttask.dll");
     std::system("manzhuk\\fcttask\\build.cmd");
@@ -153,12 +156,15 @@ void Solver::create_fcttask()
     remove("manzhuk/fcttask/fcttask.lib");
     remove("manzhuk/fcttask/fcttask.exp");
     remove("fcttask.obj");
+#else
+    remove("manzhuk/fcttask/fcttask.so");
+    std::system("sh manzhuk/fcttask/build_linux.sh");
+#endif
 }
 
 
 void Solver::solve()
 {
-#ifdef WIN32
     double *z=nullptr, *px=nullptr, *z1=nullptr, *px1=nullptr, *f=nullptr, *rj1=nullptr, *rj2=nullptr;
     double t, h, tkv;
 
@@ -202,9 +208,34 @@ void Solver::solve()
     create_fcttask();
     //applying dll
 
+#ifdef WIN32
     HINSTANCE dll = LoadLibrary(L"manzhuk/fcttask/fcttask.dll");
     void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
         (void (*)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*))GetProcAddress(dll, "fcttask");
+#else
+    void *handle = dlopen("manzhuk/fcttask/fcttask.so", RTLD_LAZY);
+
+    if (!handle) {
+        cerr << "Cannot open library: " << dlerror() << '\n';
+        return;
+    }
+
+    // load the symbol
+    cout << "Loading symbol fcttask...\n";
+    typedef void (*fcttask_t)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*);
+
+    // reset errors
+    dlerror();
+    fcttask_t fcttask = (fcttask_t) dlsym(handle, "fcttask");
+    const char *dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol 'fcttask': " << dlsym_error << '\n';
+        dlclose(handle);
+        return;
+    }
+
+#endif
+
 //solving with manzhuk
     std::list<Variable>::iterator it;
     std::cout.precision(3);
@@ -231,7 +262,11 @@ void Solver::solve()
 //_close(stdout_copy);
 
 //free dll
+#ifdef WIN32
     FreeLibrary(dll);
+#else
+    dlclose(handle);
+#endif
 //free memory
 
     if (z)
@@ -254,7 +289,6 @@ void Solver::solve()
         delete outFile;
         delete outTextStream;
     }
-#endif
 }
 
 Solver::~Solver(void)

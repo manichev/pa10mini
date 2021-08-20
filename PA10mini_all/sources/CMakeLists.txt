@@ -122,5 +122,5 @@ list(APPEND pa10_SOURCES
 add_executable(PA10mini ${pa10_SOURCES} ${QRCS})
 
 if (UNIX)
-    target_link_libraries(PA10mini Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL qwt stdc++ m)
+    target_link_libraries(PA10mini Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL qwt stdc++ m dl)
 endif()
