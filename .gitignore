@@ -21,6 +21,9 @@ moc_*
 *.cmake
 
 build-*
+**/build/*
+**/Release/*
+**/Debug/*
 */distrib/*
 */docs/*
 **/MinGW/*
