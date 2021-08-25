@@ -65,7 +65,7 @@ endfunction()
 ################################################################################
 # Common utils
 ################################################################################
-include(CMake/Utils.cmake)
+#include(CMake/Utils.cmake)
 
 ################################################################################
 # Additional Global Settings(add specific info there)
@@ -98,6 +98,10 @@ if (UNIX)
 include_directories ("/usr/include/qwt")
 endif()
 
+if (WIN32)
+include_directories ("C:/Qwt-6.1.4/include")
+endif()
+
 list(APPEND pa10_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/solver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/textdriver.cpp
@@ -121,6 +125,10 @@ list(APPEND pa10_SOURCES
 
 add_executable(PA10mini ${pa10_SOURCES} ${QRCS})
 
-if (UNIX)
+if (MSVC)
+    link_directories("C:/Qwt-6.1.4/lib")
+    #set (QWTLIBDIR "C:/Qwt-6.1.4/lib")
+    target_link_libraries(PA10mini Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL "C:/Qwt-6.1.4/lib/qwt.lib")
+else ()
     target_link_libraries(PA10mini Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL qwt stdc++ m dl)
-endif()
+endif ()

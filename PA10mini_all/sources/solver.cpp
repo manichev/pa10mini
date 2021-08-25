@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#ifdef WIN32
+#if _MSC_VER && !__INTEL_COMPILER
 #include <io.h>
 #include <windows.h>
 #else
@@ -208,15 +208,20 @@ void Solver::solve()
     create_fcttask();
     //applying dll
 
-#ifdef WIN32
-    HINSTANCE dll = LoadLibrary(L"manzhuk/fcttask/fcttask.dll");
+#if _MSC_VER && !__INTEL_COMPILER
+    HINSTANCE dll = LoadLibrary("manzhuk/fcttask/fcttask.dll"); // L"manzhuk/fcttask/fcttask.dll"
     void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
         (void (*)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*))GetProcAddress(dll, "fcttask");
 #else
+
+#ifdef WIN32
+    void *handle = dlopen("manzhuk/fcttask/fcttask.dll", RTLD_LAZY);
+#else
     void *handle = dlopen("manzhuk/fcttask/fcttask.so", RTLD_LAZY);
+#endif
 
     if (!handle) {
-        cerr << "Cannot open library: " << dlerror() << '\n';
+        cerr << "Can't open library: " << dlerror() << '\n';
         return;
     }
 
@@ -262,7 +267,7 @@ void Solver::solve()
 //_close(stdout_copy);
 
 //free dll
-#ifdef WIN32
+#if _MSC_VER && !__INTEL_COMPILER
     FreeLibrary(dll);
 #else
     dlclose(handle);
