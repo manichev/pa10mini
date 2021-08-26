@@ -376,6 +376,7 @@ QString SchemeView::getSystem()
 
 bool SchemeView::eventFilter(QObject *object, QEvent *event)
 {
+    Q_UNUSED(object)
     if( event->type() == QEvent::Resize )
     {
         if(getScale() < fullScale())

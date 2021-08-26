@@ -1,5 +1,9 @@
 #include "expression.h"
 #include <cmath>
+#include <limits>
+
+//static const double DOUBLE_EPS = 1e-32;
+auto DOUBLE_EPS = std::numeric_limits<double>::min();
 
 //void ctor
 Expression::Expression(void):left(0), right(0) {}
@@ -243,8 +247,8 @@ void Expression::toRight()
 {
     Expression* tmp = right;
     *this = *right;
-    tmp->left = 0;
-    tmp->right = 0;
+    tmp->left = nullptr;
+    tmp->right = nullptr;
     delete tmp;
 }
 
@@ -252,14 +256,14 @@ void Expression::toLeft()
 {
     Expression* tmp = left;
     *this = *left;
-    tmp->left = 0;
-    tmp->right = 0;
+    tmp->left = nullptr;
+    tmp->right = nullptr;
     delete tmp;
 }
 
 bool Expression::isConst(double value_)
 {
-    return type == _constant && value == value_;
+    return type == _constant && fabs(value - value_) < DOUBLE_EPS;
 }
 
 bool Expression::isConst()
@@ -272,8 +276,8 @@ void Expression::toConst(double value_)
 {
     delete left;
     delete right;
-    left = 0;
-    right = 0;
+    left = nullptr;
+    right = nullptr;
     type = _constant;
     value = value_;
 }

@@ -10,7 +10,7 @@ class CircuitItemEdit : public QWidget
     Q_OBJECT
 
 public:
-    CircuitItemEdit(CircuitItem*item_, QWidget *parent = 0);
+    CircuitItemEdit(CircuitItem*item_, QWidget *parent = nullptr);
     ~CircuitItemEdit();
 
     public slots:

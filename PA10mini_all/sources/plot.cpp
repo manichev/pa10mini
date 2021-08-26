@@ -62,11 +62,11 @@ void Plot::populate()
                           QColor("green"), QColor("darkGreen"), QColor("yellow"),
                           QColor("blue")};
     int start=0;
-    int Index = 0;
+    // int Index = 0;
     QColor Color;
 
-    int n = solver->get_n();
-    int m = solver->get_m();
+    // int n = solver->get_n();
+    // int m = solver->get_m();
     QwtPlotCurve *curve;
 
     QwtPlotDict::detachItems(QwtPlotItem::Rtti_PlotCurve, true);

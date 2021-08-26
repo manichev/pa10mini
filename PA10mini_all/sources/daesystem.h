@@ -12,9 +12,9 @@ using namespace std;
 //structure for system variable
 struct Variable {
     //ctor
-    Variable(){};
+    Variable(){}
     Variable(string& name_, int id_, bool isDerivative_):
-        name(name_), id(id_), isDerivative(isDerivative_), initial(0.0) {};
+        name(name_), id(id_), isDerivative(isDerivative_), initial(0.0) {}
 
     string name;
     int id;
@@ -24,7 +24,7 @@ struct Variable {
 
 struct Constant {
     Constant(string& name_, double value_):
-        name(name_), value(value_) {};
+        name(name_), value(value_) {}
     string name;
     double value;
 };

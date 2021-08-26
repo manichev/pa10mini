@@ -81,6 +81,7 @@ void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 
 void CircuitItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 {
+    Q_UNUSED(event)
     if(isItemGrabbed)
     {
         setCursor(Qt::ArrowCursor);
@@ -125,6 +126,7 @@ QPoint CircuitItem::mapToGrid(QPointF)
 
 void CircuitItem::setPenWidth(qreal width)
 {
+    Q_UNUSED(width)
 }
 
 QRectF CircuitItem::contactRect()
@@ -180,6 +182,8 @@ void CircuitItem::contactsShape(QPainterPath& path) const
 
 void RItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     //resistance
@@ -199,8 +203,10 @@ QPainterPath RItem::shape() const
     return path;
 }
 
-void CItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
+void CItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = nullptr )
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     //capacitor
@@ -224,6 +230,8 @@ QPainterPath CItem::shape() const
 
 void LItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     //inductance
@@ -250,6 +258,8 @@ QPainterPath LItem::shape() const
 
 void GItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     //conduction
@@ -274,6 +284,8 @@ QPainterPath GItem::shape() const
 
 void EItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     //voltage
@@ -299,6 +311,8 @@ QPainterPath EItem::shape() const
 
 void IItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     //current
@@ -466,7 +480,8 @@ QPainterPath CircuitNodeItem::shape() const
 
 void CircuitNodeItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     painter->drawRect(CircuitItem::contactRect().adjusted(-0.1, -0.1, 0.1, 0.1));
