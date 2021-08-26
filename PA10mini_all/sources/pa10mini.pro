@@ -5,11 +5,15 @@
 TEMPLATE = app
 TARGET = pa10mini
 
+windows: QWT_DIR = "C:/Qwt-6.1.4"
+
 INCLUDEPATH += .
-windows: INCLUDEPATH += C:/Qwt-6.1.4/include
+windows: INCLUDEPATH += $$QWT_DIR/include
 windows: INCLUDEPATH += D:/workspace/github/dlfcn-win32/src
 
 QT += core widgets opengl gui
+
+CONFIG += c++14
 
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
@@ -18,13 +22,14 @@ QT += core widgets opengl gui
 DEFINES += QT_DEPRECATED_WARNINGS
 windows: DEFINES += _WINDOWS
 
-
-include ( C:/Qwt-6.1.4/features/qwt.prf )
-LIBS += D:/workspace/github/build-dlfcn-win32-Qt_5_14_1_MinGW_64_bit-Debug/lib/libdl.dll.a
-
-#windows: LIBS += C:/Qwt-6.1.4/lib
-#windows: LIBS += -LD:/soft/developerTools/qt/qwt-6.1.4/lib/libqwt.a
+# QWT
+windows: include ( $$QWT_DIR/features/qwt.prf )
 CONFIG += qwt
+
+# dlfcn-win32 is an implementation of dlfcn for Windows: git@github.com:dlfcn-win32/dlfcn-win32.git
+windows: LIBDL_BUILD_DIR = "D:/workspace/github/build-dlfcn-win32-Qt_5_14_1_MinGW_64_bit-Debug"
+windows: LIBS += $$LIBDL_BUILD_DIR/lib/libdl.dll.a
+
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -53,10 +58,10 @@ HEADERS += circuititem.h \
            variablechooser.h \
            manzhuk/manzhuk.h \
            manzhuk/fcttask/fcttask.h \
-           /equaledit.h \
-           /schemeview.h \
-           /plot.h \
-           /FlexLexer.h
+           equaledit.h \
+           schemeview.h \
+           plot.h \
+           FlexLexer.h
 
 FORMS += circuititemedit.ui \
          pax_prototype.ui \
@@ -64,8 +69,6 @@ FORMS += circuititemedit.ui \
          solverparam.ui \
          variablechooser.ui
 
-#LEXSOURCES += scanner.l
-#YACCSOURCES += parser.y
 SOURCES += circuititem.cpp \
            circuititemedit.cpp \
            daesystem.cpp \
@@ -83,6 +86,5 @@ SOURCES += circuititem.cpp \
            textdriver.cpp \
            variablechooser.cpp \
            manzhuk/manzhuk.cpp
-           #manzhuk/fcttask/fcttask.cpp
 
 RESOURCES += pax_prototype.qrc

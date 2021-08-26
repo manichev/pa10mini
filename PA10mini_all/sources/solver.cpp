@@ -6,7 +6,7 @@
 
 #if _MSC_VER && !__INTEL_COMPILER
 #include <io.h>
-#include <windows.h>
+#include <Windows.h>
 #else
 #include <dlfcn.h>
 #endif
@@ -55,6 +55,7 @@ void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,doubl
     Q_UNUSED(tkv)
     Q_UNUSED(ncon)
     Q_UNUSED(ip)
+    Q_UNUSED(m)
 
     if(writeFile) {
         QString line;
@@ -209,9 +210,21 @@ void Solver::solve()
     //applying dll
 
 #if _MSC_VER && !__INTEL_COMPILER
-    HINSTANCE dll = LoadLibrary("manzhuk/fcttask/fcttask.dll"); // L"manzhuk/fcttask/fcttask.dll"
+
+#ifdef UNICODE
+    CONST WCHAR * fcttaskDllPath = L"manzhuk/fcttask/fcttask.dll";
+#else
+    CONST CHAR * fcttaskDllPath = "manzhuk/fcttask/fcttask.dll";
+#endif
+    HINSTANCE dll = LoadLibrary(fcttaskDllPath);
+    if (dll == nullptr) {
+        cout << "Error load fcttask.dll...\n" << fcttaskDllPath;
+        return;
+    }
+
     void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
         (void (*)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*))GetProcAddress(dll, "fcttask");
+
 #else
 
 #ifdef WIN32
@@ -268,7 +281,8 @@ void Solver::solve()
 
 //free dll
 #if _MSC_VER && !__INTEL_COMPILER
-    FreeLibrary(dll);
+    if (dll != nullptr)
+        FreeLibrary(dll);
 #else
     dlclose(handle);
 #endif

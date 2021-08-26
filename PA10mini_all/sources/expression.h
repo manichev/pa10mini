@@ -78,9 +78,9 @@ public:
     //set right
     void setLeft(Expression* left_);
 
-    inline bool isConst(double value_);
+    bool isConst(double value_);
 
-    inline bool isConst();
+    bool isConst();
 
     void print_c_ostream(std::ostream& file, bool isBracketsNeeded = false);
 
