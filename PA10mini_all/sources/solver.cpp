@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+#include <QDebug>
 
 #if _MSC_VER && !__INTEL_COMPILER
 #include <io.h>
@@ -27,7 +28,7 @@ Solver::Solver(QObject *parent)
     eps = 1e-3;
     nm = 3;
     rj2_before = false;
-    writeFile = false;
+    writeFile = true;
     maxMemSize = 1024*1024*2;
 }
 
@@ -57,7 +58,16 @@ void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,doubl
     Q_UNUSED(ip)
     Q_UNUSED(m)
 
-    if(writeFile) {
+    if (writeFile && !outFileName.isEmpty() && outTextStream) {
+        // Записать заголовок на первом шаге
+        if (fabs(t - t0) < h / 4) {
+            *outTextStream << outFileName.split(".")[0];
+            *outTextStream << ",t";
+            for (int i = 0; i < system->countVariables(); ++i)
+                *outTextStream << "," << QString::fromStdString(system->getVariableName(i + 1));
+            *outTextStream << "\n";
+        }
+
         QString line;
         line.append(" ");
         line.append(QString::number(t, 'e'));
@@ -170,11 +180,13 @@ void Solver::solve()
     double t, h, tkv;
 
     int ncon, nbad, ier, *ip=nullptr;
-    if(writeFile)
+    if (writeFile)
     {
         outFile = new QFile(outFileName);
-        if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text))
-            return;
+        if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qCritical() << "Output file " << outFileName << " wasn't opened on write";
+            // return;
+        }
         outTextStream = new QTextStream(outFile);
     }
 

@@ -99,7 +99,7 @@ void PAX_Prototype::solve()
         int pos = name.lastIndexOf('/');
         name.remove(0, pos);
         name.prepend("output/");
-        name.replace(".txt", ".pa10");
+        name.replace(".txt", ".rez"); //".pa10");
     }
     else
     {

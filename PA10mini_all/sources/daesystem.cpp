@@ -66,7 +66,7 @@ string DAESystem::getVariableName(int id_)
     for(it = variables.begin(); it != variables.end(); ++it)
         if(it->id == id_)
             return it->name;
-    return 0;
+    return "";
 }
 
 

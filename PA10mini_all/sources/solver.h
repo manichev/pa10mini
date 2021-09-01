@@ -61,7 +61,7 @@ private:
     QFile* outFile;
     QTextStream* outTextStream;
 
-    DAESystem* system;
+    DAESystem* system = nullptr;
     double t0, tk, hmn, hmx, eps;
     double tp, tout; //progress bar signal timing
     int n, m, nm;
