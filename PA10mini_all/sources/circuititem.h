@@ -40,7 +40,7 @@ public:
     QString getu() const;
     QString geti() const;
     QString getF() const { return m_f; } //!< Value e.g. resistance, voltage, current
-    void setF(const QString &f) {m_f = f; }
+    void setF(const QString &f) { m_f = f; }
 
     int getId() const;
     void setId(int id) { m_id = id; }

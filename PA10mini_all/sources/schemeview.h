@@ -44,7 +44,14 @@ public slots:
 
     void deleteItem();
 
-    //add slots
+    //!< Add items slots
+    void addR(const QPointF &pos, int id);
+    void addG(const QPointF &pos, int id);
+    void addL(const QPointF &pos, int id);
+    void addC(const QPointF &pos, int id);
+    void addU(const QPointF &pos, int id);
+    void addI(const QPointF &pos, int id);
+
     void addR(const QPointF &pos);
     void addG(const QPointF &pos);
     void addL(const QPointF &pos);

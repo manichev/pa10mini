@@ -3,7 +3,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
-
 #include <QDebug>
 
 #if _MSC_VER && !__INTEL_COMPILER

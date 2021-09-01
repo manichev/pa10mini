@@ -76,20 +76,15 @@ void PAX_Prototype::solve()
     grammar::TextDriver textDriver(&daeSystem);
     std::string daeStr;
 
-    if( sender()->objectName() == "solveButton" )
-    {
+    if (sender()->objectName() == "solveButton") {
         daeStr = ui.equalEdit->toPlainText().toStdString();
-    }
-    else
-    {
+    } else {
         daeStr = ui.schemeView->getSystem().toStdString();
     }
-    try
-    {
+
+    try {
         textDriver.parse_string(daeStr);
-    }
-    catch(TextDriverException e)
-    {
+    } catch (TextDriverException e) {
         showErr(e.reason());
         return ;
     }
@@ -97,20 +92,17 @@ void PAX_Prototype::solve()
     SolverParam*  param = new SolverParam;
     param->exec();
 
-    if( param->result() != QDialog::Accepted)
+    if (param->result() != QDialog::Accepted)
         return;
 
     QString name;
-    if( sender()->objectName() == "solveButton" )
-    {
+    if (sender()->objectName() == "solveButton") {
         name = ui.equalEdit->getFileName();
         int pos = name.lastIndexOf('/');
         name.remove(0, pos);
         name.prepend("output/");
         name.replace(".txt", ".rez"); //".pa10");
-    }
-    else
-    {
+    } else {
         name = "output/scheme.pa10";
     }
 
@@ -125,12 +117,9 @@ void PAX_Prototype::solve()
     ui.progressBar->setValue(0);
     ui.progressBar->show();
 
-    try
-    {
+    try {
         solver->solve();
-    }
-    catch(invalid_argument& e)
-    {
+    } catch(invalid_argument& e) {
         cerr << e.what() << endl;
         getchar();
         return;
@@ -231,22 +220,22 @@ void PAX_Prototype::loadScheme(const QString &path)
             QString fName = elementObject["fName"].toString();
 
             if (fName.compare("R", Qt::CaseInsensitive) == 0)
-                ui.schemeView->addR(pos);
+                ui.schemeView->addR(pos, elementObject["id"].toInt());
             else if (fName.compare("L", Qt::CaseInsensitive) == 0)
-                ui.schemeView->addL(pos);
+                ui.schemeView->addL(pos, elementObject["id"].toInt());
             else if (fName.compare("C", Qt::CaseInsensitive) == 0)
-                ui.schemeView->addC(pos);
+                ui.schemeView->addC(pos, elementObject["id"].toInt());
             else if (fName.compare("I", Qt::CaseInsensitive) == 0)
-                ui.schemeView->addI(pos);
+                ui.schemeView->addI(pos, elementObject["id"].toInt());
             else if (fName.compare("E", Qt::CaseInsensitive) == 0)
-                ui.schemeView->addU(pos);
+                ui.schemeView->addU(pos, elementObject["id"].toInt());
             else if (fName.compare("G", Qt::CaseInsensitive) == 0)
-                ui.schemeView->addG(pos);
+                ui.schemeView->addG(pos, elementObject["id"].toInt());
             ui.schemeView->lastElement()->fromJSON(elementObject);
         }
     }
 
-    /*QJsonArray nodeArray = loadDoc.object()["Nodes"].toArray();
+    QJsonArray nodeArray = loadDoc.object()["Nodes"].toArray();
     for (int i = 0; i < nodeArray.size(); ++i) {
         QJsonObject elementObject = nodeArray[i].toObject();
         QString type = elementObject["type"].toString();
@@ -256,7 +245,7 @@ void PAX_Prototype::loadScheme(const QString &path)
             ui.schemeView->addNode(pos, elementObject["id"].toInt());
             ui.schemeView->lastNode()->fromJSON(elementObject);
         }
-    }*/
+    }
 }
 
 /*void PAX_Prototype::saveScheme(const QString &path)

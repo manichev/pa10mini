@@ -578,7 +578,7 @@ void CircuitNodeItem::setGround(bool ground_)
     update();
 }
 
-QRectF CircuitNodeItem::boundingRect()  const
+QRectF CircuitNodeItem::boundingRect() const
 {
     return QRectF(-0.5, -0.5, 1.5, 1.5);
 }

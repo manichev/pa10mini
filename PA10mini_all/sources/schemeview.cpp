@@ -501,63 +501,100 @@ void SchemeView::setScale (qreal s)
     setTransform(tr);
 }
 
-void SchemeView::addR(const QPointF &pos)
+void SchemeView::addR(const QPointF &pos, int id)
 {
-    int id = recieveElementId(CircuitElementType::R);
     RItem* tmp = new RItem(id, pos);
     // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addG(const QPointF &pos, int id)
+{
+    GItem* tmp = new GItem(id, pos);
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addL(const QPointF &pos, int id)
+{
+    LItem* tmp = new LItem(id, pos);
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addC(const QPointF &pos, int id)
+{
+    CItem* tmp = new CItem(id, pos);
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addU(const QPointF &pos, int id)
+{
+    EItem* tmp = new EItem(id, pos);
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addI(const QPointF &pos, int id)
+{
+    IItem* tmp = new IItem(id, pos);
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addR(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::R);
+
+    addR(pos, id);
+
     checkgrid();
 }
 
 void SchemeView::addG(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::G);
-    GItem* tmp = new GItem(id, pos);
-    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    scene()->addItem(tmp);
-    elements.push_back(static_cast<CircuitItem*>(tmp));
+
+    addG(pos, id);
+
     checkgrid();
 }
 
 void SchemeView::addL(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::L);
-    LItem* tmp = new LItem(id, pos);
-    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    scene()->addItem(tmp);
-    elements.push_back(static_cast<CircuitItem*>(tmp));
+
+    addL(pos, id);
+
     checkgrid();
 }
 
 void SchemeView::addC(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::C);
-    CItem* tmp = new CItem(id, pos);
-    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    scene()->addItem(tmp);
-    elements.push_back(static_cast<CircuitItem*>(tmp));
+
+    addC(pos, id);
+
     checkgrid();
 }
 
 void SchemeView::addU(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::E);
-    EItem* tmp = new EItem(id, pos);
-    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    scene()->addItem(tmp);
-    elements.push_back(static_cast<CircuitItem*>(tmp));
+
+    addI(pos, id);
+
     checkgrid();
 }
 
 void SchemeView::addI(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::I);
-    IItem* tmp = new IItem(id, pos);
-    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    scene()->addItem(tmp);
-    elements.push_back(static_cast<CircuitItem*>(tmp));
+
+    addG(pos, id);
+
     checkgrid();
 }
 
