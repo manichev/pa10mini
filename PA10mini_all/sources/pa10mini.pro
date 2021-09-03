@@ -10,6 +10,7 @@ windows: QWT_DIR = "C:/Qwt-6.1.4"
 INCLUDEPATH += .
 windows: INCLUDEPATH += $$QWT_DIR/include
 windows: INCLUDEPATH += D:/workspace/github/dlfcn-win32/src
+unix: INCLUDEPATH += /usr/include/qwt
 
 QT += core widgets opengl gui
 
