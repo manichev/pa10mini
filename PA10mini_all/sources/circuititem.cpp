@@ -1,5 +1,9 @@
 #include "circuititem.h"
 
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 CircuitItem::CircuitItem(QGraphicsItem * parent)
     : QGraphicsItem(parent)
 {
@@ -65,8 +69,8 @@ void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     {
         QPointF d = event->scenePos().toPoint() - event->lastScenePos().toPoint();
         moveBy(d.x(), d.y());
-            QGraphicsView* a = scene()->views().last();
-    static_cast<SchemeView*>(a)->checkgrid();
+        QGraphicsView* a = scene()->views().last();
+        static_cast<SchemeView*>(a)->checkgrid();
     }
     if(contactGrabbed != -1)
     {
@@ -74,8 +78,8 @@ void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
         rect = shape().boundingRect() ;
         rect = rect.united(mainRect);
         prepareGeometryChange();
-            QGraphicsView* a = scene()->views().last();
-    static_cast<SchemeView*>(a)->checkgrid();
+        QGraphicsView* a = scene()->views().last();
+        static_cast<SchemeView*>(a)->checkgrid();
     }
 }
 
@@ -102,9 +106,9 @@ void CircuitItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 
 void CircuitItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    Q_UNUSED(event)
-
     setCursor(Qt::OpenHandCursor);
+
+    QGraphicsItem::hoverEnterEvent(event);
 }
 
 void CircuitItem::rotateRight()
@@ -119,7 +123,7 @@ QPointF CircuitItem::ceilPoint(QPointF point)
     return QPointF((point.x() < 0) ? a - 1 : a, (point.y() < 0) ? b - 1 : b);
 }
 
-QPoint CircuitItem::mapToGrid(QPointF)
+QPoint CircuitItem::mapToGrid(QPointF) const
 {
     return QPoint(0,0);
 }
@@ -134,7 +138,7 @@ QRectF CircuitItem::contactRect()
     return QRectF(-0.05, -0.05, 0.1, 0.1);
 }
 
-int CircuitItem::contact(QPointF pos)
+int CircuitItem::contact(QPointF pos) const
 {
     for(int i = 0; i < contacts.size(); ++i)
     if(contactRect().translated(contacts[i]).contains(mapFromScene(pos)))
@@ -176,6 +180,44 @@ void CircuitItem::contactsShape(QPainterPath& path) const
 {
     for(int i = 0; i < contacts.size(); ++i)
         path.addRect(contactRect().translated(contacts[i]));
+}
+
+QVariant CircuitItem::toQVariant() const
+{
+    qDebug() << "Save CircuitItem #" << int(elementType()) << " name:" << name;
+
+    QVariantHash hash;
+
+    hash["x"] = x();
+    hash["y"] = y();
+
+    return hash;
+}
+
+QJsonObject CircuitItem::toJSON() const
+{
+    QJsonObject jitem;
+
+    jitem["x"] = x();
+    jitem["y"] = y();
+    jitem["name"] = name;
+
+    return jitem;
+}
+
+void CircuitItem::fromJSON(const QJsonObject &jo)
+{
+    setX(jo["x"].toDouble());
+    setY(jo["y"].toDouble());
+    name = jo["name"].toString();
+}
+
+void CircuitItem::fromQVariant(const QVariantHash &hash)
+{
+    qDebug() << "Load CircuitItem #" << int(elementType()) << " name:" << name;
+
+    setX(hash["x"].toDouble());
+    setY(hash["y"].toDouble());
 }
 
 //paint implementation for circuit elements
@@ -344,7 +386,7 @@ int CircuitItem::getId()
     return id;
 }
 
-QString CircuitItem::equal()
+QString CircuitItem::equal() const
 {
     QString tmp = eq;
     tmp.replace("u", getu());
@@ -353,12 +395,12 @@ QString CircuitItem::equal()
     return tmp;
 }
 
-QString CircuitItem::getu()
+QString CircuitItem::getu() const
 {
     return u+name;
 }
 
-QString CircuitItem::geti()
+QString CircuitItem::geti() const
 {
     return i+name;
 }
@@ -468,7 +510,7 @@ void CircuitNodeItem::setGround(bool ground_)
 
 QRectF CircuitNodeItem::boundingRect()  const
 {
-    return     QRectF(-0.5, -0.5, 1.5, 1.5);
+    return QRectF(-0.5, -0.5, 1.5, 1.5);
 }
 
 QPainterPath CircuitNodeItem::shape() const
@@ -486,7 +528,7 @@ void CircuitNodeItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem
     painter->setPen(pen);
     painter->drawRect(CircuitItem::contactRect().adjusted(-0.1, -0.1, 0.1, 0.1));
     if(ground)
-    {
+    {   // Draw ground sign
         painter->drawLine(QLineF(0.0, 0.0, 0.5, 0.4));
         painter->drawLine(QLineF(0.5, 0.4, 0.5, 0.8));
         painter->drawLine(QLineF(0.2, 0.55, 0.8, 0.55));
@@ -507,12 +549,43 @@ int CircuitNodeItem::type() const
     return CircuitItem::CircuitItemNodeType;
 }
 
-int CircuitNodeItem::getId()
+int CircuitNodeItem::getId() const
 {
     return id;
 }
 
-bool CircuitNodeItem::isGrounded()
+bool CircuitNodeItem::isGrounded() const
 {
     return ground;
+}
+
+
+QTextStream * operator<<(QTextStream * stream, const CircuitNodeItem & i)
+{
+    qDebug() << "Save CircuitNodeItem #" << i.getId();
+    *stream << i.type();
+    *stream << i.x();
+    *stream << i.y();
+    *stream << i.boundingRect().x();
+    *stream << i.boundingRect().y();
+    *stream << i.boundingRect().width();
+    *stream << i.boundingRect().height();
+    *stream << i.isGrounded();
+    
+    return stream;
+}
+
+QTextStream & operator<<(QTextStream & stream, const CircuitItem & i)
+{
+    qDebug() << "Save CircuitItem #" << int(i.elementType()) << " name:" << i.name;
+    stream << i.type();
+    stream << int(i.elementType());
+    stream << i.x();
+    stream << i.y();
+    stream << i.boundingRect().x();
+    stream << i.boundingRect().y();
+    stream << i.boundingRect().width();
+    stream << i.boundingRect().height();
+    
+    return stream;
 }

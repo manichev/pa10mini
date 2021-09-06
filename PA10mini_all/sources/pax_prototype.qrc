@@ -1,7 +1,9 @@
 <RCC>
-  <qresource prefix="PAX_Prototype">
-    <file>Resources/curve.png</file>
-    <file>Resources/gears.png</file>
-    <file>Resources/open.png</file>
-  </qresource>
+    <qresource prefix="/PAX_Prototype">
+        <file>Resources/curve.png</file>
+        <file>Resources/gears.png</file>
+        <file>Resources/open.png</file>
+        <file>Resources/disk.png</file>
+        <file>Resources/save_as.png</file>
+    </qresource>
 </RCC>

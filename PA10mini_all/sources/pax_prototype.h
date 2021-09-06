@@ -30,9 +30,19 @@ public slots:
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
 
+private slots:
+    void saveSchemeSlot();
+    void saveSchemeAsSlot();
+    void loadSchemeSlot();
+
+private:
+    void saveScheme(const QString &path);
+    void loadScheme(const QString &path);
+
 private:
 	Ui::PAX_PrototypeClass ui;
     PlotWindow* plot;
+    QString m_schemePath;
 };
 
 

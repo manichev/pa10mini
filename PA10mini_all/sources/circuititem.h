@@ -12,6 +12,7 @@
 
 #include "schemeview.h"
 
+class QJsonObject;
 
 enum class CircuitElementType {
     R, G, L, C, I, E
@@ -26,25 +27,31 @@ public:
     };
 
     CircuitItem(QGraphicsItem *parent = nullptr);
+    CircuitItem(const QJsonObject &jo, QGraphicsItem *parent = nullptr);
     ~CircuitItem() override;
 
     void rotateRight();
     void setPenWidth(qreal width);
-    QPoint mapToGrid(QPointF);
-    int contact(QPointF);
+    QPoint mapToGrid(QPointF) const;
+    int contact(QPointF) const;
     static QRectF contactRect();
 
-    QString equal();
-    QString getu();
-    QString geti();
+    QString equal() const;
+    QString getu() const;
+    QString geti() const;
 
     int getId();
-    CircuitElementType elementType() { return elemType; }
+    CircuitElementType elementType() const { return elemType; }
     //QString getF();
     //void setF(QString);
 //implemented virtual functions
     QRectF boundingRect() const override;
     int type() const override;
+
+    QVariant toQVariant() const;
+    QJsonObject toJSON() const;
+    void fromJSON(const QJsonObject &jo);
+    void fromQVariant(const QVariantHash &hash);
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     QString fDim;
     QString fName;
@@ -92,12 +99,14 @@ public:
     CircuitNodeItem(int id_, QPointF pos, QGraphicsItem *parent = nullptr);
     ~CircuitNodeItem() override;
     void setGround(bool);
-    bool isGrounded();
+    bool isGrounded() const;
 //implemented virtual functions
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     int type() const override;
-    int getId();
+    int getId() const;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 
 private:
@@ -113,6 +122,8 @@ public:
     RItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
@@ -122,6 +133,8 @@ public:
     CItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
@@ -131,6 +144,8 @@ public:
     LItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
@@ -140,6 +155,8 @@ public:
     GItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
@@ -149,6 +166,8 @@ public:
     EItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
@@ -158,5 +177,11 @@ public:
     IItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
+
+protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
+
+QTextStream * operator<<(QTextStream * stream, const CircuitNodeItem & i);
+// QTextStream & operator<<(QTextStream & stream, const CircuitNodeItem & i);
+QTextStream & operator<<(QTextStream & stream, const CircuitItem & i);
