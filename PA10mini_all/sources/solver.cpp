@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+
 #include <QDebug>
 
 #if _MSC_VER && !__INTEL_COMPILER
@@ -162,7 +163,11 @@ void Solver::create_fcttask()
 #ifdef WIN32
     //compiling fcttask.dll
     remove("manzhuk/fcttask/fcttask.dll");
+#if _MSC_VER && !__INTEL_COMPILER
+    std::system("manzhuk\\fcttask\\build_vc.bat");
+#else
     std::system("manzhuk\\fcttask\\build.cmd");
+#endif
     //removing extra files
     remove("manzhuk/fcttask/fcttask.lib");
     remove("manzhuk/fcttask/fcttask.exp");
@@ -229,9 +234,14 @@ void Solver::solve()
     CONST CHAR * fcttaskDllPath = "manzhuk/fcttask/fcttask.dll";
 #endif
     HINSTANCE dll = LoadLibrary(fcttaskDllPath);
+    DWORD dwError = 0;
     if (dll == nullptr) {
-        cout << "Error load fcttask.dll...\n" << fcttaskDllPath;
+        dwError = GetLastError();
+        cout << "Cannot load " << fcttaskDllPath << ", WinError: " << dwError;
         return;
+    }
+    else {
+        cout << fcttaskDllPath << " Successfully loaded " << std::endl;
     }
 
     void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
