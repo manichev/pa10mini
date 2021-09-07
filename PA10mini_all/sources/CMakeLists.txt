@@ -123,6 +123,10 @@ list(APPEND pa10_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/circuititemedit.cpp
 )
 
+list(APPEND QRCS
+    ${CMAKE_CURRENT_LIST_DIR}/pax_prototype.qrc
+)
+
 add_executable(PA10mini ${pa10_SOURCES} ${QRCS})
 
 if (MSVC)
