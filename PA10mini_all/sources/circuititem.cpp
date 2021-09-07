@@ -7,6 +7,11 @@
 CircuitItem::CircuitItem(QGraphicsItem * parent)
     : QGraphicsItem(parent)
 {
+    initItem();
+}
+
+void CircuitItem::initItem()
+{
     isItemGrabbed = false;
     contactGrabbed = -1;
 
@@ -32,6 +37,13 @@ CircuitItem::CircuitItem(QGraphicsItem * parent)
     }
     setAcceptHoverEvents(true);
     setZValue(1.0);
+}
+
+CircuitItem::CircuitItem(const QJsonObject &jo, QGraphicsItem *parent)
+    : QGraphicsItem(parent)
+{
+    initItem();
+    fromJSON(jo);
 }
 
 CircuitItem::~CircuitItem()
@@ -172,8 +184,8 @@ void CircuitItem::drawContacts(QPainter* painter)
     font.setPointSizeF(2);
     painter->setFont(font);
     painter->scale(1/scale, 1/scale);
-    painter->drawText(QRectF(-scale*0.5, -scale*0.5, scale*1.0, scale*0.2), Qt::AlignCenter, f);
-    painter->drawText(QRectF(-scale*0.5, scale*0.3, scale*1.0, scale*0.2), Qt::AlignCenter, name);
+    painter->drawText(QRectF(-scale*0.5, -scale*0.5, scale*1.0, scale*0.2), Qt::AlignCenter, getF());
+    painter->drawText(QRectF(-scale*0.5, scale*0.3, scale*1.0, scale*0.2), Qt::AlignCenter, m_name);
 }
 
 void CircuitItem::contactsShape(QPainterPath& path) const
@@ -184,7 +196,7 @@ void CircuitItem::contactsShape(QPainterPath& path) const
 
 QVariant CircuitItem::toQVariant() const
 {
-    qDebug() << "Save CircuitItem #" << int(elementType()) << " name:" << name;
+    qDebug() << "Save CircuitItem #" << int(elementType()) << " name:" << m_name;
 
     QVariantHash hash;
 
@@ -200,7 +212,11 @@ QJsonObject CircuitItem::toJSON() const
 
     jitem["x"] = x();
     jitem["y"] = y();
-    jitem["name"] = name;
+    jitem["id"] = getId();
+    jitem["fName"] = m_fName;
+    jitem["name"] = m_name;
+    jitem["rot"] = rotation();
+    jitem["value"] = getF();
 
     return jitem;
 }
@@ -209,12 +225,15 @@ void CircuitItem::fromJSON(const QJsonObject &jo)
 {
     setX(jo["x"].toDouble());
     setY(jo["y"].toDouble());
-    name = jo["name"].toString();
+    m_fName = jo["fName"].toString();
+    m_name = jo["name"].toString();
+    setRotation(jo["rot"].toDouble());
+    setF(jo["value"].toString());
 }
 
 void CircuitItem::fromQVariant(const QVariantHash &hash)
 {
-    qDebug() << "Load CircuitItem #" << int(elementType()) << " name:" << name;
+    qDebug() << "Load CircuitItem #" << int(elementType()) << " name:" << m_name;
 
     setX(hash["x"].toDouble());
     setY(hash["y"].toDouble());
@@ -381,9 +400,9 @@ QPainterPath IItem::shape() const
     return path;
 }
 
-int CircuitItem::getId()
+int CircuitItem::getId() const
 {
-    return id;
+    return m_id;
 }
 
 QString CircuitItem::equal() const
@@ -391,29 +410,29 @@ QString CircuitItem::equal() const
     QString tmp = eq;
     tmp.replace("u", getu());
     tmp.replace("i", geti());
-    tmp.replace("f", f);
+    tmp.replace("f", getF());
     return tmp;
 }
 
 QString CircuitItem::getu() const
 {
-    return u+name;
+    return u + m_name;
 }
 
 QString CircuitItem::geti() const
 {
-    return i+name;
+    return i + m_name;
 }
 
 RItem::RItem(int id_, QPointF pos_, QGraphicsItem *parent)
     : CircuitItem(parent)
 {
-    id = id_;
-    name = "R" + QString::number(id);
+    setId(id_);
+    setName("R" + QString::number(id_));
     eq = "u=i*f";
-    f = "1.0";
+    setF("1.0");
     fDim = "Ohm";
-    fName = "R";
+    setFName("R");
     elemType = CircuitElementType::R;
     setPos(pos_);
 }
@@ -421,12 +440,12 @@ RItem::RItem(int id_, QPointF pos_, QGraphicsItem *parent)
 GItem::GItem(int id_, QPointF pos_, QGraphicsItem *parent)
     : CircuitItem(parent)
 {
-    id = id_;
-    name = "G" + QString::number(id);
+    setId(id_);
+    setName("G" + QString::number(id_));
     eq = "i=u*f";
-    f = "1.0";
+    setF("1.0");
     fDim = "Si";
-    fName = "G";
+    setFName("G");
     elemType = CircuitElementType::G;
     setPos(pos_);
 }
@@ -434,12 +453,12 @@ GItem::GItem(int id_, QPointF pos_, QGraphicsItem *parent)
 CItem::CItem(int id_, QPointF pos_, QGraphicsItem *parent)
     : CircuitItem(parent)
 {
-    id = id_;
-    name = "C" + QString::number(id);
+    setId(id_);
+    setName("C" + QString::number(id_));
     eq = "i=u'*f";
-    f = "1.0";
+    setF("1.0");
     fDim = "F";
-    fName = "C";
+    setFName("C");
     elemType = CircuitElementType::C;
     setPos(pos_);
 }
@@ -447,12 +466,12 @@ CItem::CItem(int id_, QPointF pos_, QGraphicsItem *parent)
 LItem::LItem(int id_, QPointF pos_, QGraphicsItem *parent)
     : CircuitItem(parent)
 {
-    id = id_;
-    name = "L" + QString::number(id);
+    setId(id_);
+    setName("L" + QString::number(id_));
     eq = "u=i'*f";
-    f = "1.0";
+    setF("1.0");
     fDim = "H";
-    fName = "L";
+    setFName("L");
     elemType = CircuitElementType::L;
     setPos(pos_);
 }
@@ -460,12 +479,12 @@ LItem::LItem(int id_, QPointF pos_, QGraphicsItem *parent)
 IItem::IItem(int id_, QPointF pos_, QGraphicsItem *parent)
     : CircuitItem(parent)
 {
-    id = id_;
-    name = "I" + QString::number(id);
+    setId(id_);
+    setName("I" + QString::number(id_));
     eq = "i=f";
-    f = "1.0";
+    setF("1.0");
     fDim = "A";
-    fName = "I";
+    setFName("I");
     elemType = CircuitElementType::I;
     setPos(pos_);
 }
@@ -473,12 +492,12 @@ IItem::IItem(int id_, QPointF pos_, QGraphicsItem *parent)
 EItem::EItem(int id_, QPointF pos_, QGraphicsItem *parent)
     : CircuitItem(parent)
 {
-    id = id_;
-    name = "E" + QString::number(id);
+    setId(id_);
+    setName("E" + QString::number(id_));
     eq = "u=f";
-    f = "1.0";
+    setF("1.0");
     fDim = "V";
-    fName = "E";
+    setFName("E");
     elemType = CircuitElementType::E;
     setPos(pos_);
 }
@@ -559,6 +578,24 @@ bool CircuitNodeItem::isGrounded() const
     return ground;
 }
 
+CircuitItem *CircuitItemFactory(const QString &name, int id, QPointF pos)
+{
+    if (name.compare("R", Qt::CaseInsensitive) == 0) {
+        return new RItem(id, pos);
+    } else if (name.compare("L", Qt::CaseInsensitive) == 0) {
+        return new LItem(id, pos);
+    } else if (name.compare("C", Qt::CaseInsensitive) == 0) {
+        return new CItem(id, pos);
+    } else if (name.compare("E", Qt::CaseInsensitive) == 0) {
+        return new EItem(id, pos);
+    } else if (name.compare("I", Qt::CaseInsensitive) == 0) {
+        return new IItem(id, pos);
+    } else if (name.compare("G", Qt::CaseInsensitive) == 0) {
+        return new GItem(id, pos);
+    } else {
+        return nullptr;
+    }
+}
 
 QTextStream * operator<<(QTextStream * stream, const CircuitNodeItem & i)
 {
@@ -577,7 +614,7 @@ QTextStream * operator<<(QTextStream * stream, const CircuitNodeItem & i)
 
 QTextStream & operator<<(QTextStream & stream, const CircuitItem & i)
 {
-    qDebug() << "Save CircuitItem #" << int(i.elementType()) << " name:" << i.name;
+    qDebug() << "Save CircuitItem #" << int(i.elementType()) << " name:" << i.name();
     stream << i.type();
     stream << int(i.elementType());
     stream << i.x();

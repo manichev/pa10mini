@@ -534,58 +534,88 @@ void SchemeView::setScale (qreal s)
     setTransform(tr);
 }
 
-void SchemeView::addR()
+void SchemeView::addR(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::R);
-    RItem* tmp = new RItem(id, mapToScene(lastMousePos).toPoint());
+    RItem* tmp = new RItem(id, pos);
     scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
     elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
     checkgrid();
+}
+
+void SchemeView::addG(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::G);
+    GItem* tmp = new GItem(id, pos);
+    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    checkgrid();
+}
+
+void SchemeView::addL(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::L);
+    LItem* tmp = new LItem(id, pos);
+    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    checkgrid();
+}
+
+void SchemeView::addC(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::C);
+    CItem* tmp = new CItem(id, pos);
+    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    checkgrid();
+}
+
+void SchemeView::addU(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::E);
+    EItem* tmp = new EItem(id, pos);
+    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    checkgrid();
+}
+
+void SchemeView::addI(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::I);
+    IItem* tmp = new IItem(id, pos);
+    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    checkgrid();
+}
+
+void SchemeView::addR()
+{
+    addR(mapToScene(lastMousePos).toPoint());
 }
 
 void SchemeView::addG()
 {
-    int id = recieveElementId(CircuitElementType::G);
-    GItem* tmp = new GItem(id, mapToScene(lastMousePos).toPoint());
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
-    checkgrid();
+    addG(mapToScene(lastMousePos).toPoint());
 }
 
 void SchemeView::addL()
 {
-    int id = recieveElementId(CircuitElementType::L);
-    LItem* tmp = new LItem(id, mapToScene(lastMousePos).toPoint());
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
-    checkgrid();
+    addL(mapToScene(lastMousePos).toPoint());
 }
 
 void SchemeView::addC()
 {
-    int id = recieveElementId(CircuitElementType::C);
-    CItem* tmp = new CItem(id, mapToScene(lastMousePos).toPoint());
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
-    checkgrid();
+    addC(mapToScene(lastMousePos).toPoint());
 }
 
 void SchemeView::addU()
 {
-    int id = recieveElementId(CircuitElementType::E);
-    EItem* tmp = new EItem(id, mapToScene(lastMousePos).toPoint());
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
-    checkgrid();
+    addU(mapToScene(lastMousePos).toPoint());
 }
 
 void SchemeView::addI()
 {
-    int id = recieveElementId(CircuitElementType::I);
-    IItem* tmp = new IItem(id, mapToScene(lastMousePos).toPoint());
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
-    checkgrid();
+    addI(mapToScene(lastMousePos).toPoint());
 }
 
 

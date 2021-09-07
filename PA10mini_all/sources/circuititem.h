@@ -39,9 +39,16 @@ public:
     QString equal() const;
     QString getu() const;
     QString geti() const;
+    QString getF() const { return m_f; } //!< Value e.g. resistance, voltage, current
+    void setF(const QString &f) {m_f = f; }
 
-    int getId();
+    int getId() const;
+    void setId(int id) { m_id = id; }
     CircuitElementType elementType() const { return elemType; }
+    QString fName() const { return m_fName; }
+    QString name() const { return m_name; }
+    void setFName(const QString & fname) { m_fName = fname; }
+    void setName(const QString & name) { m_name = name; }
     //QString getF();
     //void setF(QString);
 //implemented virtual functions
@@ -49,15 +56,12 @@ public:
     int type() const override;
 
     QVariant toQVariant() const;
-    QJsonObject toJSON() const;
+    virtual QJsonObject toJSON() const;
     void fromJSON(const QJsonObject &jo);
     void fromQVariant(const QVariantHash &hash);
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     QString fDim;
-    QString fName;
-    QString name;
     QString eq;
-    QString f;
     QString u;
     QString i;
     QString i0;
@@ -74,7 +78,6 @@ protected:
     inline void contactsShape(QPainterPath& path) const;
 
 //parameters;
-    int id;
 
 //painter pen
     QPen pen;
@@ -87,7 +90,13 @@ protected:
 
 private:
     inline QPointF ceilPoint(QPointF point);
+    void initItem();
 
+private:
+    int m_id;
+    QString m_f;
+    QString m_fName;
+    QString m_name;
     bool isItemGrabbed;
     int contactGrabbed;
     QPointF center;
@@ -116,7 +125,7 @@ private:
     QPen pen;
 };
 
-class RItem : CircuitItem
+class RItem : public CircuitItem
 {
 public:
     RItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
@@ -127,7 +136,7 @@ protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
-class CItem : CircuitItem
+class CItem : public CircuitItem
 {
 public:
     CItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
@@ -138,7 +147,7 @@ protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
-class LItem : CircuitItem
+class LItem : public CircuitItem
 {
 public:
     LItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
@@ -149,7 +158,7 @@ protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
-class GItem : CircuitItem
+class GItem : public CircuitItem
 {
 public:
     GItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
@@ -160,7 +169,7 @@ protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
-class EItem : CircuitItem
+class EItem : public CircuitItem
 {
 public:
     EItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
@@ -171,7 +180,7 @@ protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
 
-class IItem : CircuitItem
+class IItem : public CircuitItem
 {
 public:
     IItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
@@ -181,6 +190,8 @@ public:
 protected:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
 };
+
+CircuitItem *CircuitItemFactory(const QString &name, int id, QPointF pos);
 
 QTextStream * operator<<(QTextStream * stream, const CircuitNodeItem & i);
 // QTextStream & operator<<(QTextStream & stream, const CircuitNodeItem & i);

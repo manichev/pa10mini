@@ -32,6 +32,7 @@ public:
     ~SchemeView() override;
 
     void checkgrid();
+    CircuitItem *lastElement() { return elements.last(); }
 
 public slots:
     QString getSystem();
@@ -43,6 +44,14 @@ public slots:
     void deleteItem();
 
     //add slots
+    void addR(const QPointF &pos);
+    void addG(const QPointF &pos);
+    void addL(const QPointF &pos);
+    void addC(const QPointF &pos);
+    void addU(const QPointF &pos);
+    void addI(const QPointF &pos);
+
+private slots:
     void addR();
     void addG();
     void addL();

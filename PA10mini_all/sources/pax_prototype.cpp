@@ -4,8 +4,9 @@
 #include <fstream>
 #include <cstdlib>
 #include <stdexcept>
-#include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 
 #include "daesystem.h"
 #include "textdriver.h"
@@ -172,28 +173,6 @@ void PAX_Prototype::saveSchemeAsSlot()
     saveScheme(m_schemePath);
 }
 
-//! [4]
-/*bool Game::saveGame(Game::SaveFormat saveFormat) const
-{
-    QFile saveFile(saveFormat == Json
-        ? QStringLiteral("save.json")
-        : QStringLiteral("save.dat"));
-
-    if (!saveFile.open(QIODevice::WriteOnly)) {
-        qWarning("Couldn't open save file.");
-        return false;
-    }
-
-    QJsonObject gameObject;
-    write(gameObject);
-    QJsonDocument saveDoc(gameObject);
-    saveFile.write(saveFormat == Json
-        ? saveDoc.toJson()
-        : saveDoc.toBinaryData());
-
-    return true;
-}*/
-
 void PAX_Prototype::saveScheme(const QString &path)
 {
     QFile saveFile(path);
@@ -206,16 +185,54 @@ void PAX_Prototype::saveScheme(const QString &path)
     }
 
     QJsonObject schemeObject;
+    QJsonArray itemsArray;
 
     foreach (auto item, items) {
         CircuitItem *citem = nullptr;
         citem = dynamic_cast<CircuitItem*>(item);
         if (citem)
-            schemeObject[citem->name] = citem->toJSON();
+            itemsArray.append(citem->toJSON());
     }
+
+    schemeObject["Elements"] = itemsArray;
 
     QJsonDocument saveDoc(schemeObject);
     saveFile.write(saveDoc.toJson());
+}
+
+void PAX_Prototype::loadScheme(const QString &path)
+{
+    QFile loadFile(path);
+
+    if (! loadFile.open(QIODevice::ReadOnly)) {
+        qCritical() << "Output file " << path << " wasn't opened on read";
+        return;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    QJsonArray elementArray = loadDoc.object()["Elements"].toArray();
+
+    for (int i = 0; i < elementArray.size(); ++i) {
+        QJsonObject elementObject = elementArray[i].toObject();
+        QString fName = elementObject["fName"].toString();
+        QPoint pos(elementObject["x"].toInt(), elementObject["y"].toInt());
+        if (fName.compare("R", Qt::CaseInsensitive) == 0)
+            ui.schemeView->addR(pos);
+        else if (fName.compare("L", Qt::CaseInsensitive) == 0)
+            ui.schemeView->addL(pos);
+        else if (fName.compare("C", Qt::CaseInsensitive) == 0)
+            ui.schemeView->addC(pos);
+        else if (fName.compare("I", Qt::CaseInsensitive) == 0)
+            ui.schemeView->addI(pos);
+        else if (fName.compare("E", Qt::CaseInsensitive) == 0)
+            ui.schemeView->addU(pos);
+        else if (fName.compare("G", Qt::CaseInsensitive) == 0)
+            ui.schemeView->addG(pos);
+        ui.schemeView->lastElement()->fromJSON(elementObject);
+    }
 }
 
 /*void PAX_Prototype::saveScheme(const QString &path)
@@ -237,8 +254,3 @@ void PAX_Prototype::saveScheme(const QString &path)
             stream << citem->toQVariant().toByteArray();
     }
 }*/
-
-void PAX_Prototype::loadScheme(const QString &path)
-{
-
-}
