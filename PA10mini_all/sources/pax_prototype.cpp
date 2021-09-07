@@ -208,7 +208,8 @@ void PAX_Prototype::saveScheme(const QString &path)
     QJsonObject schemeObject;
 
     foreach (auto item, items) {
-        CircuitItem *citem = qgraphicsitem_cast<CircuitItem*>(item);
+        CircuitItem *citem = nullptr;
+        citem = dynamic_cast<CircuitItem*>(item);
         if (citem)
             schemeObject[citem->name] = citem->toJSON();
     }
