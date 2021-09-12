@@ -11,7 +11,7 @@ For students of BMSTU CAD/CAE/PDM/PLM Department, Moscow
 1. MicroSoft Visual Studio 2008 желательно иметь на диске С:
 2. Инсталлировать Qt для MicroSoft Visual Studio 2008
 3. Переписать содержимое каталога Qwt для MicroSoft Visual Studio 2008 в каталог C:/Qwt
-4. Переписась  содержимое каталога win-flex-bizon для MicroSoft Visual Studio 2008 в каталог C:/win-flex-bison
+4. Переписась  содержимое каталога win_flex_bizon для MicroSoft Visual Studio 2008 в каталог C:/win_flex_bison
 5. Из каталога .../sources исходников:
    Переписать содержимое .../PA10mini в каталог С:/PA10mini
 6. Создать переменную среды:
@@ -25,7 +25,7 @@ C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE;C:\Program Files\Micros
 Если каталоги Windows, MicroSoft Visual Studio 2008 и Program Files (Program Files (x86)) находятся не на диске C:, то надо заменить С: на другой диск в соотвествующих путях и скорректировать makefile в каталоге: C:\PA10mini\PA10mini\manzhuk\fcttask
 
 Скачать все файлы проекта PA10mini на C++ можно по ссылке:
-https://yadi.sk/d/G90W2UG0W_N-Zg
+https://yadi.sk/d/S7yNYGJA5WRCZg
 Эти коды компилируются и работают, - репозиторий PA10mini
 
 Скачать все файлы проекта PA10mini на C# можно по ссылке:
