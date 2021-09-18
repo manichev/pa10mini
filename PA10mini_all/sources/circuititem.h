@@ -112,6 +112,8 @@ public:
 //implemented virtual functions
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
+    QJsonObject toJSON() const;
+    void fromJSON(const QJsonObject &jo);
     int type() const override;
     int getId() const;
 
@@ -120,7 +122,7 @@ protected:
 
 private:
     bool ground;
-    int id;
+    int m_id;
 
     QPen pen;
 };

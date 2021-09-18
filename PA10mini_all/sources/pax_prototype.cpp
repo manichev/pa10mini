@@ -186,15 +186,21 @@ void PAX_Prototype::saveScheme(const QString &path)
 
     QJsonObject schemeObject;
     QJsonArray itemsArray;
+    QJsonArray nodesArray;
 
     foreach (auto item, items) {
         CircuitItem *citem = nullptr;
+        CircuitNodeItem *nitem = nullptr;
         citem = dynamic_cast<CircuitItem*>(item);
-        if (citem)
+        if (citem) {
             itemsArray.append(citem->toJSON());
+        } else if (nitem = dynamic_cast<CircuitNodeItem*>(item)) {
+            nodesArray.append(nitem->toJSON());
+        }
     }
 
     schemeObject["Elements"] = itemsArray;
+    schemeObject["Nodes"] = nodesArray;
 
     QJsonDocument saveDoc(schemeObject);
     saveFile.write(saveDoc.toJson());
@@ -217,21 +223,36 @@ void PAX_Prototype::loadScheme(const QString &path)
 
     for (int i = 0; i < elementArray.size(); ++i) {
         QJsonObject elementObject = elementArray[i].toObject();
-        QString fName = elementObject["fName"].toString();
+        QString type = elementObject["type"].toString();
         QPoint pos(elementObject["x"].toInt(), elementObject["y"].toInt());
-        if (fName.compare("R", Qt::CaseInsensitive) == 0)
-            ui.schemeView->addR(pos);
-        else if (fName.compare("L", Qt::CaseInsensitive) == 0)
-            ui.schemeView->addL(pos);
-        else if (fName.compare("C", Qt::CaseInsensitive) == 0)
-            ui.schemeView->addC(pos);
-        else if (fName.compare("I", Qt::CaseInsensitive) == 0)
-            ui.schemeView->addI(pos);
-        else if (fName.compare("E", Qt::CaseInsensitive) == 0)
-            ui.schemeView->addU(pos);
-        else if (fName.compare("G", Qt::CaseInsensitive) == 0)
-            ui.schemeView->addG(pos);
-        ui.schemeView->lastElement()->fromJSON(elementObject);
+        if (type.compare("CircuitItem", Qt::CaseInsensitive) == 0) {
+            QString fName = elementObject["fName"].toString();
+
+            if (fName.compare("R", Qt::CaseInsensitive) == 0)
+                ui.schemeView->addR(pos);
+            else if (fName.compare("L", Qt::CaseInsensitive) == 0)
+                ui.schemeView->addL(pos);
+            else if (fName.compare("C", Qt::CaseInsensitive) == 0)
+                ui.schemeView->addC(pos);
+            else if (fName.compare("I", Qt::CaseInsensitive) == 0)
+                ui.schemeView->addI(pos);
+            else if (fName.compare("E", Qt::CaseInsensitive) == 0)
+                ui.schemeView->addU(pos);
+            else if (fName.compare("G", Qt::CaseInsensitive) == 0)
+                ui.schemeView->addG(pos);
+            ui.schemeView->lastElement()->fromJSON(elementObject);
+        }
+    }
+
+    QJsonArray nodeArray = loadDoc.object()["Nodes"].toArray();
+    for (int i = 0; i < nodeArray.size(); ++i) {
+        QJsonObject elementObject = nodeArray[i].toObject();
+        QString type = elementObject["type"].toString();
+        QPoint pos(elementObject["x"].toInt(), elementObject["y"].toInt());
+        if (type.compare("CircuitNodeItem", Qt::CaseInsensitive) == 0) {
+            ui.schemeView->addNode(pos);
+            ui.schemeView->lastNode()->fromJSON(elementObject);
+        }
     }
 }
 

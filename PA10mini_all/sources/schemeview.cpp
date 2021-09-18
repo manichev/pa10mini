@@ -274,7 +274,7 @@ void SchemeView::checkgrid()
         }
     }
 }
-void SchemeView::addNode(QPointF pos)
+void SchemeView::addNode(const QPointF &pos)
 {
     CircuitNodeItem* node;
     int newId = 1;

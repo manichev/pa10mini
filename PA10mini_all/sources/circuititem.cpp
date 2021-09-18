@@ -210,6 +210,7 @@ QJsonObject CircuitItem::toJSON() const
 {
     QJsonObject jitem;
 
+    jitem["type"] = "CircuitItem";
     jitem["x"] = x();
     jitem["y"] = y();
     jitem["id"] = getId();
@@ -223,10 +224,14 @@ QJsonObject CircuitItem::toJSON() const
 
 void CircuitItem::fromJSON(const QJsonObject &jo)
 {
+    if (jo["type"] != "CircuitItem")
+        return;
+
     setX(jo["x"].toDouble());
     setY(jo["y"].toDouble());
     m_fName = jo["fName"].toString();
     m_name = jo["name"].toString();
+    m_id = jo["id"].toInt();
     setRotation(jo["rot"].toDouble());
     setF(jo["value"].toString());
 }
@@ -237,6 +242,30 @@ void CircuitItem::fromQVariant(const QVariantHash &hash)
 
     setX(hash["x"].toDouble());
     setY(hash["y"].toDouble());
+}
+
+QJsonObject CircuitNodeItem::toJSON() const
+{
+    QJsonObject jitem;
+
+    jitem["type"] = "CircuitNodeItem";
+    jitem["x"] = x();
+    jitem["y"] = y();
+    jitem["id"] = m_id;
+    jitem["ground"] = ground;
+
+    return jitem;
+}
+
+void CircuitNodeItem::fromJSON(const QJsonObject &jo)
+{
+    if (jo["type"] != "CircuitNodeItem")
+        return;
+
+    setX(jo["x"].toDouble());
+    setY(jo["y"].toDouble());
+    m_id = jo["id"].toInt();
+    ground = jo["ground"].toBool();
 }
 
 //paint implementation for circuit elements
@@ -512,7 +541,7 @@ CircuitNodeItem::CircuitNodeItem(int id_, QPointF pos, QGraphicsItem *parent)
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setCapStyle(Qt::RoundCap);
     ground = false;
-    id = id_;
+    m_id = id_;
     setZValue(2.0);
 }
 
@@ -559,7 +588,7 @@ void CircuitNodeItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem
     font.setPointSizeF(2);
     painter->setFont(font);
     painter->scale(1/scale, 1/scale);
-    painter->drawText(QRectF(-scale*0.4, -scale*0.4, scale*0.4, scale*0.2), Qt::AlignCenter, QString::number(id));
+    painter->drawText(QRectF(-scale*0.4, -scale*0.4, scale*0.4, scale*0.2), Qt::AlignCenter, QString::number(m_id));
 
 }
 
@@ -570,7 +599,7 @@ int CircuitNodeItem::type() const
 
 int CircuitNodeItem::getId() const
 {
-    return id;
+    return m_id;
 }
 
 bool CircuitNodeItem::isGrounded() const

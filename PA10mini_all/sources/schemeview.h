@@ -33,6 +33,7 @@ public:
 
     void checkgrid();
     CircuitItem *lastElement() { return elements.last(); }
+    CircuitNodeItem *lastNode() { return nodes.last(); }
 
 public slots:
     QString getSystem();
@@ -50,6 +51,7 @@ public slots:
     void addC(const QPointF &pos);
     void addU(const QPointF &pos);
     void addI(const QPointF &pos);
+    void addNode(const QPointF &pos);
 
 private slots:
     void addR();
@@ -73,7 +75,6 @@ private:
     inline qreal fullScale();
     void setScale (qreal s);
     int recieveElementId(CircuitElementType type);
-    void addNode(QPointF pos);
 
     int gridW;
     int gridH;
