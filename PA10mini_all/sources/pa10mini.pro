@@ -37,6 +37,8 @@ mingw: {
     LIBS += $$LIBDL_BUILD_DIR/lib/dl.lib
 }
 }
+unix: LIBS += -ldl
+unix: LIBS += -L/lib -lqwt
 #windows: LIBS += $$LIBDL_BUILD_DIR/lib/libdl.dll.a
 
 # You can also make your code fail to compile if you use deprecated APIs.
