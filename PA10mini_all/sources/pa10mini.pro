@@ -28,8 +28,16 @@ windows: include ( $$QWT_DIR/features/qwt.prf )
 CONFIG += qwt
 
 # dlfcn-win32 is an implementation of dlfcn for Windows: git@github.com:dlfcn-win32/dlfcn-win32.git
-windows: LIBDL_BUILD_DIR = "D:/workspace/github/build-dlfcn-win32-Qt_5_14_1_MinGW_64_bit-Debug"
-windows: LIBS += $$LIBDL_BUILD_DIR/lib/libdl.dll.a
+windows: {
+mingw: {
+    LIBDL_BUILD_DIR = "D:/workspace/github/build-dlfcn-win32-Qt_5_14_1_MinGW_64_bit-Debug"
+    LIBS += $$LIBDL_BUILD_DIR/lib/libdl.dll.a
+} else {
+    LIBDL_BUILD_DIR = "D:/workspace/github/build-dlfcn-win32-Qt_5_14_1_MSVC2017_64bit-Debug"
+    LIBS += $$LIBDL_BUILD_DIR/lib/dl.lib
+}
+}
+#windows: LIBS += $$LIBDL_BUILD_DIR/lib/libdl.dll.a
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
