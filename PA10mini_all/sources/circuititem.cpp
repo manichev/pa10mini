@@ -33,7 +33,7 @@ void CircuitItem::initItem()
     for(int i = 0; i < contacts.size(); ++i)
     {
         contactsStart << contacts[i];
-        rect = rect.united(contactRect().translated(contacts[i]).adjusted(-0.5,-0.5,+0.5,+0.5));
+        // rect = rect.united(contactRect().translated(contacts[i]).adjusted(-0.5,-0.5,+0.5,+0.5));
     }
     setAcceptHoverEvents(true);
     setZValue(1.0);
@@ -58,6 +58,11 @@ int CircuitItem::type() const
 
 QRectF CircuitItem::boundingRect(void) const
 {
+    QRectF rect;
+
+    rect = shape().boundingRect();
+    rect = rect.united(mainRect);
+
     return rect;
 }
 
@@ -87,8 +92,8 @@ void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     if(contactGrabbed != -1)
     {
         contacts[contactGrabbed] += mapFromScene(event->scenePos().toPoint()) - mapFromScene(event->lastScenePos().toPoint());
-        rect = shape().boundingRect() ;
-        rect = rect.united(mainRect);
+        // rect = shape().boundingRect();
+        // rect = rect.united(mainRect);
         prepareGeometryChange();
         QGraphicsView* a = scene()->views().last();
         static_cast<SchemeView*>(a)->checkgrid();

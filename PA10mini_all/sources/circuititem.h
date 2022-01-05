@@ -85,7 +85,7 @@ protected:
 //contacts;
     QVector<QPointF> contacts;
     QVector<QPointF> contactsStart;
-    QRectF rect;
+    // QRectF rect;
     QRectF mainRect;
 
 private:
