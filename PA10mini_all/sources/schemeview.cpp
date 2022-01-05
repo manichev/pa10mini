@@ -115,14 +115,14 @@ SchemeView::SchemeView(QWidget *parent)
     scaleStep = 0.05;
 
 //drawing grid
-    setSceneRect(-1, -1, gridW+2, gridH+2);
+    setSceneRect(-1, -1, gridW + 2, gridH + 2);
     QList<QGraphicsLineItem *> gridLines;
     QPen gridPen;
-    gridPen.setColor(QColor(222,222,222,255));
+    gridPen.setColor(QColor(222, 222, 222, 255));
     gridPen.setStyle(Qt::DashLine);
     gridPen.setWidthF(0.01);
 
-    for(double x = 0; x <= gridW; x+=1.0)
+    for(double x = 0; x <= gridW; x += 1.0)
         gridLines.push_back(scene()->addLine(x, 0.0, x, gridH, gridPen));
     for(double y = 0; y <= gridH; y+=1.0)
         gridLines.push_back(scene()->addLine(0.0, y, gridW, y, gridPen));
@@ -197,11 +197,10 @@ void SchemeView::deleteItem()
 {
     CircuitItem* element;
 
-    foreach(element, elements)
-    {
-        if(qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
-            qgraphicsitem_cast<CircuitItem*>(hoveredItem)->elementType() == element->elementType()) // cHANGE: && to ==
-        {
+    foreach (element, elements) {
+        if (qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
+            qgraphicsitem_cast<CircuitItem*>(hoveredItem)->elementType() == element->elementType()) {// cHANGE: && to ==
+
             elements.removeOne(element);
             delete element;
         }
@@ -236,36 +235,26 @@ void SchemeView::checkgrid()
     QList<QGraphicsItem*> items;
     QGraphicsItem* item;
     CircuitNodeItem* node;
-    for(int i=0; i <= gridH; ++i)
-    {
-        for(int j=0; j <= gridW; ++j)
-        {
+    for (int i=0; i <= gridH; ++i) {
+        for (int j=0; j <= gridW; ++j) {
             int counter = 0;
             items = scene()->items(CircuitItem::contactRect().translated(j, i));
             int id = -1;
-            foreach(item, items)
-            {
-                if(item->type() == CircuitItem::CircuitItemType)
-                {
-                    if(reinterpret_cast<CircuitItem*>(item)->contact(QPointF(j,i)) != -1)
+            foreach (item, items) {
+                if (item->type() == CircuitItem::CircuitItemType) {
+                    if (reinterpret_cast<CircuitItem*>(item)->contact(QPointF(j, i)) != -1)
                         counter++;
-                }
-                else if(item->type() == CircuitItem::CircuitItemNodeType)
-                {
+                } else if (item->type() == CircuitItem::CircuitItemNodeType) {
                     id = reinterpret_cast<CircuitNodeItem*>(item)->getId();
                 }
             }
 
-            if(id == -1 && counter >= 2)
-            {
+            if (id == -1 && counter >= 2) {
                 addNode(QPointF(j, i));
             }
-            else if (id != -1 && counter < 2)
-            {
-                foreach(node, nodes)
-                {
-                    if(node->getId() == id)
-                    {
+            else if (id != -1 && counter < 2) {
+                foreach (node, nodes) {
+                    if (node->getId() == id) {
                         nodes.removeOne(node);
                         delete node;
                     }
@@ -274,22 +263,28 @@ void SchemeView::checkgrid()
         }
     }
 }
+
+void SchemeView::addNode(const QPointF &pos, int id)
+{
+    nodes.push_back(new CircuitNodeItem(id, pos));
+    scene()->addItem(nodes.last());
+}
+
 void SchemeView::addNode(const QPointF &pos)
 {
     CircuitNodeItem* node;
     int newId = 1;
     bool stop = false;
-    while(!stop)
-    {
+    while (!stop) {
         stop = true;
         foreach(node, nodes)
-            if(newId == node->getId())
+            if (newId == node->getId())
                 stop = false;
-        if(!stop)
+        if (!stop)
             ++newId;
     }
-    nodes.push_back(new CircuitNodeItem(newId, pos));
-    scene()->addItem(nodes.last());
+
+    addNode(pos, newId);
 }
 
 QString SchemeView::getSystem()
@@ -298,27 +293,21 @@ QString SchemeView::getSystem()
     CircuitItem* element;
     CircuitNodeItem* node;
 //dPhi and element equals
-    foreach(element, elements)
-    {
+    foreach (element, elements) {
         result.append(element->equal() + "\n");
         result.append(element->getu() + "=");
         bool isFirstInLine = true;
-        foreach(node, nodes)
-        {
-            if(!node->isGrounded())
-            {
+        foreach (node, nodes) {
+            if (!node->isGrounded()) {
                 int contact = element->contact(node->scenePos());
                 qDebug() << contact;
-                if(contact == 0)
-                {
-                    if(isFirstInLine)
+                if (contact == 0) {
+                    if (isFirstInLine)
                         isFirstInLine = false;
                     else
                         result.append("+");
                     result.append("phi" + QString::number(node->getId()));
-                }
-                if(contact == 1)
-                {
+                } if(contact == 1) {
                     isFirstInLine = false;
                     result.append("-");
                     result.append("phi" + QString::number(node->getId()));
@@ -328,43 +317,36 @@ QString SchemeView::getSystem()
         result.append("\n");
     }
 //Kirchhoff
-    foreach(node, nodes)
-    {
+    foreach (node, nodes) {
         bool isFirstInLine = true;
-        if(!node->isGrounded())
-        {
-            foreach(element, elements)
-            {
+        if (!node->isGrounded()) {
+            foreach(element, elements) {
                 int contact = element->contact(node->scenePos());
-                if(contact == 0)
-                {
-                    if(isFirstInLine)
+                if (contact == 0) {
+                    if (isFirstInLine)
                         isFirstInLine = false;
                     else
                         result.append("+");
                     result.append(element->geti());
-                }
-                else if(contact == 1)
-                {
+                } else if(contact == 1) {
                     isFirstInLine = false;
                     result.append("-");
                     result.append(element->geti());
                 }
             }
-        result.append("=0\n");
+            result.append("=0\n");
         }
     }
-    foreach(element, elements)
-    {
-        if(element->u0.toDouble() != 0)
-        {
+
+    foreach (element, elements) {
+        if (element->u0.toDouble() != 0) {
             result.append(element->getu());
             result.append("==");
             result.append(element->u0);
             result.append("\n");
         }
-        if(element->i0.toDouble() != 0)
-        {
+
+        if (element->i0.toDouble() != 0) {
             result.append(element->geti());
             result.append("==");
             result.append(element->i0);
@@ -377,26 +359,22 @@ QString SchemeView::getSystem()
 bool SchemeView::eventFilter(QObject *object, QEvent *event)
 {
     Q_UNUSED(object)
-    if( event->type() == QEvent::Resize )
-    {
-        if(getScale() < fullScale())
-        {
+    if (event->type() == QEvent::Resize ) {
+        if (getScale() < fullScale()) {
             setScale(fullScale());
         }
     }
+
     return false;
 }
 
 
 void SchemeView::mousePressEvent(QMouseEvent * event)
 {
-    if(event->button() == Qt::MidButton)
-    {
+    if (event->button() == Qt::MidButton) {
         setCursor(Qt::ClosedHandCursor);
         isGrabbed = true;
-    }
-    else
-    {
+    } else {
         QGraphicsView::mousePressEvent(event);
     }
     lastMousePos = event->pos();
@@ -409,8 +387,7 @@ void SchemeView::rotateItem()
 }
 void SchemeView::mouseMoveEvent(QMouseEvent * event)
 {
-    if(isGrabbed)
-    {
+    if (isGrabbed) {
         int dx  = lastMousePos.x() - event->pos().x();
         int dy  = lastMousePos.y() - event->pos().y();
         QScrollBar* hBar = horizontalScrollBar();
@@ -419,9 +396,7 @@ void SchemeView::mouseMoveEvent(QMouseEvent * event)
         vBar->setValue(vBar->value() + dy);
 
         lastMousePos = event->pos();
-    }
-    else
-    {
+    } else {
         QGraphicsView::mouseMoveEvent(event);
     }
 }
@@ -429,19 +404,15 @@ void SchemeView::mouseMoveEvent(QMouseEvent * event)
 
 void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
 {
-    if(event->button() ==  Qt::MidButton)
-    {
+    if (event->button() ==  Qt::MidButton) {
         setCursor(Qt::ArrowCursor);
         isGrabbed = false;
-    }
-    else if(event->button() ==  Qt::RightButton )
-    {
+    } else if (event->button() ==  Qt::RightButton ) {
         hoveredItem = scene()->itemAt(mapToScene(event->pos()), QTransform());
-        if(hoveredItem != nullptr)
-        {
+        if (hoveredItem != nullptr) {
             lastMousePos = event->globalPos();
-            switch(hoveredItem->type())
-            {
+
+            switch(hoveredItem->type()) {
             case CircuitItem::CircuitItemType:
                 itemMenu->exec(event->globalPos());
                 return;//break;
@@ -457,9 +428,7 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
         lastMousePos = event->pos();
         mainMenu->exec(event->globalPos());
         //}
-    }
-    else
-    {
+    } else {
         QGraphicsView::mouseReleaseEvent(event);
     }
 }
@@ -485,13 +454,10 @@ void SchemeView::wheelEvent ( QWheelEvent * event )
 {
     qreal delta = (event->delta() > 0) ? scaleStep : -scaleStep;
     qreal scaleValue = getScale() * (1 + delta);
-    if(scaleValue > fullScale())
-    {
+    if(scaleValue > fullScale()) {
         setScale(scaleValue);
         isScaled = true;
-    }
-    else
-    {
+    } else {
         setScale(fullScale());
         isScaled = false;
     }
@@ -505,7 +471,8 @@ qreal SchemeView::getScale()
 
 qreal SchemeView::fullScale()
 {
-    return sceneRect().height()/height()>sceneRect().width()/width()?height()/sceneRect().height():width()/sceneRect().width();
+    return sceneRect().height()/height()>sceneRect().width()/width() ?
+                height()/sceneRect().height() : width()/sceneRect().width();
 }
 
 int SchemeView::recieveElementId(CircuitElementType type)
@@ -513,13 +480,13 @@ int SchemeView::recieveElementId(CircuitElementType type)
     CircuitItem* element;
     int newId = 1;
     bool stop = false;
-    while(!stop)
-    {
+    while(!stop) {
         stop = true;
-        foreach(element, elements)
-            if(newId == element->getId() && element->elementType() == type)
+        foreach (element, elements)
+            if (newId == element->getId() && element->elementType() == type)
                 stop = false;
-        if(!stop)
+
+        if (!stop)
             ++newId;
     }
     return newId;
@@ -538,8 +505,9 @@ void SchemeView::addR(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::R);
     RItem* tmp = new RItem(id, pos);
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
     checkgrid();
 }
 
@@ -547,8 +515,9 @@ void SchemeView::addG(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::G);
     GItem* tmp = new GItem(id, pos);
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
     checkgrid();
 }
 
@@ -556,8 +525,9 @@ void SchemeView::addL(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::L);
     LItem* tmp = new LItem(id, pos);
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
     checkgrid();
 }
 
@@ -565,8 +535,9 @@ void SchemeView::addC(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::C);
     CItem* tmp = new CItem(id, pos);
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
     checkgrid();
 }
 
@@ -574,8 +545,9 @@ void SchemeView::addU(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::E);
     EItem* tmp = new EItem(id, pos);
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
     checkgrid();
 }
 
@@ -583,8 +555,9 @@ void SchemeView::addI(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::I);
     IItem* tmp = new IItem(id, pos);
-    scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
-    elements.push_back(reinterpret_cast<CircuitItem*>(tmp));
+    // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
     checkgrid();
 }
 

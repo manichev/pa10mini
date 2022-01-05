@@ -59,8 +59,9 @@ public:
     virtual QJsonObject toJSON() const;
     void fromJSON(const QJsonObject &jo);
     void fromQVariant(const QVariantHash &hash);
+    QString fUnit() const { return m_fUnit; }
+    void setFUnit(const QString &uName) { m_fUnit = uName; }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    QString fDim;
     QString eq;
     QString u;
     QString i;
@@ -96,6 +97,7 @@ private:
     int m_id;
     QString m_f;
     QString m_fName;
+    QString m_fUnit;
     QString m_name;
     bool isItemGrabbed;
     int contactGrabbed;
@@ -118,7 +120,7 @@ public:
     int getId() const;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
 private:
     bool ground;

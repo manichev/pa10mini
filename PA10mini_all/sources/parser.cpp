@@ -464,23 +464,21 @@ namespace grammar {
     // Perform the reduction.
     YY_REDUCE_PRINT (yyn);
     switch (yyn)
-      {
-          case 8:
-
     {
-                    std::cout<<"Initial\n" ;
-                    std::string val = *(yysemantic_stack_[(3) - (1)].sval);
-                    driver.daeSystem->setInitial(val,
-                        atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
-                }
+    case 8:
+    {
+            std::cout<<"Initial\n" ;
+            std::string val = *(yysemantic_stack_[(3) - (1)].sval);
+            driver.daeSystem->setInitial(val,
+                atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
+    }
     break;
 
-  case 11:
-
+    case 11:
     {
-                std::cout<<"Const\n" ;
-                    driver.daeSystem->addConstant(*(yysemantic_stack_[(3) - (1)].sval), atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
-                }
+        std::cout<<"Const\n" ;
+        driver.daeSystem->addConstant(*(yysemantic_stack_[(3) - (1)].sval), atof((yysemantic_stack_[(3) - (3)].sval)->c_str()));
+    }
     break;
 
   case 16:

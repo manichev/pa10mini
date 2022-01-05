@@ -157,18 +157,19 @@ void PAX_Prototype::activateEqualMode()
 
 void PAX_Prototype::saveSchemeSlot()
 {
-    saveScheme(m_schemePath);
+    if (m_schemePath.contains(".json", Qt::CaseInsensitive))
+        saveScheme(m_schemePath);
 }
 
 void PAX_Prototype::loadSchemeSlot()
 {
-    m_schemePath = QFileDialog::getOpenFileName(this, tr("Открыть файл схемы"), m_schemePath, tr("(*.*)"));
+    m_schemePath = QFileDialog::getOpenFileName(this, tr("Открыть файл схемы"), m_schemePath, tr("JSON Files (*.json)"));
     loadScheme(m_schemePath);
 }
 
 void PAX_Prototype::saveSchemeAsSlot()
 {
-    m_schemePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл схемы как"), m_schemePath, tr("(*.*)"));
+    m_schemePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл схемы как"), m_schemePath, tr("JSON Files (*.json)"));
 
     saveScheme(m_schemePath);
 }
@@ -187,6 +188,7 @@ void PAX_Prototype::saveScheme(const QString &path)
     QJsonObject schemeObject;
     QJsonArray itemsArray;
     QJsonArray nodesArray;
+    QJsonArray connectionArray;
 
     foreach (auto item, items) {
         CircuitItem *citem = nullptr;
@@ -194,7 +196,7 @@ void PAX_Prototype::saveScheme(const QString &path)
         citem = dynamic_cast<CircuitItem*>(item);
         if (citem) {
             itemsArray.append(citem->toJSON());
-        } else if (nitem = dynamic_cast<CircuitNodeItem*>(item)) {
+        } else if ((nitem = dynamic_cast<CircuitNodeItem*>(item))) {
             nodesArray.append(nitem->toJSON());
         }
     }
@@ -211,13 +213,13 @@ void PAX_Prototype::loadScheme(const QString &path)
     QFile loadFile(path);
 
     if (! loadFile.open(QIODevice::ReadOnly)) {
-        qCritical() << "Output file " << path << " wasn't opened on read";
+        qCritical() << "Input file " << path << " wasn't opened on read";
         return;
     }
 
-    QByteArray saveData = loadFile.readAll();
+    QByteArray loadData = loadFile.readAll();
 
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
 
     QJsonArray elementArray = loadDoc.object()["Elements"].toArray();
 
@@ -244,16 +246,17 @@ void PAX_Prototype::loadScheme(const QString &path)
         }
     }
 
-    QJsonArray nodeArray = loadDoc.object()["Nodes"].toArray();
+    /*QJsonArray nodeArray = loadDoc.object()["Nodes"].toArray();
     for (int i = 0; i < nodeArray.size(); ++i) {
         QJsonObject elementObject = nodeArray[i].toObject();
         QString type = elementObject["type"].toString();
         QPoint pos(elementObject["x"].toInt(), elementObject["y"].toInt());
+
         if (type.compare("CircuitNodeItem", Qt::CaseInsensitive) == 0) {
-            ui.schemeView->addNode(pos);
+            ui.schemeView->addNode(pos, elementObject["id"].toInt());
             ui.schemeView->lastNode()->fromJSON(elementObject);
         }
-    }
+    }*/
 }
 
 /*void PAX_Prototype::saveScheme(const QString &path)

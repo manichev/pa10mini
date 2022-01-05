@@ -52,6 +52,7 @@ public slots:
     void addU(const QPointF &pos);
     void addI(const QPointF &pos);
     void addNode(const QPointF &pos);
+    void addNode(const QPointF &pos, int id);
 
 private slots:
     void addR();

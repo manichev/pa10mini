@@ -11,7 +11,7 @@ CircuitItemEdit::CircuitItemEdit(CircuitItem*item_, QWidget *parent)
     ui.u0Edit->setText(item->u0);
     ui.nameEdit->setText(item->name());
     ui.fNameLabel->setText(item->fName());
-    ui.fDimLabel->setText(item->fDim);
+    ui.fDimLabel->setText(item->fUnit());
 }
 
 CircuitItemEdit::~CircuitItemEdit()
