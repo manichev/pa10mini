@@ -14,6 +14,11 @@
 #include <QJsonObject>
 #include <QSettings>
 
+// Versions
+static const int major = 10;
+static const int minor = 2;
+static const int patch = 0;
+
 extern Solver* solver;
 
 PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
@@ -22,6 +27,9 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
     // QTextCodec *langcodec=QTextCodec::codecForName("CP1251");
     // QTextCodec::setCodecForTr(langcodec);
     ui.setupUi(this);
+
+    setWindowTitle(QString("PA%1mini-v%2.%3").arg(major).arg(minor).arg(patch));
+
     ui.progressBar->hide();
     solver = new Solver(this);
     connect( solver, SIGNAL(progressChanged(int)), ui.progressBar, SLOT(setValue(int)));
