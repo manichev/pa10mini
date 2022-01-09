@@ -62,6 +62,7 @@ HEADERS += circuititem.h \
            resource.h \
            scanner.h \
            schemeview.h \
+           settingsdialog.h \
            solver.h \
            solverparam.h \
            stack.hh \
@@ -77,6 +78,7 @@ HEADERS += circuititem.h \
 FORMS += circuititemedit.ui \
          pax_prototype.ui \
          plotwindow.ui \
+         settingsdialog.ui \
          solverparam.ui \
          variablechooser.ui
 
@@ -92,6 +94,7 @@ SOURCES += circuititem.cpp \
            plotwindow.cpp \
            scanner.cpp \
            schemeview.cpp \
+           settingsdialog.cpp \
            solver.cpp \
            solverparam.cpp \
            textdriver.cpp \

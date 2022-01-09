@@ -1,17 +1,18 @@
+#include "daesystem.h"
+#include "manzhuk/manzhuk.h"
 #include "pax_prototype.h"
+#include "settingsdialog.h"
+#include "solver.h"
+#include "textdriver.h"
 
-#include <iostream>
-#include <fstream>
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-
-#include "daesystem.h"
-#include "textdriver.h"
-#include "solver.h"
-#include "manzhuk/manzhuk.h"
+#include <QSettings>
 
 extern Solver* solver;
 
@@ -28,9 +29,14 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
     connect(ui.loadSchemeButton, &QPushButton::clicked, this, &PAX_Prototype::loadSchemeSlot);
     connect(ui.saveSchemeButton, &QPushButton::clicked, this, &PAX_Prototype::saveSchemeSlot);
     connect(ui.saveSchemeAsButton, &QPushButton::clicked, this, &PAX_Prototype::saveSchemeAsSlot);
+    connect(ui.settingButton, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
+    connect(ui.settingButton_2, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
 
     installEventFilter(this);
     plot = new PlotWindow;
+
+    QSettings settings("PAXMINI", "CADCAMCAE6BMSTU");
+    m_pathToMinGW = settings.value("MinGWPath").toString();
 }
 
 PAX_Prototype::~PAX_Prototype()
@@ -118,7 +124,7 @@ void PAX_Prototype::solve()
     ui.progressBar->show();
 
     try {
-        solver->solve();
+        solver->solve(m_pathToMinGW);
     } catch(invalid_argument& e) {
         cerr << e.what() << endl;
         getchar();
@@ -142,6 +148,22 @@ void PAX_Prototype::activateSchemeMode()
 void PAX_Prototype::activateEqualMode()
 {
     ui.stackedWidget->setCurrentWidget(ui.equalMode);
+}
+
+void PAX_Prototype::showSettingsDialog()
+{
+    QSettings settings("PAXMINI", "CADCAMCAE6BMSTU");
+
+    SettingsDialog *dialog = new SettingsDialog();
+
+    dialog->setMinGWPath(settings.value("MinGWPath").toString());
+
+    if (dialog->exec()) {
+        m_pathToMinGW = dialog->getMinGWPath();
+        settings.setValue("MinGWPath", m_pathToMinGW);
+    }
+
+    delete dialog;
 }
 
 void PAX_Prototype::saveSchemeSlot()

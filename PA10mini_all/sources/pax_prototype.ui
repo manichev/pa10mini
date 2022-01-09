@@ -322,6 +322,20 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="settingButton_2">
+             <property name="toolTip">
+              <string>Настройки</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="pax_prototype.qrc">
+               <normaloff>:/PAX_Prototype/Resources/settings.png</normaloff>:/PAX_Prototype/Resources/settings.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -568,6 +582,20 @@
              <property name="icon">
               <iconset resource="pax_prototype.qrc">
                <normaloff>:/PAX_Prototype/Resources/open.png</normaloff>:/PAX_Prototype/Resources/open.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="settingButton">
+             <property name="toolTip">
+              <string>Настройки</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="pax_prototype.qrc">
+               <normaloff>:/PAX_Prototype/Resources/settings.png</normaloff>:/PAX_Prototype/Resources/settings.png</iconset>
              </property>
             </widget>
            </item>

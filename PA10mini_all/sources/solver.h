@@ -17,7 +17,7 @@ public:
     Solver(QObject *parent);
     ~Solver(void);
 
-    void solve();
+    void solve(const QString &pathToCompiler);
     void setSystem(DAESystem* system_);
 
     double get_t0(void) { return t0; };
@@ -70,5 +70,5 @@ private:
     QString outFileName;
     bool writeFile;
 
-    void create_fcttask();
+    void create_fcttask(const QString &pathToCompiler);
 };
