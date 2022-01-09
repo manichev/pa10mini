@@ -39,17 +39,26 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
     connect(ui.saveSchemeAsButton, &QPushButton::clicked, this, &PAX_Prototype::saveSchemeAsSlot);
     connect(ui.settingButton, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
     connect(ui.settingButton_2, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
+    connect(solver, &Solver::statusMessage, this, &PAX_Prototype::showStatusBarMessage);
 
     installEventFilter(this);
     plot = new PlotWindow;
 
     QSettings settings("PAXMINI", "CADCAMCAE6BMSTU");
     m_pathToMinGW = settings.value("MinGWPath").toString();
+
+    m_statusBar = new QStatusBar();
+    setStatusBar(m_statusBar);
 }
 
 PAX_Prototype::~PAX_Prototype()
 {
     delete solver;
+}
+
+void PAX_Prototype::showStatusBarMessage(const QString &mesg)
+{
+    m_statusBar->showMessage(mesg);
 }
 
 void PAX_Prototype::showErr(const QString& message)
@@ -200,7 +209,9 @@ void PAX_Prototype::saveScheme(const QString &path)
     auto items = ui.schemeView->scene()->items();
 
     if (! saveFile.open(QIODevice::WriteOnly)) {
-        qCritical() << "Output file " << path << " wasn't opened on write";
+        auto str = QString("Output file %1 wasn't opened on write").arg(path);
+        qCritical() << str;
+        m_statusBar->showMessage(str);
         return;
     }
 
@@ -232,7 +243,9 @@ void PAX_Prototype::loadScheme(const QString &path)
     QFile loadFile(path);
 
     if (! loadFile.open(QIODevice::ReadOnly)) {
-        qCritical() << "Input file " << path << " wasn't opened on read";
+        auto str = QString("Input file %1 wasn't opened on read").arg(path);
+        qCritical() << str;
+        m_statusBar->showMessage(str);
         return;
     }
 

@@ -35,6 +35,7 @@ private slots:
     void saveSchemeAsSlot();
     void loadSchemeSlot();
     void showSettingsDialog();
+    void showStatusBarMessage(const QString &mesg);
 
 private:
     void saveScheme(const QString &path);
@@ -45,6 +46,7 @@ private:
     PlotWindow* plot;
     QString m_schemePath;
     QString m_pathToMinGW;
+    QStatusBar *m_statusBar;
 };
 
 

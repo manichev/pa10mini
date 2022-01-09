@@ -158,20 +158,18 @@ void Solver::create_fcttask(const QString &pathToCompiler)
 
 #ifdef WIN32
     // Compiling fcttask.dll
-    remove("manzhuk/fcttask/fcttask.dll"); // !!!!!!!!!!!!!!!!!!!!!
+    remove("manzhuk/fcttask/fcttask.dll");
 #if _MSC_VER && !__INTEL_COMPILER
     // std::system("manzhuk\\fcttask\\build_vc.bat");
-    QFileInfo MingwDir(pathToCompiler);
+#else
+    // std::system("manzhuk\\fcttask\\build.cmd");
+#endif
 
+    QFileInfo MingwDir(pathToCompiler);
     auto str1 = QString("set PATH=%PATH%;%1").arg(MingwDir.path());
     auto str2 = MingwDir.filePath();
     auto str3 = "-shared -static manzhuk/fcttask/fcttask.cpp -o manzhuk/fcttask/fcttask.dll";
-
     std::system(QString("%1 && %2 %3").arg(str1).arg(str2).arg(str3).toStdString().data());
-#else
-    // std::system("manzhuk\\fcttask\\build.cmd");
-    std::system("mingw32-make.exe -f manzhuk/fcttask/makefile");
-#endif
 
     // Removing extra files
     remove("manzhuk/fcttask/fcttask.lib");
@@ -194,7 +192,9 @@ void Solver::solve(const QString &pathToCompiler)
         std::system("mkdir output");
         outFile = new QFile(outFileName);
         if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
-            qCritical() << "Output file " << outFileName << " wasn't opened on write";
+            auto str = QString("Output file %1 wasn't opened on write").arg(outFileName);
+            qCritical() << str;
+            emit statusMessage(str);
             // return;
         }
         outTextStream = new QTextStream(outFile);
@@ -260,7 +260,9 @@ void Solver::solve(const QString &pathToCompiler)
 #endif
 
     if (!handle) {
-        cerr << "Can't open library: " << dlerror() << '\n';
+        auto str = QString("Can't open library: %1 \n").arg(dlerror());
+        cerr << str.toStdString().data();
+        emit statusMessage(str);
         return;
     }
 
@@ -273,7 +275,9 @@ void Solver::solve(const QString &pathToCompiler)
     fcttask_t fcttask = (fcttask_t) dlsym(handle, "fcttask");
     const char *dlsym_error = dlerror();
     if (dlsym_error) {
-        cerr << "Cannot load symbol 'fcttask': " << dlsym_error << '\n';
+        auto str = QString("Cannot load symbol 'fcttask': %1 \n").arg(dlsym_error);
+        cerr << str.toStdString().data();
+        emit statusMessage(str);
         dlclose(handle);
         return;
     }

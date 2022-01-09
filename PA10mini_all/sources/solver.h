@@ -56,6 +56,8 @@ protected:
 
 signals:
     int progressChanged(int);
+    // Including error messages
+    void statusMessage(const QString &msg);
 
 private:
     QFile* outFile;
