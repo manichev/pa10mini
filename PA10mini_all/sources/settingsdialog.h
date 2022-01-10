@@ -18,6 +18,9 @@ public:
     QString getMinGWPath() const;
     void setMinGWPath(const QString &path);
 
+private slots:
+    void onPathToMingwToolButtonClick();
+
 private:
     Ui::SettingsDialog *ui;
 };

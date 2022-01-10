@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>657</width>
+    <height>133</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,6 +25,13 @@
      </item>
      <item>
       <widget class="QLineEdit" name="pathToMinGWEdit"/>
+     </item>
+     <item>
+      <widget class="QToolButton" name="pathToMinGWToolButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
