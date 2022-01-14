@@ -95,7 +95,7 @@
               </size>
              </property>
              <property name="toolTip">
-              <string>Начать вычисления</string>
+              <string>Начать вычисления(Ctrl+r)</string>
              </property>
              <property name="statusTip">
               <string>Начать интегрирование системы уравнений</string>
@@ -112,6 +112,9 @@
                <width>18</width>
                <height>18</height>
               </size>
+             </property>
+             <property name="shortcut">
+              <string>Ctrl+R</string>
              </property>
             </widget>
            </item>
@@ -416,6 +419,9 @@
                <height>28</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Редактор схем(Ctrl+t)</string>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -428,6 +434,9 @@
                <width>18</width>
                <height>18</height>
               </size>
+             </property>
+             <property name="shortcut">
+              <string>Ctrl+T</string>
              </property>
             </widget>
            </item>
@@ -491,6 +500,9 @@
                <height>28</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Запуск(Ctrl+r)</string>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -503,6 +515,9 @@
                <width>18</width>
                <height>18</height>
               </size>
+             </property>
+             <property name="shortcut">
+              <string>Ctrl+R</string>
              </property>
             </widget>
            </item>
@@ -701,6 +716,9 @@
                <height>28</height>
               </size>
              </property>
+             <property name="toolTip">
+              <string>Текстовый режим(Ctrl+t)</string>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -713,6 +731,9 @@
                <width>18</width>
                <height>18</height>
               </size>
+             </property>
+             <property name="shortcut">
+              <string>Ctrl+T</string>
              </property>
             </widget>
            </item>

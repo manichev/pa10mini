@@ -290,23 +290,3 @@ void PAX_Prototype::loadScheme(const QString &path)
         }
     }
 }
-
-/*void PAX_Prototype::saveScheme(const QString &path)
-{
-    auto items = ui.schemeView->scene()->items();
-
-    QFile file(path);
-
-    if (! file.open(QIODevice::WriteOnly)) {
-        qCritical() << "Output file " << path << " wasn't opened on write";
-    }
-
-    // QTextStream *stream = new QTextStream(&file);
-    QTextStream stream(&file);
-
-    foreach (auto item, items) {
-        CircuitItem *citem = qgraphicsitem_cast<CircuitItem*>(item);
-        if (citem)
-            stream << citem->toQVariant().toByteArray();
-    }
-}*/

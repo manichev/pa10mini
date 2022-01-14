@@ -131,8 +131,7 @@ void EqualEdit::createNew()
 
 void EqualEdit::open()
 {
-    if(wasChanged)
-    {
+    if (wasChanged) {
         QMessageBox msgBox;
         msgBox.setText("Do you want to save changes?");
         msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
@@ -151,15 +150,14 @@ void EqualEdit::open()
             break;
         }
     }
-    fileName = QFileDialog::getOpenFileName(this, tr("Открыть файл"), "", tr("(*.txt)"));
+    fileName = QFileDialog::getOpenFileName(this, tr("Открыть файл"), "tests", tr("(*.txt)"));
     QFile txtFile(fileName);
     if (!txtFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
     QTextStream in(&txtFile);
     clear();
     setUndoRedoEnabled(false);
-    while (!in.atEnd())
-    {
+    while (!in.atEnd()) {
         QString line = in.readLine();
         appendPlainText(line);
     }

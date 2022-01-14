@@ -205,14 +205,14 @@ void Solver::solve(const QString &pathToCompiler)
     // if(system->countVariables() > system->countEquals())
     //    throw invalid_argument("NM!");
     // allocating memory
-    z = new double[n+1];
-    px = new double[m+1];
-    z1 = new double[n+1];
-    px1 = new double[m+1];
-    f = new double[n+1];
-    rj1 = new double[(n+1)*(n+1)];
-    rj2 = new double[(n+1)*(n+1)];
-    ip = new int[20+2*(n+1)+6*(m+1)];
+    z = new double[n + 1];
+    px = new double[m + 1];
+    z1 = new double[n + 1];
+    px1 = new double[m + 1];
+    f = new double[n + 1];
+    rj1 = new double[(n + 1) * (n + 1)];
+    rj2 = new double[(n + 1) * (n + 1)];
+    ip = new int[20 + 2 * (n + 1) + 6 * (m + 1)];
     paxData.clear();
     paxData.resize(trace.size()+1);
 
@@ -224,9 +224,9 @@ void Solver::solve(const QString &pathToCompiler)
 
     ier = rj2_before ? 0 : -1;
 
-    maxPoints = maxMemSize/(sizeof(double)*paxData.size());
-    tout = t0 + (tk - t0)/maxPoints;
-    tp = t0 + (tk-t0)/100;
+    maxPoints = maxMemSize / (sizeof(double) * paxData.size());
+    tout = t0 + (tk - t0) / maxPoints;
+    tp = t0 + (tk - t0) / 100;
 
     create_fcttask(pathToCompiler);
 
