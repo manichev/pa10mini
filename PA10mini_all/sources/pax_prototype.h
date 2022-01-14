@@ -17,7 +17,7 @@ class PAX_Prototype : public QMainWindow
 	Q_OBJECT
 
 public:
-    PAX_Prototype(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
+    PAX_Prototype(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::Widget);
     ~PAX_Prototype() override;
 public slots:
 	void activateSchemeMode();
@@ -34,6 +34,8 @@ private slots:
     void saveSchemeSlot();
     void saveSchemeAsSlot();
     void loadSchemeSlot();
+    void showSettingsDialog();
+    void showStatusBarMessage(const QString &mesg);
 
 private:
     void saveScheme(const QString &path);
@@ -43,6 +45,8 @@ private:
 	Ui::PAX_PrototypeClass ui;
     PlotWindow* plot;
     QString m_schemePath;
+    QString m_pathToMinGW;
+    QStatusBar *m_statusBar;
 };
 
 

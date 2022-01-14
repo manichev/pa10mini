@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <QDebug>
+#include <QFileInfo>
 
 #if _MSC_VER && !__INTEL_COMPILER
 #include <io.h>
@@ -112,7 +113,7 @@ int progressChanged(int value)
     return value;
 }
 
-void Solver::create_fcttask()
+void Solver::create_fcttask(const QString &pathToCompiler)
 {
     ofstream file;
     file.open("manzhuk/fcttask/fcttask.cpp");
@@ -125,29 +126,25 @@ void Solver::create_fcttask()
     std::list<Expression*>::iterator eqIt;
     Expression* der;
     int i = 1;
-    for(eqIt = system->equals.begin(); eqIt != system->equals.end(); ++eqIt)
-    {
+    for (eqIt = system->equals.begin(); eqIt != system->equals.end(); ++eqIt) {
         file << "\tf[" << i << "] = ";
         (*eqIt)->simplify();
         (*eqIt)->print_c_ostream(file);
         file << ";\n";
-        for(int j = 1; j <= m; ++j)
-        {
+
+        for (int j = 1; j <= m; ++j) {
             der = (*eqIt)->derivative(-j);
-            if( !der->isConst(0.0) )
-            {
+            if (!der->isConst(0.0)) {
                 file << "\trj1[" << i << "*n+"<< + j << "] = ";
                 der->print_c_ostream(file);
                 file << ";\n";
             }
         }
-        if(rj2_before)
-        {
-            for(int j = 1; j <= n; ++j)
-            {
+
+        if (rj2_before) {
+            for (int j = 1; j <= n; ++j) {
                 der = (*eqIt)->derivative(j);
-                if( !der->isConst(0.0) )
-                {
+                if (!der->isConst(0.0)) {
                     file << "\trj2[" << i << "*n+"<< + j << "] = ";
                     der->print_c_ostream(file);
                     file << ";\n";
@@ -160,14 +157,21 @@ void Solver::create_fcttask()
     file.close();
 
 #ifdef WIN32
-    //compiling fcttask.dll
+    // Compiling fcttask.dll
     remove("manzhuk/fcttask/fcttask.dll");
 #if _MSC_VER && !__INTEL_COMPILER
-    std::system("manzhuk\\fcttask\\build_vc.bat");
+    // std::system("manzhuk\\fcttask\\build_vc.bat");
 #else
-    std::system("manzhuk\\fcttask\\build.cmd");
+    // std::system("manzhuk\\fcttask\\build.cmd");
 #endif
-    //removing extra files
+
+    QFileInfo MingwDir(pathToCompiler);
+    auto str1 = QString("set PATH=%PATH%;%1").arg(MingwDir.path());
+    auto str2 = MingwDir.filePath();
+    auto str3 = "-shared -static manzhuk/fcttask/fcttask.cpp -o manzhuk/fcttask/fcttask.dll";
+    std::system(QString("%1 && %2 %3").arg(str1).arg(str2).arg(str3).toStdString().data());
+
+    // Removing extra files
     remove("manzhuk/fcttask/fcttask.lib");
     remove("manzhuk/fcttask/fcttask.exp");
     remove("fcttask.obj");
@@ -178,17 +182,19 @@ void Solver::create_fcttask()
 }
 
 
-void Solver::solve()
+void Solver::solve(const QString &pathToCompiler)
 {
     double *z=nullptr, *px=nullptr, *z1=nullptr, *px1=nullptr, *f=nullptr, *rj1=nullptr, *rj2=nullptr;
     double t, h, tkv;
 
-    int ncon, nbad, ier, *ip=nullptr;
-    if (writeFile)
-    {
+    int ncon, nbad, ier, *ip = nullptr;
+    if (writeFile) {
+        std::system("mkdir output");
         outFile = new QFile(outFileName);
         if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
-            qCritical() << "Output file " << outFileName << " wasn't opened on write";
+            auto str = QString("Output file %1 wasn't opened on write").arg(outFileName);
+            qCritical() << str;
+            emit statusMessage(str);
             // return;
         }
         outTextStream = new QTextStream(outFile);
@@ -196,9 +202,9 @@ void Solver::solve()
 
     n = system->countEquals();
     m = system->countDerivatives();
-    //if(system->countVariables() > system->countEquals())
+    // if(system->countVariables() > system->countEquals())
     //    throw invalid_argument("NM!");
-//allocating memory
+    // allocating memory
     z = new double[n+1];
     px = new double[m+1];
     z1 = new double[n+1];
@@ -210,7 +216,7 @@ void Solver::solve()
     paxData.clear();
     paxData.resize(trace.size()+1);
 
-//initializing values
+    //initializing values
     t = 0.0;
     h = 0.0;
     ncon = 0;
@@ -222,9 +228,9 @@ void Solver::solve()
     tout = t0 + (tk - t0)/maxPoints;
     tp = t0 + (tk-t0)/100;
 
-    create_fcttask();
-    //applying dll
+    create_fcttask(pathToCompiler);
 
+    // Applying dll
 #if _MSC_VER && !__INTEL_COMPILER
 
 #ifdef UNICODE
@@ -238,8 +244,7 @@ void Solver::solve()
         dwError = GetLastError();
         cout << "Cannot load " << fcttaskDllPath << ", WinError: " << dwError;
         return;
-    }
-    else {
+    } else {
         cout << fcttaskDllPath << " Successfully loaded " << std::endl;
     }
 
@@ -255,7 +260,9 @@ void Solver::solve()
 #endif
 
     if (!handle) {
-        cerr << "Can't open library: " << dlerror() << '\n';
+        auto str = QString("Can't open library: %1 \n").arg(dlerror());
+        cerr << str.toStdString().data();
+        emit statusMessage(str);
         return;
     }
 
@@ -268,26 +275,27 @@ void Solver::solve()
     fcttask_t fcttask = (fcttask_t) dlsym(handle, "fcttask");
     const char *dlsym_error = dlerror();
     if (dlsym_error) {
-        cerr << "Cannot load symbol 'fcttask': " << dlsym_error << '\n';
+        auto str = QString("Cannot load symbol 'fcttask': %1 \n").arg(dlsym_error);
+        cerr << str.toStdString().data();
+        emit statusMessage(str);
         dlclose(handle);
         return;
     }
 
 #endif
 
-//solving with manzhuk
+// Solving with manzhuk
     std::list<Variable>::iterator it;
     std::cout.precision(3);
-        for(int i = 1; i <= n; ++i)
-            z1[i] = z[i] = 0.0;
+    for (int i = 1; i <= n; ++i)
+        z1[i] = z[i] = 0.0;
 
-    for(it = system->variables.begin(); it != system->variables.end(); ++it)
-    {
+    for (it = system->variables.begin(); it != system->variables.end(); ++it) {
         z[it->id] = it->initial;
         z1[it->id] = fabs(z[it->id]);
         std::cout<<it->name<< " ["<<it->id<<"] "<<" = "<<it->initial<<"\n";
     }
-    for(int i = 1; i <= m; ++i)
+    for (int i = 1; i <= m; ++i)
         px[i] = px1[i] = 0.0;
 
 //int stdout_copy = _dup(1);
@@ -323,8 +331,7 @@ void Solver::solve()
         delete[] rj1;
     if (rj2)
         delete[] rj2;
-    if (writeFile)
-    {
+    if (writeFile) {
         outFile->close();
         delete outFile;
         delete outTextStream;

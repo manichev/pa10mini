@@ -5,5 +5,11 @@
         <file>Resources/open.png</file>
         <file>Resources/disk.png</file>
         <file>Resources/save_as.png</file>
+        <file>Resources/text.png</file>
+        <file>Resources/high_voltage.png</file>
+        <file>Resources/arrow_redo.png</file>
+        <file>Resources/arrow_undo.png</file>
+        <file>Resources/document_empty.png</file>
+        <file>Resources/settings.png</file>
     </qresource>
 </RCC>
