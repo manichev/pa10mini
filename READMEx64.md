@@ -22,3 +22,7 @@
 
 
 ## Linux
+Установить библиотеку `qwt-qt5`:
+```
+$ sudo apt-get install libqwt-qt5-*
+```

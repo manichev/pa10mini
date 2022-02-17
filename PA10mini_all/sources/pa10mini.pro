@@ -38,7 +38,7 @@ mingw: {
 }
 }
 unix: LIBS += -ldl
-unix: LIBS += -L/lib -lqwt
+unix: LIBS += -L/usr/lib -lqwt-qt5
 #windows: LIBS += $$LIBDL_BUILD_DIR/lib/libdl.dll.a
 
 # You can also make your code fail to compile if you use deprecated APIs.
