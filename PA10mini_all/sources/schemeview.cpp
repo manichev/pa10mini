@@ -584,7 +584,7 @@ void SchemeView::addU(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::E);
 
-    addI(pos, id);
+    addU(pos, id);
 
     checkgrid();
 }
@@ -593,7 +593,7 @@ void SchemeView::addI(const QPointF &pos)
 {
     int id = recieveElementId(CircuitElementType::I);
 
-    addG(pos, id);
+    addI(pos, id);
 
     checkgrid();
 }
