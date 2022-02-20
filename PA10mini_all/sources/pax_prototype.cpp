@@ -199,6 +199,9 @@ void PAX_Prototype::saveSchemeAsSlot()
 {
     m_schemePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл схемы как"), m_schemePath, tr("JSON Files (*.json)"));
 
+    if (!m_schemePath.endsWith(".json", Qt::CaseInsensitive))
+        m_schemePath += ".json";
+
     saveScheme(m_schemePath);
 }
 
