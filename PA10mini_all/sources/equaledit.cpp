@@ -104,7 +104,7 @@ void EqualEdit::lineNumberAreaPaintEvent(QPaintEvent *event)
 
 void EqualEdit::createNew()
 {
-    if(wasChanged)
+    if (wasChanged)
     {
         QMessageBox msgBox;
         msgBox.setText("Do you want to save changes?");
@@ -185,7 +185,7 @@ void EqualEdit::saveAs()
 
 void EqualEdit::save()
 {
-    if(fileName == "default")
+    if (fileName == "default")
         fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл как"), "", tr("(*.txt)"));
     QFile txtFile(fileName);
     if (!txtFile.open(QIODevice::WriteOnly | QIODevice::Text))

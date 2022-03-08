@@ -70,16 +70,16 @@ void Plot::populate()
     QwtPlotCurve *curve;
 
     QwtPlotDict::detachItems(QwtPlotItem::Rtti_PlotCurve, true);
-    for(int i = 0; i < solver->trace.size(); ++i)
+    for (int i = 0; i < solver->trace.size(); ++i)
     {
         Color = QtColours[start];
         start++;
-        if(start == sizeof(QtColours))
+        if (start == sizeof(QtColours))
         {
             start = 0;
         }
         QString name;
-        if(solver->dims[i] != "")
+        if (solver->dims[i] != "")
             name = solver->dims[i];
         else
             name = solver->names[solver->trace[i]-1];

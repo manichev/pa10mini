@@ -44,7 +44,7 @@ public:
 
     int getId() const;
     void setId(int id) { m_id = id; }
-    CircuitElementType elementType() const { return elemType; }
+    CircuitElementType elementType() const { return m_elemType; }
     QString fName() const { return m_fName; }
     QString name() const { return m_name; }
     void setFName(const QString & fname) { m_fName = fname; }
@@ -63,11 +63,11 @@ public:
     void setFUnit(const QString &uName) { m_fUnit = uName; }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     QString eq;
-    QString u;
-    QString i;
-    QString i0;
-    QString u0;
-    CircuitElementType elemType;
+    QString m_u;
+    QString m_i;
+    QString m_i0;
+    QString m_u0;
+    CircuitElementType m_elemType;
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent * event) override;
@@ -81,13 +81,13 @@ protected:
 //parameters;
 
 //painter pen
-    QPen pen;
+    QPen m_pen;
 
 //contacts;
-    QVector<QPointF> contacts;
-    QVector<QPointF> contactsStart;
+    QVector<QPointF> m_contacts;
+    QVector<QPointF> m_contactsStart;
     // QRectF rect;
-    QRectF mainRect;
+    QRectF m_mainRect;
 
 private:
     inline QPointF ceilPoint(QPointF point);
@@ -99,9 +99,9 @@ private:
     QString m_fName;
     QString m_fUnit;
     QString m_name;
-    bool isItemGrabbed;
-    int contactGrabbed;
-    QPointF center;
+    bool m_isItemGrabbed;
+    int m_contactGrabbed;
+    // QPointF center;
 };
 
 class CircuitNodeItem : public QGraphicsItem
@@ -123,7 +123,7 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
 private:
-    bool ground;
+    bool m_ground;
     int m_id;
 
     QPen pen;

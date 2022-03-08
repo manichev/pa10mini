@@ -73,7 +73,7 @@ bool PAX_Prototype::eventFilter(QObject *object, QEvent *event)
 {
     Q_UNUSED(object)
 
-    if( event->type() == QEvent::Close )
+    if ( event->type() == QEvent::Close )
     {
         exit(0);
     }

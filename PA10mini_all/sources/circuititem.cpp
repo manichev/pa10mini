@@ -12,27 +12,27 @@ CircuitItem::CircuitItem(QGraphicsItem * parent)
 
 void CircuitItem::initItem()
 {
-    isItemGrabbed = false;
-    contactGrabbed = -1;
+    m_isItemGrabbed = false;
+    m_contactGrabbed = -1;
 
-    u = "u";
-    i = "i";
-    i0 = "0";
-    u0 = "0";
+    m_u = "u";
+    m_i = "i";
+    m_i0 = "0";
+    m_u0 = "0";
 
     //painter
-    pen.setWidthF(0.03);
-    pen.setJoinStyle(Qt::RoundJoin);
-    pen.setCapStyle(Qt::RoundCap);
+    m_pen.setWidthF(0.03);
+    m_pen.setJoinStyle(Qt::RoundJoin);
+    m_pen.setCapStyle(Qt::RoundCap);
 
     //contacts
-    contacts << QPointF(-1.0, 0.0);
-    contacts << QPointF(1.0, 0.0);
-    mainRect.setRect(-1.0,-0.5,+2.0,+1.0);
+    m_contacts << QPointF(-1.0, 0.0);
+    m_contacts << QPointF(1.0, 0.0);
+    m_mainRect.setRect(-1.0,-0.5,+2.0,+1.0);
     //bounding rect
-    for(int i = 0; i < contacts.size(); ++i)
+    for (int i = 0; i < m_contacts.size(); ++i)
     {
-        contactsStart << contacts[i];
+        m_contactsStart << m_contacts[i];
         // rect = rect.united(contactRect().translated(contacts[i]).adjusted(-0.5,-0.5,+0.5,+0.5));
     }
     setAcceptHoverEvents(true);
@@ -61,20 +61,20 @@ QRectF CircuitItem::boundingRect(void) const
     QRectF rect;
 
     rect = shape().boundingRect();
-    rect = rect.united(mainRect);
+    rect = rect.united(m_mainRect);
 
     return rect;
 }
 
 void CircuitItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 {
-    if(event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton)
     {
         setCursor(Qt::ClosedHandCursor);
-        contactGrabbed = contact(event->scenePos());
-        if(contactGrabbed == -1)
+        m_contactGrabbed = contact(event->scenePos());
+        if (m_contactGrabbed == -1)
         {
-            isItemGrabbed = true;
+            m_isItemGrabbed = true;
         }
     }
 
@@ -82,13 +82,13 @@ void CircuitItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 
 void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 {
-    if (isItemGrabbed) {
+    if (m_isItemGrabbed) {
         QPointF d = event->scenePos().toPoint() - event->lastScenePos().toPoint();
         moveBy(d.x(), d.y());
         QGraphicsView* a = scene()->views().last();
         static_cast<SchemeView*>(a)->checkgrid();
-    } if (contactGrabbed != -1) {
-        contacts[contactGrabbed] += mapFromScene(event->scenePos().toPoint()) - mapFromScene(event->lastScenePos().toPoint());
+    } if (m_contactGrabbed != -1) {
+        m_contacts[m_contactGrabbed] += mapFromScene(event->scenePos().toPoint()) - mapFromScene(event->lastScenePos().toPoint());
         // rect = shape().boundingRect();
         // rect = rect.united(mainRect);
         prepareGeometryChange();
@@ -100,17 +100,17 @@ void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 void CircuitItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 {
     Q_UNUSED(event)
-    if(isItemGrabbed)
+    if (m_isItemGrabbed)
     {
         setCursor(Qt::ArrowCursor);
-        isItemGrabbed = false;
+        m_isItemGrabbed = false;
         QGraphicsView* a = scene()->views().last();
         static_cast<SchemeView*>(a)->checkgrid();
     }
-    if(contactGrabbed != -1)
+    if (m_contactGrabbed != -1)
     {
         setCursor(Qt::ArrowCursor);
-        contactGrabbed = -1;
+        m_contactGrabbed = -1;
         //after changing shape
         prepareGeometryChange();
         QGraphicsView* a = scene()->views().last();
@@ -154,32 +154,32 @@ QRectF CircuitItem::contactRect()
 
 int CircuitItem::contact(QPointF pos) const
 {
-    for(int i = 0; i < contacts.size(); ++i)
-        if(contactRect().translated(contacts[i]).contains(mapFromScene(pos)))
+    for (int i = 0; i < m_contacts.size(); ++i)
+        if (contactRect().translated(m_contacts[i]).contains(mapFromScene(pos)))
             return i;
     return -1;
 }
 
 void CircuitItem::drawContacts(QPainter* painter)
 {
-    for (int i = 0; i < contacts.size(); ++i)
+    for (int i = 0; i < m_contacts.size(); ++i)
     {
-        if (contactsStart[i].x() < contacts[i].x() && i == 0)
+        if (m_contactsStart[i].x() < m_contacts[i].x() && i == 0)
         {
-            painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contactsStart[i].x(), contactsStart[i].y()));
-            painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contacts[i].x(), contacts[i].y()));
+            painter->drawLine(QLineF(m_contactsStart[i].x(), m_contacts[i].y(), m_contactsStart[i].x(), m_contactsStart[i].y()));
+            painter->drawLine(QLineF(m_contactsStart[i].x(), m_contacts[i].y(), m_contacts[i].x(), m_contacts[i].y()));
         }
-        else if (contactsStart[i].x() > contacts[i].x() && i == 1)
+        else if (m_contactsStart[i].x() > m_contacts[i].x() && i == 1)
         {
-            painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contactsStart[i].x(), contactsStart[i].y()));
-            painter->drawLine(QLineF(contactsStart[i].x(), contacts[i].y(), contacts[i].x(), contacts[i].y()));
+            painter->drawLine(QLineF(m_contactsStart[i].x(), m_contacts[i].y(), m_contactsStart[i].x(), m_contactsStart[i].y()));
+            painter->drawLine(QLineF(m_contactsStart[i].x(), m_contacts[i].y(), m_contacts[i].x(), m_contacts[i].y()));
         }
         else
         {
-            painter->drawLine(QLineF(contactsStart[i].x(), contactsStart[i].y(), contacts[i].x(), contactsStart[i].y()));
-            painter->drawLine(QLineF(contacts[i].x(), contactsStart[i].y(), contacts[i].x(), contacts[i].y()));
+            painter->drawLine(QLineF(m_contactsStart[i].x(), m_contactsStart[i].y(), m_contacts[i].x(), m_contactsStart[i].y()));
+            painter->drawLine(QLineF(m_contacts[i].x(), m_contactsStart[i].y(), m_contacts[i].x(), m_contacts[i].y()));
         }
-        painter->fillRect(contactRect().translated(contacts[i]), Qt::black);
+        painter->fillRect(contactRect().translated(m_contacts[i]), Qt::black);
     }
 
     qreal scale = 14;
@@ -193,8 +193,8 @@ void CircuitItem::drawContacts(QPainter* painter)
 
 void CircuitItem::contactsShape(QPainterPath& path) const
 {
-    for(int i = 0; i < contacts.size(); ++i)
-        path.addRect(contactRect().translated(contacts[i]));
+    for (int i = 0; i < m_contacts.size(); ++i)
+        path.addRect(contactRect().translated(m_contacts[i]));
 }
 
 QVariant CircuitItem::toQVariant() const
@@ -224,10 +224,10 @@ QJsonObject CircuitItem::toJSON() const
     jitem["value"] = getF();
 
     //for (auto contact : contacts) {
-    for (int i = 0; i < contacts.size(); ++i) {
+    for (int i = 0; i < m_contacts.size(); ++i) {
         QJsonObject contactItem;
-        contactItem["x"] = contacts[i].x();
-        contactItem["y"] = contacts[i].y();
+        contactItem["x"] = m_contacts[i].x();
+        contactItem["y"] = m_contacts[i].y();
         contactItem["id"] = i;
         contactArray.append(contactItem);
     }
@@ -254,7 +254,7 @@ void CircuitItem::fromJSON(const QJsonObject &jo)
     for (int i = 0; i < contactArray.size(); ++i) {
         int id = contactArray[i].toObject()["id"].toInt();
         QPointF p(contactArray[i].toObject()["x"].toDouble(), contactArray[i].toObject()["y"].toDouble());
-        contacts[id] = p;
+        m_contacts[id] = p;
     }
 }
 
@@ -274,7 +274,7 @@ QJsonObject CircuitNodeItem::toJSON() const
     jitem["x"] = x();
     jitem["y"] = y();
     jitem["id"] = m_id;
-    jitem["ground"] = ground;
+    jitem["ground"] = m_ground;
 
     return jitem;
 }
@@ -287,7 +287,7 @@ void CircuitNodeItem::fromJSON(const QJsonObject &jo)
     setX(jo["x"].toDouble());
     setY(jo["y"].toDouble());
     m_id = jo["id"].toInt();
-    ground = jo["ground"].toBool();
+    m_ground = jo["ground"].toBool();
 }
 
 //paint implementation for circuit elements
@@ -297,7 +297,7 @@ void RItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(pen);
+    painter->setPen(m_pen);
     //resistance
     painter->drawRect(QRectF(-0.3, -0.15, 0.6, 0.3));
     painter->drawLine(QLineF(-1.0, 0.0, -0.3, 0.0));
@@ -320,7 +320,7 @@ void CItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(pen);
+    painter->setPen(m_pen);
     //capacitor
     painter->drawLine(QLineF(-1.0, 0.0, -0.1, 0.0));
     painter->drawLine(QLineF(0.1, 0.0, 1.0, 0.0));
@@ -345,7 +345,7 @@ void LItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(pen);
+    painter->setPen(m_pen);
     //inductance
     painter->drawLine(QLineF(-1.0, 0.0, -0.4, 0.0));
     painter->drawLine(QLineF(0.4, 0.0, 1.0, 0.0));
@@ -373,7 +373,7 @@ void GItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(pen);
+    painter->setPen(m_pen);
     //conduction
     painter->drawRect(QRectF(-0.3, -0.15, 0.6, 0.3));
     painter->drawLine(QLineF(-1.0, 0.0, -0.3, 0.0));
@@ -399,7 +399,7 @@ void EItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(pen);
+    painter->setPen(m_pen);
     //voltage
 
     painter->drawLine(QLineF(-1.0, 0.0, 1.0, 0.0));
@@ -426,7 +426,7 @@ void IItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option,
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(pen);
+    painter->setPen(m_pen);
     //current
 
     painter->drawLine(QLineF(-1.0, 0.0, 1.0, 0.0));
@@ -467,12 +467,12 @@ QString CircuitItem::equal() const
 
 QString CircuitItem::getu() const
 {
-    return u + m_name;
+    return m_u + m_name;
 }
 
 QString CircuitItem::geti() const
 {
-    return i + m_name;
+    return m_i + m_name;
 }
 
 RItem::RItem(int id_, QPointF pos_, QGraphicsItem *parent)
@@ -484,7 +484,7 @@ RItem::RItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setF("1.0");
     setFUnit("Ohm");
     setFName("R");
-    elemType = CircuitElementType::R;
+    m_elemType = CircuitElementType::R;
     setPos(pos_);
 }
 
@@ -497,7 +497,7 @@ GItem::GItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setF("1.0");
     setFUnit("Si");
     setFName("G");
-    elemType = CircuitElementType::G;
+    m_elemType = CircuitElementType::G;
     setPos(pos_);
 }
 
@@ -510,7 +510,7 @@ CItem::CItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setF("1.0");
     setFUnit("F");
     setFName("C");
-    elemType = CircuitElementType::C;
+    m_elemType = CircuitElementType::C;
     setPos(pos_);
 }
 
@@ -523,7 +523,7 @@ LItem::LItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setF("1.0");
     setFUnit("H");
     setFName("L");
-    elemType = CircuitElementType::L;
+    m_elemType = CircuitElementType::L;
     setPos(pos_);
 }
 
@@ -536,7 +536,7 @@ IItem::IItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setF("1.0");
     setFUnit("A");
     setFName("I");
-    elemType = CircuitElementType::I;
+    m_elemType = CircuitElementType::I;
     setPos(pos_);
 }
 
@@ -549,7 +549,7 @@ EItem::EItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setF("1.0");
     setFUnit("V");
     setFName("E");
-    elemType = CircuitElementType::E;
+    m_elemType = CircuitElementType::E;
     setPos(pos_);
 }
 
@@ -562,7 +562,7 @@ CircuitNodeItem::CircuitNodeItem(int id_, QPointF pos, QGraphicsItem *parent)
     pen.setWidthF(0.03);
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setCapStyle(Qt::RoundCap);
-    ground = false;
+    m_ground = false;
     m_id = id_;
     setZValue(2.0);
 }
@@ -574,7 +574,7 @@ CircuitNodeItem::~CircuitNodeItem()
 
 void CircuitNodeItem::setGround(bool ground_)
 {
-    ground = ground_;
+    m_ground = ground_;
     update();
 }
 
@@ -597,7 +597,7 @@ void CircuitNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(pen);
     painter->drawRect(CircuitItem::contactRect().adjusted(-0.1, -0.1, 0.1, 0.1));
-    if (ground)
+    if (m_ground)
     {   // Draw ground sign
         painter->drawLine(QLineF(0.0, 0.0, 0.5, 0.4));
         painter->drawLine(QLineF(0.5, 0.4, 0.5, 0.8));
@@ -626,7 +626,7 @@ int CircuitNodeItem::getId() const
 
 bool CircuitNodeItem::isGrounded() const
 {
-    return ground;
+    return m_ground;
 }
 
 CircuitItem *CircuitItemFactory(const QString &name, int id, QPointF pos)

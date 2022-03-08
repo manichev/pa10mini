@@ -122,9 +122,9 @@ SchemeView::SchemeView(QWidget *parent)
     gridPen.setStyle(Qt::DashLine);
     gridPen.setWidthF(0.01);
 
-    for(double x = 0; x <= gridW; x += 1.0)
+    for (double x = 0; x <= gridW; x += 1.0)
         gridLines.push_back(scene()->addLine(x, 0.0, x, gridH, gridPen));
-    for(double y = 0; y <= gridH; y+=1.0)
+    for (double y = 0; y <= gridH; y+=1.0)
         gridLines.push_back(scene()->addLine(0.0, y, gridW, y, gridPen));
     installEventFilter(this);
 
@@ -307,7 +307,7 @@ QString SchemeView::getSystem()
                     else
                         result.append("+");
                     result.append("phi" + QString::number(node->getId()));
-                } if(contact == 1) {
+                } if (contact == 1) {
                     isFirstInLine = false;
                     result.append("-");
                     result.append("phi" + QString::number(node->getId()));
@@ -328,7 +328,7 @@ QString SchemeView::getSystem()
                     else
                         result.append("+");
                     result.append(element->geti());
-                } else if(contact == 1) {
+                } else if (contact == 1) {
                     isFirstInLine = false;
                     result.append("-");
                     result.append(element->geti());
@@ -339,17 +339,17 @@ QString SchemeView::getSystem()
     }
 
     foreach (element, elements) {
-        if (element->u0.toDouble() != 0) {
+        if (element->m_u0.toDouble() != 0) {
             result.append(element->getu());
             result.append("==");
-            result.append(element->u0);
+            result.append(element->m_u0);
             result.append("\n");
         }
 
-        if (element->i0.toDouble() != 0) {
+        if (element->m_i0.toDouble() != 0) {
             result.append(element->geti());
             result.append("==");
-            result.append(element->i0);
+            result.append(element->m_i0);
             result.append("\n");
         }
     }
@@ -454,7 +454,7 @@ void SchemeView::wheelEvent ( QWheelEvent * event )
 {
     qreal delta = (event->delta() > 0) ? scaleStep : -scaleStep;
     qreal scaleValue = getScale() * (1 + delta);
-    if(scaleValue > fullScale()) {
+    if (scaleValue > fullScale()) {
         setScale(scaleValue);
         isScaled = true;
     } else {

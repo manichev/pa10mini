@@ -43,7 +43,7 @@ public:
 
     bool get_rj2_before(void) { return rj2_before; };
     void set_rj2_before(bool value) { rj2_before = value; };
-    DAESystem* get_system(void){return system;};
+    DAESystem* get_system(void){return system; };
 
     void set_outFileName(QString value) { outFileName = value; };
 
