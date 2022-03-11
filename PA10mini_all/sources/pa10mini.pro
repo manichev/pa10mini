@@ -102,3 +102,24 @@ SOURCES += circuititem.cpp \
            manzhuk/manzhuk.cpp
 
 RESOURCES += pax_prototype.qrc
+
+exists($$shell_path($${OUT_PWD}/manzhuk)) {
+# ToDo: test it on Win32
+} else {
+
+# Copy plugin's JSONs
+windows:    copydata.commands = $(COPY_DIR) $$shell_path($${PWD}/manzhuk) $$shell_path($${OUT_PWD}/manzhuk)
+unix:       copydata.commands = $(COPY_DIR) $$shell_path($${PWD}/manzhuk) $$shell_path($${OUT_PWD}/)
+}
+
+message(pluginsPWD: $${PWD}/manzhuk)
+message(pluginsOUTPWD: $${OUT_PWD}/manzhuk)
+
+exists($$shell_path($${OUT_PWD}/manzhuk)) {
+# Do nothing
+} else {
+    first.depends = $(first) copydata
+    export(first.depends)
+    export(copydata.commands)
+    QMAKE_EXTRA_TARGETS += first copydata
+}
