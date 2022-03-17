@@ -35,6 +35,7 @@ public:
     QPoint mapToGrid(QPointF) const;
     int contact(QPointF) const;
     static QRectF contactRect();
+    virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = nullptr) override;
 
     QString equal() const;
     QString getu() const;
@@ -137,7 +138,7 @@ public:
     QPainterPath shape() const override;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 class CItem : public CircuitItem
@@ -148,7 +149,7 @@ public:
     QPainterPath shape() const override;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 class LItem : public CircuitItem
@@ -159,7 +160,7 @@ public:
     QPainterPath shape() const override;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 class GItem : public CircuitItem
@@ -170,7 +171,7 @@ public:
     QPainterPath shape() const override;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 class EItem : public CircuitItem
@@ -181,7 +182,7 @@ public:
     QPainterPath shape() const override;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 class IItem : public CircuitItem
@@ -192,7 +193,7 @@ public:
     QPainterPath shape() const override;
 
 protected:
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 CircuitItem *CircuitItemFactory(const QString &name, int id, QPointF pos);

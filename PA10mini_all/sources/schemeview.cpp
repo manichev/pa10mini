@@ -160,6 +160,11 @@ SchemeView::SchemeView(QWidget *parent)
     nodeMenu->addAction(ungroundAction);
 
     //main
+    initMainMenu();
+}
+
+void SchemeView::initMainMenu()
+{
     mainMenu = new QMenu(this);
 
     QAction* addRAction;
@@ -191,6 +196,18 @@ SchemeView::SchemeView(QWidget *parent)
     addIAction = new QAction("Add I", this);
     connect(addIAction, SIGNAL(triggered()), this, SLOT(addI()));
     mainMenu->addAction(addIAction);
+
+    QAction* selectAllAction;
+    selectAllAction = new QAction("Select all", this);
+    connect(selectAllAction, &QAction::triggered, this, &SchemeView::selectAllAction);
+    mainMenu->addAction(selectAllAction);
+}
+
+void SchemeView::selectAllAction() const
+{
+    for (auto item : items()) {
+        item->setSelected(true);
+    }
 }
 
 void SchemeView::deleteItem()

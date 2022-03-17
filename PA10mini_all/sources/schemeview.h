@@ -68,6 +68,7 @@ private slots:
     void addC();
     void addU();
     void addI();
+    void selectAllAction() const;
 
 protected:
     void mousePressEvent(QMouseEvent * event) override;
@@ -78,6 +79,7 @@ protected:
     void leaveEvent (QEvent* event) override;
 
 private:
+    void initMainMenu();
     bool eventFilter(QObject *target, QEvent *event) override;
     inline qreal getScale();
     inline qreal fullScale();
