@@ -35,7 +35,7 @@ public:
     QPoint mapToGrid(QPointF) const;
     int contact(QPointF) const;
     static QRectF contactRect();
-    virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = nullptr) override;
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
     QString equal() const;
     QString getu() const;

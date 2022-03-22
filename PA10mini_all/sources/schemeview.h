@@ -77,6 +77,7 @@ protected:
     void wheelEvent ( QWheelEvent * event ) override;
     void enterEvent (QEvent* event) override;
     void leaveEvent (QEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     void initMainMenu();

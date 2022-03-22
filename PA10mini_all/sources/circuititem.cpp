@@ -154,7 +154,7 @@ QRectF CircuitItem::contactRect()
     return QRectF(-0.05, -0.05, 0.1, 0.1);
 }
 
-void CircuitItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+void CircuitItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (option->state & QStyle::State_Selected) {
         m_pen.setWidthF(0.06);

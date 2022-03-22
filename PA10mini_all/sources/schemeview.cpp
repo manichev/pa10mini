@@ -215,7 +215,10 @@ void SchemeView::deleteItem()
     CircuitItem* element;
 
     foreach (element, elements) {
-        if (qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
+        if (element->isSelected()) {
+            elements.removeOne(element);
+            delete element;
+        } else if (qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
             qgraphicsitem_cast<CircuitItem*>(hoveredItem)->elementType() == element->elementType()) {// cHANGE: && to ==
 
             elements.removeOne(element);
@@ -224,7 +227,6 @@ void SchemeView::deleteItem()
     }
     checkgrid();
 }
-
 void SchemeView::editCircuitItem()
 {
     CircuitItemEdit *tmp = new CircuitItemEdit(reinterpret_cast<CircuitItem*>(hoveredItem));
@@ -466,6 +468,12 @@ void SchemeView::leaveEvent (QEvent* event)
     setMouseTracking(false);
 }
 
+void SchemeView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete) {
+        deleteItem();
+    }
+}
 
 void SchemeView::wheelEvent ( QWheelEvent * event )
 {
