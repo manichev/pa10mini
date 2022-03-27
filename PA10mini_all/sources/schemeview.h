@@ -97,7 +97,7 @@ private:
 
     QList<CircuitNodeItem*> nodes;
     QList<CircuitItem*> elements;
-    QGraphicsItem* hoveredItem;
+    QGraphicsItem* hoveredItem = nullptr;
 
     QMenu* itemMenu;
     QMenu* nodeMenu;

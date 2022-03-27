@@ -218,7 +218,7 @@ void SchemeView::deleteItem()
         if (element->isSelected()) {
             elements.removeOne(element);
             delete element;
-        } else if (qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
+        } else if (hoveredItem && qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
             qgraphicsitem_cast<CircuitItem*>(hoveredItem)->elementType() == element->elementType()) {// cHANGE: && to ==
 
             elements.removeOne(element);
@@ -421,12 +421,24 @@ void SchemeView::mouseMoveEvent(QMouseEvent * event)
 }
 
 
-void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
+void SchemeView:: mouseReleaseEvent(QMouseEvent * event)
 {
-    if (event->button() ==  Qt::MidButton) {
+    if (event->button() == Qt::MidButton) {
         setCursor(Qt::ArrowCursor);
         isGrabbed = false;
-    } else if (event->button() ==  Qt::RightButton ) {
+        hoveredItem = nullptr;
+    } else if (event->button() == Qt::LeftButton) {
+        isGrabbed = false;
+        hoveredItem = nullptr;
+        QGraphicsItem* item = scene()->itemAt(mapToScene(event->pos()), QTransform());
+        if (item)
+            item->setSelected(true);
+        if (event->modifiers() != Qt::KeyboardModifier::ControlModifier) {
+            for (auto other : items())
+                if (other != item)
+                    other->setSelected(false);
+        }
+    } else if (event->button() == Qt::RightButton) {
         hoveredItem = scene()->itemAt(mapToScene(event->pos()), QTransform());
         if (hoveredItem != nullptr) {
             lastMousePos = event->globalPos();
@@ -448,6 +460,7 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
         mainMenu->exec(event->globalPos());
         //}
     } else {
+        hoveredItem = nullptr;
         QGraphicsView::mouseReleaseEvent(event);
     }
 }
