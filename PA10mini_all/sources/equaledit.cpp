@@ -150,7 +150,7 @@ void EqualEdit::open()
             break;
         }
     }
-    fileName = QFileDialog::getOpenFileName(this, tr("Открыть файл"), "tests", tr("(*.txt)"));
+    fileName = QFileDialog::getOpenFileName(this, tr("Открыть файл"), "tests", tr("(*.*)"));
     QFile txtFile(fileName);
     if (!txtFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
