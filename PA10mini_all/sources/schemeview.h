@@ -68,6 +68,7 @@ private slots:
     void addC();
     void addU();
     void addI();
+    void selectAllAction() const;
 
 protected:
     void mousePressEvent(QMouseEvent * event) override;
@@ -76,8 +77,10 @@ protected:
     void wheelEvent ( QWheelEvent * event ) override;
     void enterEvent (QEvent* event) override;
     void leaveEvent (QEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
+    void initMainMenu();
     bool eventFilter(QObject *target, QEvent *event) override;
     inline qreal getScale();
     inline qreal fullScale();
@@ -94,7 +97,7 @@ private:
 
     QList<CircuitNodeItem*> nodes;
     QList<CircuitItem*> elements;
-    QGraphicsItem* hoveredItem;
+    QGraphicsItem* hoveredItem = nullptr;
 
     QMenu* itemMenu;
     QMenu* nodeMenu;

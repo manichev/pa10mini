@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStyleOptionGraphicsItem>
 
 CircuitItem::CircuitItem(QGraphicsItem * parent)
     : QGraphicsItem(parent)
@@ -12,6 +13,7 @@ CircuitItem::CircuitItem(QGraphicsItem * parent)
 
 void CircuitItem::initItem()
 {
+    setFlags(ItemIsSelectable | ItemIsMovable | ItemIsFocusable | ItemIsFocusable);
     m_isItemGrabbed = false;
     m_contactGrabbed = -1;
 
@@ -150,6 +152,16 @@ void CircuitItem::setPenWidth(qreal width)
 QRectF CircuitItem::contactRect()
 {
     return QRectF(-0.05, -0.05, 0.1, 0.1);
+}
+
+void CircuitItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    if ((option->state & QStyle::State_Selected) || isSelected()) {
+        m_pen.setWidthF(0.06);
+        // m_pen.setStyle();
+    } else {
+        m_pen.setWidthF(0.03);
+    }
 }
 
 int CircuitItem::contact(QPointF pos) const
@@ -292,10 +304,12 @@ void CircuitNodeItem::fromJSON(const QJsonObject &jo)
 
 //paint implementation for circuit elements
 
-void RItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr)
+void RItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+    CircuitItem::paint(painter, option, widget);
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(m_pen);
     //resistance
@@ -315,10 +329,12 @@ QPainterPath RItem::shape() const
     return path;
 }
 
-void CItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = nullptr )
+void CItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+    CircuitItem::paint(painter, option, widget);
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(m_pen);
     //capacitor
@@ -340,10 +356,13 @@ QPainterPath CItem::shape() const
     return path;
 }
 
-void LItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
+void LItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+
+    CircuitItem::paint(painter, option, widget);
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(m_pen);
     //inductance
@@ -368,10 +387,12 @@ QPainterPath LItem::shape() const
 }
 
 
-void GItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+void GItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+    CircuitItem::paint(painter, option, widget);
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(m_pen);
     //conduction
@@ -394,10 +415,12 @@ QPainterPath GItem::shape() const
     return path;
 }
 
-void EItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+void EItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+    CircuitItem::paint(painter, option, widget);
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(m_pen);
     //voltage
@@ -423,8 +446,10 @@ QPainterPath EItem::shape() const
 
 void IItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+    CircuitItem::paint(painter, option, widget);
+
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(m_pen);
     //current

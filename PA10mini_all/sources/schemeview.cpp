@@ -160,6 +160,11 @@ SchemeView::SchemeView(QWidget *parent)
     nodeMenu->addAction(ungroundAction);
 
     //main
+    initMainMenu();
+}
+
+void SchemeView::initMainMenu()
+{
     mainMenu = new QMenu(this);
 
     QAction* addRAction;
@@ -191,6 +196,18 @@ SchemeView::SchemeView(QWidget *parent)
     addIAction = new QAction("Add I", this);
     connect(addIAction, SIGNAL(triggered()), this, SLOT(addI()));
     mainMenu->addAction(addIAction);
+
+    QAction* selectAllAction;
+    selectAllAction = new QAction("Select all", this);
+    connect(selectAllAction, &QAction::triggered, this, &SchemeView::selectAllAction);
+    mainMenu->addAction(selectAllAction);
+}
+
+void SchemeView::selectAllAction() const
+{
+    for (auto item : items()) {
+        item->setSelected(true);
+    }
 }
 
 void SchemeView::deleteItem()
@@ -198,7 +215,10 @@ void SchemeView::deleteItem()
     CircuitItem* element;
 
     foreach (element, elements) {
-        if (qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
+        if (element->isSelected()) {
+            elements.removeOne(element);
+            delete element;
+        } else if (hoveredItem && qgraphicsitem_cast<CircuitItem*>(hoveredItem)->getId() == element->getId() &&
             qgraphicsitem_cast<CircuitItem*>(hoveredItem)->elementType() == element->elementType()) {// cHANGE: && to ==
 
             elements.removeOne(element);
@@ -207,7 +227,6 @@ void SchemeView::deleteItem()
     }
     checkgrid();
 }
-
 void SchemeView::editCircuitItem()
 {
     CircuitItemEdit *tmp = new CircuitItemEdit(reinterpret_cast<CircuitItem*>(hoveredItem));
@@ -402,12 +421,24 @@ void SchemeView::mouseMoveEvent(QMouseEvent * event)
 }
 
 
-void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
+void SchemeView:: mouseReleaseEvent(QMouseEvent * event)
 {
-    if (event->button() ==  Qt::MidButton) {
+    if (event->button() == Qt::MidButton) {
         setCursor(Qt::ArrowCursor);
         isGrabbed = false;
-    } else if (event->button() ==  Qt::RightButton ) {
+        hoveredItem = nullptr;
+    } else if (event->button() == Qt::LeftButton) {
+        isGrabbed = false;
+        hoveredItem = nullptr;
+        QGraphicsItem* item = scene()->itemAt(mapToScene(event->pos()), QTransform());
+        if (item)
+            item->setSelected(true);
+        if (event->modifiers() != Qt::KeyboardModifier::ControlModifier) {
+            for (auto other : items())
+                if (other != item)
+                    other->setSelected(false);
+        }
+    } else if (event->button() == Qt::RightButton) {
         hoveredItem = scene()->itemAt(mapToScene(event->pos()), QTransform());
         if (hoveredItem != nullptr) {
             lastMousePos = event->globalPos();
@@ -429,6 +460,7 @@ void SchemeView:: mouseReleaseEvent( QMouseEvent * event )
         mainMenu->exec(event->globalPos());
         //}
     } else {
+        hoveredItem = nullptr;
         QGraphicsView::mouseReleaseEvent(event);
     }
 }
@@ -449,6 +481,12 @@ void SchemeView::leaveEvent (QEvent* event)
     setMouseTracking(false);
 }
 
+void SchemeView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete) {
+        deleteItem();
+    }
+}
 
 void SchemeView::wheelEvent ( QWheelEvent * event )
 {
