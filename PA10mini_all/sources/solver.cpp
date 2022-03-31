@@ -45,7 +45,7 @@ void Solver::setSystem(DAESystem* system_)
     foreach(variable, system->variables)
     {
         names.append(QString::fromStdString(variable.name));
-        if(variable.isDerivative)
+        if (variable.isDerivative)
             dnames.append(QString::fromStdString(variable.name) + "'");
     }
     names+=dnames;
@@ -72,10 +72,10 @@ void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,doubl
         QString line;
         line.append(" ");
         line.append(QString::number(t, 'e'));
-        for(int i = 0; i < trace.size(); ++i)
+        for (int i = 0; i < trace.size(); ++i)
         {
             line.append(" ");
-            if(trace[i] > n)
+            if (trace[i] > n)
                 line.append(QString::number(px[trace[i]-n], 'e'));
             else
                 line.append(QString::number(z[trace[i]], 'e'));
@@ -83,12 +83,12 @@ void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,doubl
         line.append("\n");
         *outTextStream << line;
     }
-    if( t >= tout )
+    if ( t >= tout )
     {
         paxData[0].append(t);
-        for(int i = 0; i < trace.size(); ++i)
+        for (int i = 0; i < trace.size(); ++i)
         {
-            if(trace[i] > n)
+            if (trace[i] > n)
                 paxData[i+1]+=px[trace[i]-n];
             else
                 paxData[i+1]+=z[trace[i]];
@@ -96,7 +96,7 @@ void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,doubl
         tout+= (tk-t0)/maxPoints;
     }
 
-    if( t>=tp )
+    if ( t>=tp )
     {
         tp += (tk-t0)/100;
         emit progressChanged((int)((t-t0)/(tk-t0)*100));
@@ -202,17 +202,17 @@ void Solver::solve(const QString &pathToCompiler)
 
     n = system->countEquals();
     m = system->countDerivatives();
-    // if(system->countVariables() > system->countEquals())
+    // if (system->countVariables() > system->countEquals())
     //    throw invalid_argument("NM!");
     // allocating memory
-    z = new double[n+1];
-    px = new double[m+1];
-    z1 = new double[n+1];
-    px1 = new double[m+1];
-    f = new double[n+1];
-    rj1 = new double[(n+1)*(n+1)];
-    rj2 = new double[(n+1)*(n+1)];
-    ip = new int[20+2*(n+1)+6*(m+1)];
+    z = new double[n + 1];
+    px = new double[m + 1];
+    z1 = new double[n + 1];
+    px1 = new double[m + 1];
+    f = new double[n + 1];
+    rj1 = new double[(n + 1) * (n + 1)];
+    rj2 = new double[(n + 1) * (n + 1)];
+    ip = new int[20 + 2 * (n + 1) + 6 * (m + 1)];
     paxData.clear();
     paxData.resize(trace.size()+1);
 
@@ -224,9 +224,9 @@ void Solver::solve(const QString &pathToCompiler)
 
     ier = rj2_before ? 0 : -1;
 
-    maxPoints = maxMemSize/(sizeof(double)*paxData.size());
-    tout = t0 + (tk - t0)/maxPoints;
-    tp = t0 + (tk-t0)/100;
+    maxPoints = maxMemSize / (sizeof(double) * paxData.size());
+    tout = t0 + (tk - t0) / maxPoints;
+    tp = t0 + (tk - t0) / 100;
 
     create_fcttask(pathToCompiler);
 

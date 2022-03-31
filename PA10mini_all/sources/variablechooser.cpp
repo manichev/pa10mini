@@ -33,7 +33,7 @@ void VariableChooser::apply()
     int i = 0;
     foreach(checkBox, checkBoxes)
     {
-        if(checkBox->checkState() == Qt::Checked)
+        if (checkBox->checkState() == Qt::Checked)
         {
             solver->trace.append(i+1);
             solver->dims.append(lines[i]->text());

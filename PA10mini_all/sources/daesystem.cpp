@@ -11,7 +11,7 @@ DAESystem::DAESystem(void)
 DAESystem::~DAESystem(void)
 {
     std::list<Expression*>::iterator it;
-    for(it = equals.begin(); it != equals.end(); ++it)
+    for (it = equals.begin(); it != equals.end(); ++it)
         delete *it;
 }
 
@@ -21,16 +21,16 @@ int DAESystem::addVariable(string& name_, bool isDerivative_)
 {
     bool exists = false;
     std::list<Variable>::iterator it;
-    if(name_.compare(string("t")) == 0)
+    if (name_.compare(string("t")) == 0)
         return 0;
-    for(it = variables.begin(); it != variables.end(); ++it)
-        if(it->name.compare(name_) == 0)
+    for (it = variables.begin(); it != variables.end(); ++it)
+        if (it->name.compare(name_) == 0)
         {
             exists = true;
             break;
         }
 
-    if(exists == true)
+    if (exists == true)
     {
         it->isDerivative |= isDerivative_;
         return it->id;
@@ -45,8 +45,8 @@ int DAESystem::addVariable(string& name_, bool isDerivative_)
 bool DAESystem::constantExists(string& name_, double& value_)
 {
     std::list<Constant>::iterator it;
-    for(it = constants.begin(); it != constants.end(); ++it)
-        if(it->name.compare(name_) == 0)
+    for (it = constants.begin(); it != constants.end(); ++it)
+        if (it->name.compare(name_) == 0)
         {
             value_ = it->value;
             return true;
@@ -63,8 +63,8 @@ void DAESystem::addConstant(string& name_, double value_)
 string DAESystem::getVariableName(int id_)
 {
     std::list<Variable>::iterator it;
-    for(it = variables.begin(); it != variables.end(); ++it)
-        if(it->id == id_)
+    for (it = variables.begin(); it != variables.end(); ++it)
+        if (it->id == id_)
             return it->name;
     return "";
 }
@@ -80,8 +80,8 @@ void DAESystem::addEqual(Expression* equal)
 void DAESystem::setInitial(string& name, double value)
 {
     std::list<Variable>::iterator it;
-    for(it = variables.begin(); it != variables.end(); ++it)
-    if(it->name.compare(name) == 0)
+    for (it = variables.begin(); it != variables.end(); ++it)
+    if (it->name.compare(name) == 0)
     {
         it->initial = value;
     }
@@ -110,8 +110,8 @@ int DAESystem::countDerivatives()
 {
     std::list<Variable>::iterator it;
     int count = 0;
-    for(it = variables.begin(); it != variables.end(); ++it)
-        if(it->isDerivative == true)
+    for (it = variables.begin(); it != variables.end(); ++it)
+        if (it->isDerivative == true)
             ++count;
     return count;
 }
@@ -120,7 +120,7 @@ int DAESystem::countVariables()
 {
     std::list<Variable>::iterator it;
     int count = 0;
-    for(it = variables.begin(); it != variables.end(); ++it)
+    for (it = variables.begin(); it != variables.end(); ++it)
         ++count;
     return count;
 }
@@ -133,15 +133,15 @@ int DAESystem::countEquals()
 
 void DAESystem::updateExprIds(Expression* expr)
 {
-    if(expr!=0)
+    if (expr!=0)
     {
-        if(expr->type == _variable)
+        if (expr->type == _variable)
         {
             std::list<Variable>::iterator it;
             int count = 1;
-            for(it = variables.begin(); it != variables.end(); ++it)
+            for (it = variables.begin(); it != variables.end(); ++it)
             {
-                if(it->id == expr->id || it->id == -expr->id)
+                if (it->id == expr->id || it->id == -expr->id)
                 {
                     expr->id = (expr->id<0)?-count:count;
                     break;
@@ -159,13 +159,13 @@ void DAESystem::updateAllIds()
 {
     sortVariables();
     std::list<Expression*>::iterator eqIt;
-    for(eqIt = equals.begin(); eqIt != equals.end(); ++eqIt)
+    for (eqIt = equals.begin(); eqIt != equals.end(); ++eqIt)
     {
         updateExprIds(*eqIt);
     }
     std::list<Variable>::iterator it;
     int count = 1;
-    for(it = variables.begin(); it != variables.end(); ++it)
+    for (it = variables.begin(); it != variables.end(); ++it)
     {
             it->id = count;
             count++;

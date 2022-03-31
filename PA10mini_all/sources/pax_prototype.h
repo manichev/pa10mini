@@ -49,5 +49,4 @@ private:
     QStatusBar *m_statusBar;
 };
 
-
 #endif // PAX_PROTOTYPE_H

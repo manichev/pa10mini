@@ -73,7 +73,7 @@ bool PAX_Prototype::eventFilter(QObject *object, QEvent *event)
 {
     Q_UNUSED(object)
 
-    if( event->type() == QEvent::Close )
+    if ( event->type() == QEvent::Close )
     {
         exit(0);
     }
@@ -199,6 +199,9 @@ void PAX_Prototype::saveSchemeAsSlot()
 {
     m_schemePath = QFileDialog::getSaveFileName(this, tr("Сохранить файл схемы как"), m_schemePath, tr("JSON Files (*.json)"));
 
+    if (!m_schemePath.endsWith(".json", Qt::CaseInsensitive))
+        m_schemePath += ".json";
+
     saveScheme(m_schemePath);
 }
 
@@ -290,23 +293,3 @@ void PAX_Prototype::loadScheme(const QString &path)
         }
     }
 }
-
-/*void PAX_Prototype::saveScheme(const QString &path)
-{
-    auto items = ui.schemeView->scene()->items();
-
-    QFile file(path);
-
-    if (! file.open(QIODevice::WriteOnly)) {
-        qCritical() << "Output file " << path << " wasn't opened on write";
-    }
-
-    // QTextStream *stream = new QTextStream(&file);
-    QTextStream stream(&file);
-
-    foreach (auto item, items) {
-        CircuitItem *citem = qgraphicsitem_cast<CircuitItem*>(item);
-        if (citem)
-            stream << citem->toQVariant().toByteArray();
-    }
-}*/
