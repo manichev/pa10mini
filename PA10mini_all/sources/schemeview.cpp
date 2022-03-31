@@ -199,6 +199,7 @@ void SchemeView::initMainMenu()
 
     QAction* selectAllAction;
     selectAllAction = new QAction("Select all", this);
+    selectAllAction->setShortcut(QKeySequence::SelectAll);
     connect(selectAllAction, &QAction::triggered, this, &SchemeView::selectAllAction);
     mainMenu->addAction(selectAllAction);
 }
@@ -483,7 +484,9 @@ void SchemeView::leaveEvent (QEvent* event)
 
 void SchemeView::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Delete) {
+    if (event->matches(QKeySequence::SelectAll)) {
+        selectAllAction();
+    } else if (event->key() == Qt::Key_Delete) {
         deleteItem();
     }
 }
