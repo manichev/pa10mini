@@ -84,16 +84,16 @@ void CircuitItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 
 void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 {
-    if (m_isItemGrabbed) {
-        QPointF d = event->scenePos().toPoint() - event->lastScenePos().toPoint();
-        moveBy(d.x(), d.y());
-        QGraphicsView* a = scene()->views().last();
-        static_cast<SchemeView*>(a)->checkgrid();
-    } if (m_contactGrabbed != -1) {
+    if (m_contactGrabbed != -1) {
         m_contacts[m_contactGrabbed] += mapFromScene(event->scenePos().toPoint()) - mapFromScene(event->lastScenePos().toPoint());
         // rect = shape().boundingRect();
         // rect = rect.united(mainRect);
         prepareGeometryChange();
+        QGraphicsView* a = scene()->views().last();
+        static_cast<SchemeView*>(a)->checkgrid();
+    } else if (m_isItemGrabbed) {
+        QPointF d = event->scenePos().toPoint() - event->lastScenePos().toPoint();
+        moveBy(d.x(), d.y());
         QGraphicsView* a = scene()->views().last();
         static_cast<SchemeView*>(a)->checkgrid();
     }
