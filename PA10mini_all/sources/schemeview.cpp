@@ -297,7 +297,7 @@ void SchemeView::addNode(const QPointF &pos)
     bool stop = false;
     while (!stop) {
         stop = true;
-        foreach(node, nodes)
+        foreach (node, nodes)
             if (newId == node->getId())
                 stop = false;
         if (!stop)
@@ -315,7 +315,7 @@ QString SchemeView::getSystem()
 //dPhi and element equals
     foreach (element, elements) {
         result.append(element->equal() + "\n");
-        result.append(element->getu() + "=");
+        result.append(element->getU() + "=");
         bool isFirstInLine = true;
         foreach (node, nodes) {
             if (!node->isGrounded()) {
@@ -347,11 +347,11 @@ QString SchemeView::getSystem()
                         isFirstInLine = false;
                     else
                         result.append("+");
-                    result.append(element->geti());
+                    result.append(element->getI());
                 } else if (contact == 1) {
                     isFirstInLine = false;
                     result.append("-");
-                    result.append(element->geti());
+                    result.append(element->getI());
                 }
             }
             result.append("=0\n");
@@ -359,17 +359,17 @@ QString SchemeView::getSystem()
     }
 
     foreach (element, elements) {
-        if (element->m_u0.toDouble() != 0) {
-            result.append(element->getu());
+        if (element->getU0().toDouble() != 0) {
+            result.append(element->getU());
             result.append("==");
-            result.append(element->m_u0);
+            result.append(element->getU0());
             result.append("\n");
         }
 
-        if (element->m_i0.toDouble() != 0) {
-            result.append(element->geti());
+        if (element->getI0().toDouble() != 0) {
+            result.append(element->getI());
             result.append("==");
-            result.append(element->m_i0);
+            result.append(element->getI0());
             result.append("\n");
         }
     }

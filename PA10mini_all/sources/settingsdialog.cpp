@@ -9,6 +9,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("Диалог настроек"));
+
     connect(ui->pathToMinGWToolButton, &QToolButton::clicked, this, &SettingsDialog::onPathToMingwToolButtonClick);
 }
 

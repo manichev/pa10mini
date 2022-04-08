@@ -484,20 +484,30 @@ int CircuitItem::getId() const
 QString CircuitItem::equal() const
 {
     QString tmp = eq;
-    tmp.replace("u", getu());
-    tmp.replace("i", geti());
+    tmp.replace("u", getU());
+    tmp.replace("i", getI());
     tmp.replace("f", getF());
     return tmp;
 }
 
-QString CircuitItem::getu() const
+QString CircuitItem::getU() const
 {
     return m_u + m_name;
 }
 
-QString CircuitItem::geti() const
+QString CircuitItem::getI() const
 {
     return m_i + m_name;
+}
+
+QString CircuitItem::getI0() const
+{
+    return m_i0;
+}
+
+QString CircuitItem::getU0() const
+{
+    return m_u0;
 }
 
 RItem::RItem(int id_, QPointF pos_, QGraphicsItem *parent)
