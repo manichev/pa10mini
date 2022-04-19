@@ -150,7 +150,7 @@ void EqualEdit::open()
             break;
         }
     }
-    fileName = QFileDialog::getOpenFileName(this, tr("Открыть файл"), "tests", tr("(*.*)"));
+    fileName = QFileDialog::getOpenFileName(this, tr("РћС‚РєСЂС‹С‚СЊ С„Р°Р№Р»"), "tests", tr("(*.*)"));
     QFile txtFile(fileName);
     if (!txtFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -173,7 +173,7 @@ void EqualEdit::textWasChanged()
 
 void EqualEdit::saveAs()
 {
-    fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл как"), "", tr("(*.txt)"));
+    fileName = QFileDialog::getSaveFileName(this, tr("РЎРѕС…СЂР°РЅРёС‚СЊ С„Р°Р№Р» РєР°Рє"), "", tr("(*.txt)"));
     QFile txtFile(fileName);
     if (!txtFile.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
@@ -186,7 +186,7 @@ void EqualEdit::saveAs()
 void EqualEdit::save()
 {
     if (fileName == "default")
-        fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл как"), "", tr("(*.txt)"));
+        fileName = QFileDialog::getSaveFileName(this, tr("РЎРѕС…СЂР°РЅРёС‚СЊ С„Р°Р№Р» РєР°Рє"), "", tr("(*.txt)"));
     QFile txtFile(fileName);
     if (!txtFile.open(QIODevice::WriteOnly | QIODevice::Text))
         return;

@@ -69,6 +69,15 @@ string DAESystem::getVariableName(int id_)
     return "";
 }
 
+string DAESystem::getVariableDerivativeName(int id_)
+{
+    std::list<Variable>::iterator it;
+    for (it = variables.begin(); it != variables.end(); ++it)
+        if (it->id == id_)
+            if (it->isDerivative)
+                return it->name + "'";
+    return "";
+}
 
 //add equal to system
 void DAESystem::addEqual(Expression* equal)
@@ -81,10 +90,8 @@ void DAESystem::setInitial(string& name, double value)
 {
     std::list<Variable>::iterator it;
     for (it = variables.begin(); it != variables.end(); ++it)
-    if (it->name.compare(name) == 0)
-    {
-        it->initial = value;
-    }
+        if (it->name.compare(name) == 0)
+            it->initial = value;
 }
 
 

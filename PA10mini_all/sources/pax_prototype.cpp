@@ -49,6 +49,7 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
 
     m_statusBar = new QStatusBar();
     setStatusBar(m_statusBar);
+    m_schemePath = "scheme.json";
 }
 
 PAX_Prototype::~PAX_Prototype()
@@ -124,9 +125,13 @@ void PAX_Prototype::solve()
         int pos = name.lastIndexOf('/');
         name.remove(0, pos);
         name.prepend("output/");
-        name.replace(".txt", ".rez"); //".pa10");
+        name.replace(".txt", ".csv");
     } else {
-        name = "output/scheme.pa10";
+        name = m_schemePath;
+        int pos = name.lastIndexOf('/');
+        name.remove(0, pos);
+        name.prepend("output/");
+        name.replace(".json", ".csv");
     }
 
     solver->set_outFileName(name);

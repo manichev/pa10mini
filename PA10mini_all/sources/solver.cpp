@@ -62,44 +62,46 @@ void Solver::outtask(double z[],double px[],int n,int m,double t,double t0,doubl
     if (writeFile && !outFileName.isEmpty() && outTextStream) {
         // Записать заголовок на первом шаге
         if (fabs(t - t0) < h / 4) {
-            *outTextStream << outFileName.split(".")[0];
-            *outTextStream << ",t";
-            for (int i = 0; i < system->countVariables(); ++i)
-                *outTextStream << "," << QString::fromStdString(system->getVariableName(i + 1));
+            *outTextStream << "t";
+
+            for (int i = 0; i < trace.size(); ++i) {
+                if (trace[i] > n)
+                    *outTextStream << "," << QString::fromStdString(system->getVariableDerivativeName(trace[i] - n));
+                else
+                    *outTextStream << "," << QString::fromStdString(system->getVariableName(trace[i]));
+            }
+
             *outTextStream << "\n";
         }
 
+        // Запись данных
         QString line;
         line.append(" ");
         line.append(QString::number(t, 'e'));
-        for (int i = 0; i < trace.size(); ++i)
-        {
-            line.append(" ");
+        for (int i = 0; i < trace.size(); ++i) {
+            line.append(", ");
             if (trace[i] > n)
-                line.append(QString::number(px[trace[i]-n], 'e'));
+                line.append(QString::number(px[trace[i] - n], 'e'));
             else
                 line.append(QString::number(z[trace[i]], 'e'));
         }
         line.append("\n");
         *outTextStream << line;
     }
-    if ( t >= tout )
-    {
+    if (t >= tout) {
         paxData[0].append(t);
-        for (int i = 0; i < trace.size(); ++i)
-        {
+        for (int i = 0; i < trace.size(); ++i) {
             if (trace[i] > n)
-                paxData[i+1]+=px[trace[i]-n];
+                paxData[i + 1] += px[trace[i] - n];
             else
-                paxData[i+1]+=z[trace[i]];
+                paxData[i + 1] += z[trace[i]];
         }
-        tout+= (tk-t0)/maxPoints;
+        tout += (tk - t0) / maxPoints;
     }
 
-    if ( t>=tp )
-    {
-        tp += (tk-t0)/100;
-        emit progressChanged((int)((t-t0)/(tk-t0)*100));
+    if (t >= tp) {
+        tp += (tk - t0) / 100;
+        emit progressChanged((int)((t - t0) / (tk - t0) * 100));
     }
 }
 

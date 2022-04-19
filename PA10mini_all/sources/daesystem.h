@@ -49,6 +49,7 @@ public:
 
     //get variable name
     std::string getVariableName(int id_);
+    std::string getVariableDerivativeName(int id_);
 
     //add equal to system
     void addEqual(Expression* equal);
