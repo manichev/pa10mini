@@ -76,13 +76,8 @@ namespace grammar {
 #ifndef YYSTYPE
     union semantic_type
     {
-
-
-    std::string* sval;
-    Expression* mtree;
-
-
-
+        std::string* sval;
+        Expression* mtree;
     };
 #else
     typedef YYSTYPE semantic_type;

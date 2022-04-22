@@ -11,7 +11,7 @@ class SolverParam : public QDialog
     Q_OBJECT
 
 public:
-    SolverParam(QWidget *parent = 0);
+    SolverParam(QWidget *parent = nullptr);
     ~SolverParam();
 public slots:
     void check();

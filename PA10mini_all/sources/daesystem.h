@@ -33,10 +33,7 @@ struct Constant {
 class DAESystem
 {
 public:
-    //ctor
     DAESystem(void);
-
-    //dctor
     ~DAESystem(void);
 
     //add new variable to system

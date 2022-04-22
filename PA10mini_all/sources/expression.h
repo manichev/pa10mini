@@ -48,10 +48,10 @@ public:
     Expression(double value_);
 
     //function node ctor
-    Expression(Function fn_, Expression* left_ = 0, Expression* right_ = 0);
+    Expression(Function fn_, Expression* left_ = nullptr, Expression* right_ = nullptr);
 
     //operator node ctor
-    Expression(Operator op_, Expression* left_ = 0, Expression* right_ = 0);
+    Expression(Operator op_, Expression* left_ = nullptr, Expression* right_ = nullptr);
 
     //dctor
     ~Expression(void);
@@ -94,12 +94,13 @@ public:
         //operator id
         Operator op;
         //function id
-        Function fn; };
+        Function fn;
+    };
 
 //private data
 private:
-    Expression* left;
-    Expression* right;
+    Expression* left = nullptr;
+    Expression* right = nullptr;
 
     void toConst(double value_);
     void toLeft();
