@@ -36,6 +36,7 @@ private slots:
     void loadSchemeSlot();
     void showSettingsDialog();
     void showStatusBarMessage(const QString &mesg);
+    void showAboutDialog();
 
 private:
     void saveScheme(const QString &path);

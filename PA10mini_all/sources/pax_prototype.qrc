@@ -11,5 +11,6 @@
         <file>Resources/arrow_undo.png</file>
         <file>Resources/document_empty.png</file>
         <file>Resources/settings.png</file>
+        <file>Resources/info.png</file>
     </qresource>
 </RCC>

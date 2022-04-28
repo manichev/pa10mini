@@ -40,6 +40,7 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
     connect(ui.settingButton, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
     connect(ui.settingButton_2, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
     connect(solver, &Solver::statusMessage, this, &PAX_Prototype::showStatusBarMessage);
+    connect(ui.pushButtonAbout, &QPushButton::pressed, this, &PAX_Prototype::showAboutDialog);
 
     installEventFilter(this);
     plot = new PlotWindow;
@@ -50,6 +51,7 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
     m_statusBar = new QStatusBar();
     setStatusBar(m_statusBar);
     m_schemePath = "scheme.json";
+    qApp->setApplicationVersion(tr("%1.%2.%3").arg(major).arg(minor).arg(patch));
 }
 
 PAX_Prototype::~PAX_Prototype()
@@ -185,6 +187,27 @@ void PAX_Prototype::showSettingsDialog()
     }
 
     delete dialog;
+}
+
+void PAX_Prototype::showAboutDialog()
+{
+    QString st = QString(tr("\nПрограмма ПА10-мини \nВерсия %1\n"))
+                 .arg(qApp->applicationVersion());
+
+    st.append("\nУчебная программа для моделирования\n"
+              "простых электрических схем и расчета систем ОДУ.\n");
+
+    st.append(tr("\nАвторы:\n"));
+    const QStringList authors{tr("Маничев В.Б."), tr("Игнатович А.")};
+
+    for (auto author : authors)
+        st.append(author + "\n");
+
+    QMessageBox box;
+    box.setText(st);
+    box.setWindowTitle(tr("О программе"));
+
+    box.exec();
 }
 
 void PAX_Prototype::saveSchemeSlot()
