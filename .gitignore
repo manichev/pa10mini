@@ -19,6 +19,13 @@ Makefile*
 *_wrapper.sh
 moc_*
 *.cmake
+*.bak
+*.orig
+*_LOCAL_*
+*_REMOTE_*
+*_BASE_*
+*_BACKUP_*
+Релиз/*
 
 build-*
 **/build/*
