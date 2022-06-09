@@ -255,8 +255,8 @@ void SchemeView::checkgrid()
     QList<QGraphicsItem*> items;
     QGraphicsItem* item;
     CircuitNodeItem* node;
-    for (int i=0; i <= gridH; ++i) {
-        for (int j=0; j <= gridW; ++j) {
+    for (int i = 0; i <= gridH; ++i) {
+        for (int j = 0; j <= gridW; ++j) {
             int counter = 0;
             items = scene()->items(CircuitItem::contactRect().translated(j, i));
             int id = -1;
@@ -271,8 +271,7 @@ void SchemeView::checkgrid()
 
             if (id == -1 && counter >= 2) {
                 addNode(QPointF(j, i));
-            }
-            else if (id != -1 && counter < 2) {
+            } else if (id != -1 && counter < 2) {
                 foreach (node, nodes) {
                     if (node->getId() == id) {
                         nodes.removeOne(node);

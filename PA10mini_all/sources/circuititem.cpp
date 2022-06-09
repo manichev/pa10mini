@@ -70,12 +70,10 @@ QRectF CircuitItem::boundingRect(void) const
 
 void CircuitItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 {
-    if (event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         setCursor(Qt::ClosedHandCursor);
         m_contactGrabbed = contact(event->scenePos());
-        if (m_contactGrabbed == -1)
-        {
+        if (m_contactGrabbed == -1) {
             m_isItemGrabbed = true;
         }
     }
@@ -102,15 +100,13 @@ void CircuitItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 void CircuitItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event )
 {
     Q_UNUSED(event)
-    if (m_isItemGrabbed)
-    {
+    if (m_isItemGrabbed) {
         setCursor(Qt::ArrowCursor);
         m_isItemGrabbed = false;
         QGraphicsView* a = scene()->views().last();
         static_cast<SchemeView*>(a)->checkgrid();
     }
-    if (m_contactGrabbed != -1)
-    {
+    if (m_contactGrabbed != -1) {
         setCursor(Qt::ArrowCursor);
         m_contactGrabbed = -1;
         //after changing shape
