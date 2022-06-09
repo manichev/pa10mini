@@ -46,5 +46,3 @@ private:
     double c01, c02, c03, l01, l02, l03, a;
     double b, g, a1, a11, a12, a13, a21, a22, a23, a31, a32, a33;
 };
-
-//#include "tst_manzhuk.moc"

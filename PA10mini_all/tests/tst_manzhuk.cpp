@@ -8,38 +8,7 @@
 #include <QObject>
 #include <QtTest/qtest.h>
 
-/*class tst_ManZhuk : public QObject
-{
-    Q_OBJECT
-public:
-    explicit tst_ManZhuk();
-
-private slots:
-    void initTestCase();
-    void tstDuffing();
-
-private:
-    //task001 task002 - Duffing equation
-    inline friend void fcttask001(double z[],double px[],double f[],double rj1[],double rj2[],int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
-    inline friend void outtask001(double z[],double px[],int n,int m,double t,double t0,double tk,double h,double *tkv,int ncon,int ip[]);
-
-private:
-    // Common variables for manzhuk ODE systems solver
-    double rj1[2500], rj2[2500];
-    double z[50], px[50], z1[50], xp1[50], f[50], t, t0, tk, h, hmn, hmx, eps, tkv;
-    int n, nm, m, ncon, nbad, ier, ip[10000];
-    FILE *f01,*f02;
-    // Tasks&tests for ODE sets
-    int i;
-    double pi4, om, tstartp, tendp, deltatp, tkp;
-    double mu0, mu1;
-    double c1, c2, l, r;
-    double mu;
-    double c01, c02, c03, l01, l02, l03, a;
-    double b, g, a1, a11, a12, a13, a21, a22, a23, a31, a32, a33;
-}; */
-
-tst_ManZhuk ManZhukTest;
+static tst_ManZhuk ManZhukTest;
 
 void global_fcttask(double z[],double px[],double f[],double rj1[],double rj2[],int n,int m,double t,double h,int ncon,int *nbad,int ip[]) {
     switch (ManZhukTest.m_currentTest) {
@@ -125,8 +94,11 @@ void tst_ManZhuk::tstDuffing()
 }
 
 //task001 task002 - Duffing equation
-void tst_ManZhuk::fcttask001(double z[],double px[],double f[],double rj1[],double rj2[],int n,int m,double t,double h,int ncon,int *nbad,int ip[])
+void tst_ManZhuk::fcttask001(double z[],double px[],double f[],double rj1[],
+                             double rj2[],int n,int m,double t,double h,int ncon,int *nbad,int ip[])
 {
+    Q_UNUSED(h); Q_UNUSED(ncon); Q_UNUSED(nbad); Q_UNUSED(m); Q_UNUSED(ip)
+
     f[1]=px[1]-z[2];
         rj1[1*n+1]=1e0;
         rj2[1*n+2]=-1e0;
@@ -139,6 +111,8 @@ void tst_ManZhuk::fcttask001(double z[],double px[],double f[],double rj1[],doub
 void tst_ManZhuk::outtask001(double z[], double px[], int n, int m, double t, double t0,
                              double tk, double h, double *tkv, int ncon, int ip[])
 {
+    Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
+
     if (ncon == 0) fprintf(f01,"           Duffing equations, t, x1, x2, px1, px2\n");
     if (ncon == 0) fprintf(f02,"           Duffing equations, t, x1, x2, px1, px2\n");
     // Start print of tabulation results
@@ -159,6 +133,10 @@ m20:
     return;
 }
 
-QTEST_MAIN(tst_ManZhuk)
-
-//#include "tst_manzhuk.moc"
+int main(int argc, char *argv[])
+{
+    QCoreApplication app(argc, argv);
+    app.setAttribute(Qt::AA_Use96Dpi, true);
+    QTEST_SET_MAIN_SOURCE_PATH
+    return QTest::qExec(&ManZhukTest, argc, argv);
+}
