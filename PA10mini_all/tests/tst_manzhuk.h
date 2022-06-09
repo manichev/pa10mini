@@ -16,8 +16,10 @@ class tst_ManZhuk : public QObject
     Q_OBJECT
 public:
     explicit tst_ManZhuk();
-    friend void global_fcttask(double z[],double px[],double f[],double rj1[],double rj2[],int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
-    friend void global_outtask(double z[],double px[],int n,int m,double t,double t0,double tk,double h,double *tkv,int ncon,int ip[]);
+    friend void global_fcttask(double z[],double px[],double f[],double rj1[],double rj2[],
+                               int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
+    friend void global_outtask(double z[],double px[],int n,int m,double t,double t0,
+                               double tk,double h,double *tkv,int ncon,int ip[]);
 
 private slots:
     void initTestCase();
@@ -25,8 +27,10 @@ private slots:
 
 private:
     //task001 task002 - Duffing equation
-    inline void fcttask001(double z[],double px[],double f[],double rj1[],double rj2[],int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
-    inline void outtask001(double z[],double px[],int n,int m,double t,double t0,double tk,double h,double *tkv,int ncon,int ip[]);
+    inline void fcttask001(double z[],double px[],double f[],double rj1[],double rj2[],
+                           int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
+    inline void outtask001(double z[],double px[],int n,int m,double t,double t0,
+                           double tk,double h,double *tkv,int ncon,int ip[]);
 
 public:
     TestName m_currentTest = Notest;
