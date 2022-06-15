@@ -8,7 +8,7 @@
 #include <QtTest/qtest.h>
 
 enum TestName {
-    Notest, Duffing, RC, RLC, VanDerPole
+    Notest, Duffing, LC, RC, RLC, VanDerPole
 };
 
 class tst_ManZhuk : public QObject
@@ -24,12 +24,18 @@ public:
 private slots:
     void initTestCase();
     void tstDuffing();
+    void tstLC();
 
 private:
     //task001 task002 - Duffing equation
     inline void fcttask001(double z[],double px[],double f[],double rj1[],double rj2[],
                            int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
     inline void outtask001(double z[],double px[],int n,int m,double t,double t0,
+                           double tk,double h,double *tkv,int ncon,int ip[]);
+
+    inline void fcttaskLC(double z[],double px[],double f[],double rj1[],double rj2[],
+                           int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
+    inline void outtaskLC(double z[],double px[],int n,int m,double t,double t0,
                            double tk,double h,double *tkv,int ncon,int ip[]);
 
 public:
