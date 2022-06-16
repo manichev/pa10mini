@@ -150,20 +150,26 @@ void tst_ManZhuk::tstLC()
     f02 = fopen("grtaskLC.csv", "wt");
     om = 1e0;
     fprintf(f01, "        relative tolerance - eps=%e pi4=%e\n", eps, pi4);
-    nm = 1;
+    nm = 3;
     fprintf(f01, "        number of method - nm=%d\n", nm);
     t0 = 0e0;
-    tk = 250e0;
+    tk = 10e0;
     tstartp = 0e0;//time for start printing
-    tendp = 250e0;//time for end printing
+    tendp = 10e0;//time for end printing
     deltatp = 1e-1;//step for printing
     fprintf(f01, " tstartp=%e deltatp=%e tendp=%e\n", tstartp, deltatp, tendp);
-    hmn = 1e-10;
-    hmx = tk / 10e0;
+    hmn = 1e-12;
+    hmx = tk;
     n = 2;
     m = 2;
     z[1] = 0e0;
     z[2] = 0e0;
+    /*z[3] = 0;
+    z[4] = 0;
+    z[5] = 0;
+    z[6] = 0;
+    z[7] = 0;
+    z[8] = 0;*/
     z1[1] = fabs(z[1]);
     z1[2] = fabs(z[2]);
 
@@ -191,10 +197,28 @@ x1'-k1*x2=0
 x2'+k2*x1=0
 x1==1
 x2==0*/
-    f[1] = px[1]-z[2];
+    /*f[1] = px[1]-z[2];
     rj1[1*n+1] = 1;
     f[2] = px[2]+z[1];
+    rj1[2*n+2] = 1;*/
+    /*f[1] = px[1]-z[2];
+    rj1[1*n+1] = 1;
+    f[2] = px[2]-((-1)*z[1]+1e16*(1-pow(z[1], 2))*z[2]);
+    rj1[2*n+2] = 1;*/
+    f[1] = px[1]-z[2];
+    rj1[1*n+1] = 1;
+    f[2] = px[2]+z[1]+1+z[2];
     rj1[2*n+2] = 1;
+    /*f[1] = z[7]-1;
+    f[2] = z[7]-z[5];
+    f[3] = z[3]-px[2];
+    rj1[3*n+2] = -1;
+    f[4] = z[2]-z[6];
+    f[5] = z[8]-px[1];
+    rj1[5*n+1] = -1;
+    f[6] = z[8]-(z[5]-z[6]);
+    f[7] = z[4]+z[1];
+    f[8] = z[3]-z[1];*/
 }
 
 void tst_ManZhuk::outtaskLC(double z[],double px[],int n,int m,double t,double t0,
