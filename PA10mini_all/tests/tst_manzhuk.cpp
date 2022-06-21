@@ -20,6 +20,9 @@ void global_fcttask(double z[], double px[], double f[], double rj1[], double rj
     case LC:
         ManZhukTest.fcttaskLC(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
         break;
+    case Dib15i:
+        ManZhukTest.fcttaskDib(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
+        break;
     default:
         break;
     }
@@ -34,6 +37,9 @@ void global_outtask(double z[], double px[], int n, int m, double t, double t0,
         break;
     case LC:
         ManZhukTest.outtaskLC(z, px, n, m, t, t0, tk, h, tkv, ncon, ip);
+        break;
+    case Dib15i:
+        ManZhukTest.outtaskDib(z, px, n, m, t, t0, tk, h, tkv, ncon, ip);
         break;
         default:
         break;
@@ -244,6 +250,23 @@ m20:
     // End print of tabulation results
     fprintf(f02, "%e,   %e,  %e,  %e,  %e\n", t, z[1], z[2], px[1], px[2]);
     return;
+}
+
+void tst_ManZhuk::tstDIB()
+{
+
+}
+
+void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],double rj2[],
+                       int n,int m,double t,double h,int ncon,int *nbad,int ip[])
+{
+
+}
+
+void tst_ManZhuk::outtaskDib(double z[],double px[],int n,int m,double t,double t0,
+                       double tk,double h,double *tkv,int ncon,int ip[])
+{
+
 }
 
 int main(int argc, char *argv[])
