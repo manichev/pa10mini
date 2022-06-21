@@ -65,9 +65,9 @@ private:
     // Dib problem
     const int IZv = 2;
     const int Jdib = 2;
-    double ki[2], kAl[2], kd[2], kp[2], C0[2], Cp0[2];
+    double ki[20], kAl[20], kd[20], kp[20], C0[20], Cp0[20];
     double M0 = 1.5, Mp0 = 0;
     double Al0 = 0.012;
-    double y0[2], Y[2], y1[2], y2[2], v0[2], v1[2], v2[2], P1[2], Pp1[2], P1I[2], P1dI[2], P1d[2];
+    double y0[20], Y[20], y1[20], y2[20], v0[20], v1[20], v2[20], P1[20], Pp1[20], P1I[20], P1dI[20], P1d[20];
     int TotalTime = 100;
 };

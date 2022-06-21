@@ -256,30 +256,30 @@ void tst_ManZhuk::tstDIB()
 {
     double param[12] = {2, 0.01, 0.05, 3.5, 1.2, 0.01, 0.05, 600, 1500, 0.000025, 0.000045, 0.22};
 
-    int k = 0;
-    for (int i = 1; i < (1 + Jdib); ++i, ++k) {
-        ki[k] = param[i];
+    int k = 1;
+    for (int i = 2; i <= (1 + Jdib); ++i) {
+        ki[k++] = param[i-1];
     }
-    for (int i = (1 + Jdib), k = 0; i < (1 + 2 * Jdib); ++i, ++k) {
-        kAl[k] = param[i];
-    }
-
-    for (int i = (1 + 2 * Jdib) , k = 0; i < (1 + 3 * Jdib); ++i, ++k) {
-        kd[k] = param[i];
+    for (int i = (2 + Jdib), k = 1; i <= (1 + 2 * Jdib); ++i) {
+        kAl[k++] = param[i-1];
     }
 
-    for (int i = (1 + 3 * Jdib), k = 0; i < (1 + 4 * Jdib); ++i, ++k) {
-        kp[k] = param[i];
+    for (int i = (2 + 2 * Jdib) , k = 1; i <= (1 + 3 * Jdib); ++i) {
+        kd[k++] = param[i-1];
     }
 
-    for (int i = (1 + 4 * Jdib), k = 0; i < (1 + 5 * Jdib); ++i, ++k) {
-        C0[k] = param[i];
+    for (int i = (2 + 3 * Jdib), k = 1; i <= (1 + 4 * Jdib); ++i) {
+        kp[k++] = param[i-1];
+    }
+
+    for (int i = (2 + 4 * Jdib), k = 1; i <= (1 + 5 * Jdib); ++i) {
+        C0[k++] = param[i-1];
     }
 
     // if (Jdib == 1)
         // f = [1];
     // else
-    double f[2];
+    /*double f[20];
     double Sum = 0;
     for (int i = 0, k = 0; i < Jdib; ++i, ++k) {
         if (i != Jdib) {
@@ -288,63 +288,63 @@ void tst_ManZhuk::tstDIB()
         } else {
           f[k] = 1 - Sum;
         }
-    }
+    }*/
 
-    k = 0;
-    for (int i = 0; i < Jdib; ++i) {
+    k = 1;
+    for (int i = 1; i <= Jdib; ++i) {
         z[k++] = C0[i];
     }
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         z[k++] = y0[i];
     }
     z[k++] = M0;
     z[k++] = Al0;
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         z[k++] = Y[i];
     }
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         z[k++] = P1[i];
     }
-    for (int i = 0; i < Jdib * IZv; ++i) {
+    for (int i = 1; i <= Jdib * IZv; ++i) {
         z[k++] = P1I[i];
     }
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         z[k++] = P1d[i];
     }
-    for (int i = 0; i < Jdib * IZv; ++i) {
+    for (int i = 1; i <= Jdib * IZv; ++i) {
         z[k++] = P1dI[i];
     }
 
     Mp0 = 0;
-    for (int i = 0; i < Jdib; ++i) {
-        Cp0[i] = -ki[Jdib - 1] * C0[Jdib - 1] * M0; // Верно ли это? ki и C0 не меняются
-        Mp0 = Mp0 + ki[Jdib - 1] * C0[Jdib - 1] * M0;
-        Pp1[i] = ki[Jdib - 1] * C0[Jdib - 1] * M0; // Верно ли это? ki и C0 не меняются
+    for (int i = 1; i <= Jdib; ++i) {
+        Cp0[i] = -ki[Jdib] * C0[Jdib] * M0; // Верно ли это? ki и C0 не меняются
+        Mp0 = Mp0 + ki[Jdib] * C0[Jdib] * M0;
+        Pp1[i] = ki[Jdib] * C0[Jdib] * M0; // Верно ли это? ki и C0 не меняются
     }
     Mp0 = -Mp0;
 
-    k = 0;
-    for (int i = 0; i < Jdib; ++i) {
+    k = 1;
+    for (int i = 1; i <= Jdib; ++i) {
         px[k++] = Cp0[i];
     }
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         px[k++] = y0[i];
     }
     px[k++] = Mp0;
     px[k++] = Al0;
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         px[k++] = Y[i];
     }
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         px[k++] = Pp1[i];
     }
-    for (int i = 0; i < Jdib * IZv; ++i) {
+    for (int i = 1; i <= Jdib * IZv; ++i) {
         px[k++] = P1I[i];
     }
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         px[k++] = P1d[i];
     }
-    for (int i = 0; i < Jdib * IZv; ++i) {
+    for (int i = 1; i <= Jdib * IZv; ++i) {
         px[k++] = P1dI[i];
     }
 
@@ -398,45 +398,45 @@ void tst_ManZhuk::tstDIB()
 void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],double rj2[],
                        int n,int m,double t,double h,int ncon,int *nbad,int ip[])
 {
-    int k = 0;
-    for (int i = 0; i < Jdib; ++i) {
-        f[k++] = px[i] + ki[i] * z[i] * z[2 * (Jdib - 1) + 1] - kAl[i] * z[2 * (Jdib - 1) + 2] * z[Jdib]; // А здесь ki идет по i // z[Jdib] - верно ли, что по j?
+    int k = 1;
+    for (int i = 1; i <= Jdib; ++i) {
+        f[k++] = px[i] + ki[i] * z[i] * z[2 * Jdib + 1] - kAl[i] * z[2 * Jdib + 2] * z[Jdib + 1]; // А здесь ki идет по i // z[Jdib] - верно ли, что по j?
     }
 
-    for (int i = Jdib; i < 2 * Jdib; ++i) {
+    for (int i = Jdib + 1; i <= 2 * Jdib; ++i) {
         // xp(i)-ki(i-j)*x(i-j)*x(2*j+1)+kd(i-j)*x(i)+kAl(i-j)*x(2*j+2)*x(i)];
         f[k++] = z[i] - ki[i - Jdib] * z[i - Jdib] * z[2 * Jdib + 1] +
                 kd[i - Jdib] * z[i] + kAl[i - Jdib] * z[2 * Jdib + 2] * z[i];
     }
     double Sum1 = 0;
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         Sum1 = Sum1 + ki[i] * z[i] * z[2 * Jdib + 1];
     }
     double Sum2 = 0;
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         Sum2 = Sum2 + kp[i] * z[Jdib + i] * z[2 * Jdib + 1];
     }
     f[k++] = px[2 * Jdib + 1] + Sum1 + Sum2;
 
     double Sum = 0;
-    for (int i = 0; i < Jdib; ++i) {
+    for (int i = 1; i <= Jdib; ++i) {
         Sum += kAl[i] * z[Jdib + i] * z[2 * i + 2];
     }
     f[k++] = px[2 * Jdib + 2] + Sum;
 
-    for (int i = 2 * Jdib + 2; i < 3 * Jdib + 2; ++i) {
+    for (int i = 2 * Jdib + 3; i <= (3 * Jdib + 2); ++i) {
         f[k++] = px[i] - kp[i - 2 * Jdib - 2] * z[i - Jdib - 2] * z[2 * Jdib + 1];
     }
 
     // rez = [rez; xp(i)-ki(i-3*j-2)*x(i-3*j-2)*x(2*j+1)+kp(i-3*j-2)*x(i)*x(2*j+1)+kAl(i-3*j-2)*x(2*j+2)*x(i)+kd(i-3*j-2)*x(i)];
-    for (int i = (3 * Jdib + 2); i < 4 * Jdib + 2; ++i) {
+    for (int i = (3 * Jdib + 3); i <= (4 * Jdib + 2); ++i) {
         f[k++] = px[i] - ki[i - 3 * Jdib - 2] * z[i - 3 * Jdib - 2] * z[2 * Jdib + 1] +
                 kp[i - 3 * Jdib - 2] * z[i] * z[2 * Jdib + 1] +
                 kAl[i - 3 * Jdib - 2] * z[2 * Jdib + 2] * z[i] + kd[i - 3 * Jdib - 2] * z[i];
     }
 
-    for (int ii = 0; i < IZv; ++ii) {
-        for (int i = (3 + ii) * Jdib + 2; i < (4 + ii) * Jdib + 2; ++i) {
+    for (int ii = 1; i <= IZv; ++ii) {
+        for (int i = (3 + ii) * Jdib + 3; i <= ((4 + ii) * Jdib + 2); ++i) {
             f[k++] = px[i] - ki[i - (3 + ii) * Jdib - 2] * z[i - Jdib] * z[2 * Jdib + 1] +
                     kp[i - (3 + ii) * Jdib - 2] * z[i] * z[2 * Jdib + 1] +
                     kAl[i - (3 + ii) * Jdib - 2] * z[2 * Jdib + 2] * z[i] +
@@ -444,20 +444,20 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
         }
     }
 
-    for (int i = (4 + IZv) * Jdib + 3; i < (5 + IZv) * Jdib + 2; ++i) {
+    for (int i = (4 + IZv) * Jdib + 3; i <= ((5 + IZv) * Jdib + 2); ++i) {
         f[k++] = px[i] - kAl[i-(4 + IZv) * Jdib - 2] * z[2 * Jdib + 2] * z[i - IZv * Jdib] -
                 kd[i - (4 + IZv) * Jdib - 2] * z[i - IZv * Jdib];
     }
 
     int AA, BB;
-    for (int ii = 0; ii < IZv; ii++) {
+    for (int ii = 1; ii <= IZv; ii++) {
         /*if (ii > 6378)
            IZv=int32(IZv);%количество звеньев мономера
            j = int32(j);
            AA = int32(((4+IZv+ii)*j+3));
            BB = int32(((5+IZv+ii)*j+2));
         else*/
-           AA = (4 + IZv + ii) * Jdib + 2; // 3;
+           AA = (4 + IZv + ii) * Jdib + 3; // 3;
            BB = (5 + IZv + ii) * Jdib + 2;
         // }
 
