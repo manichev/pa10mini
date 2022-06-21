@@ -61,4 +61,13 @@ private:
     double mu;
     double c01, c02, c03, l01, l02, l03, a;
     double b, g, a1, a11, a12, a13, a21, a22, a23, a31, a32, a33;
+
+    // Dib problem
+    const int IZv = 2;
+    const int Jdib = 2;
+    double ki[2], kAl[2], kd[2], kp[2], C0[2], Cp0[2];
+    double M0 = 1.5, Mp0 = 0;
+    double Al0 = 0.012;
+    double y0[2], Y[2], y1[2], y2[2], v0[2], v1[2], v2[2], P1[2], Pp1[2], P1I[2], P1dI[2], P1d[2];
+    int TotalTime = 100;
 };
