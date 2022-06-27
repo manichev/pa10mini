@@ -52,7 +52,7 @@ private:
     double rj1[2500], rj2[2500];
     double z[50], px[50], z1[50], xp1[50], f[50], t, t0, tk, h, hmn, hmx, eps, tkv;
     int n, nm, m, ncon, nbad, ier, ip[10000];
-    FILE *f01,*f02;
+    // FILE *f01,*f02;
     // Tasks&tests for ODE sets
     int i;
     double pi4, om, tstartp, tendp, deltatp, tkp;

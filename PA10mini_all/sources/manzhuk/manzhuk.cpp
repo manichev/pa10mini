@@ -1581,10 +1581,9 @@ d410:      fcon=con0;
      radzp=con1;
      if(fdz>conmst)
          radzp=dp/fdz;
-d420:      ;
-/*
+d420:
     fprintf(f01,"ip[1]= %d fnm= %15.8e  fcon= %15.8e fdz= %15.8e h= %15.8e \n ",ip[1],fnm,fcon,fdz,h);
-
+/*
     fprintf(f01,"z,px\n");
     for(i=1;i<=n;i++)fprintf(f01,"%15.8e ",z[i]);
              fprintf(f01,"\n");
@@ -1801,7 +1800,7 @@ d565:     ;
      if(prwar==1)
          ip[11]=ip[11]+1;
      if(prwar==1)
-         printf(" warning! fdz>0.01: t=%15.8e ,h=%15.8e ,eps=%15.8e  \n",t,h,ar[1]);
+         ;//printf(" warning! fdz>0.01: t=%15.8e ,h=%15.8e ,eps=%15.8e  \n",t,h,ar[1]);
      if(ipm==0)
      {
        if(ee>epsp)

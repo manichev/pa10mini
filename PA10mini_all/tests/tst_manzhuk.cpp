@@ -9,6 +9,7 @@
 #include <QtTest/qtest.h>
 
 static tst_ManZhuk ManZhukTest;
+FILE *f01,*f02;
 
 void global_fcttask(double z[], double px[], double f[], double rj1[], double rj2[], int n,
                     int m, double t, double h, int ncon, int *nbad, int ip[])
@@ -353,31 +354,35 @@ void tst_ManZhuk::tstDIB()
     f02 = fopen("grtaskDib15i.csv", "wt");
     om = 1e0;
     fprintf(f01, "        relative tolerance - eps=%e pi4=%e\n", eps, pi4);
-    nm = 3;
+    nm = 1;
     fprintf(f01, "        number of method - nm=%d\n", nm);
     t0 = 0e0;
     tk = 10e0;
     tstartp = 0e0;//time for start printing
     tendp = 10e0;//time for end printing
-    deltatp = 1e-1;//step for printing
+    deltatp = 1e0;//step for printing
     fprintf(f01, " tstartp=%e deltatp=%e tendp=%e\n", tstartp, deltatp, tendp);
     hmn = 1e-10;
+    // h = 1e-6;
     hmx = tk;
     n = 20;
     m = 20;
     ncon = 2;
     ier = -1;
-    z1[0] = fabs(z[0]);
-    z1[1] = fabs(z[1]);
-    z1[2] = fabs(z[2]);
-    z1[3] = fabs(z[3]);
-    z1[4] = fabs(z[4]);
-    z1[5] = fabs(z[5]);
-    z1[6] = fabs(z[6]);
-    z1[7] = fabs(z[7]);
-    z1[8] = fabs(z[8]);
-    z1[9] = fabs(z[9]);
-    z1[10] = fabs(z[10]);
+    z1[0] = 0; //fabs(z[0]);
+    z1[1] = 0; //fabs(z[1]);
+    z1[2] = 0; //fabs(z[2]);
+    z1[3] = 0; //fabs(z[3]);
+    z1[4] = 0; //fabs(z[4]);
+    z1[5] = 0; //fabs(z[5]);
+    z1[6] = 0; //fabs(z[6]);
+    z1[7] = 0; //fabs(z[7]);
+    z1[8] = 0; //fabs(z[8]);
+    z1[9] = 0; //fabs(z[9]);
+    z1[10] = 0; //fabs(z[10]);
+
+    f[1]=0.1;
+    f[2]=0.9;
 
     manzhuk(z, px, z1, xp1, f, rj1, rj2, t, t0, tk, h, hmn, hmx, eps,
             &tkv, n, m, nm, ncon, &nbad, &ier, ip, global_fcttask, global_outtask);
@@ -392,7 +397,6 @@ void tst_ManZhuk::tstDIB()
     printf("\n");
     fclose(f01);
     fclose(f02);
-
 }
 
 void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],double rj2[],
@@ -507,6 +511,28 @@ void tst_ManZhuk::outtaskDib(double z[],double px[],int n,int m,double t,double 
        end
        fprintf(out_X,'\n');
     end*/
+    /*Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
+
+    if (ncon == 0) fprintf(f01, "LC ODE, t, x1, x2, px1, px2\n");
+    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"px1\",  \"px2\"\n");
+    // Start print of tabulation results
+    if (ncon == 0) tkp = deltatp;
+    if (deltatp == 0) goto m20;
+    if (t <= tkp) goto m10;
+    tkp = tkp + deltatp;
+
+m10:
+    if ((tkp < *tkv) && (*tkv >= t)) *tkv = tkp;
+    if (t < tstartp) goto m20;
+    if (t > tendp) goto m20;
+    if (t == *tkv) fprintf(f01, "  %e   %e  %e  %e  %e\n", t, z[1], z[2], px[1], px[2]);
+
+m20:
+    // End print of tabulation results
+    fprintf(f02, "%e,   %e,  %e,  %e,  %e,   %e,  %e,  %e,  %e,   %e,  %e,  %e,  %e,   %e,  %e,  %e,  %e\n",
+            t, z[1], z[2], z[3], z[4], z[5], z[6], z[7], z[8],
+            px[1], px[2], px[3], px[4], px[5], px[6], px[7], px[8]);*/
+    return;
 }
 
 int main(int argc, char *argv[])
