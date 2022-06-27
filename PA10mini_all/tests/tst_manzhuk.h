@@ -63,8 +63,8 @@ private:
     double b, g, a1, a11, a12, a13, a21, a22, a23, a31, a32, a33;
 
     // Dib problem
-    const int IZv = 2;
-    const int Jdib = 2;
+    int IZv = 2;
+    int Jdib = 2;
     double ki[20], kAl[20], kd[20], kp[20], C0[20], Cp0[20];
     double M0 = 1.5, Mp0 = 0;
     double Al0 = 0.012;
