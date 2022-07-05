@@ -22,7 +22,7 @@ void global_fcttask(double z[], double px[], double f[], double rj1[], double rj
         ManZhukTest.fcttaskLC(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
         break;
     case Dib15i:
-        ManZhukTest.fcttaskDib(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
+        ManZhukTest.fcttaskDibI1J2(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
         break;
     default:
         break;
@@ -397,6 +397,142 @@ void tst_ManZhuk::tstDIB()
     printf("\n");
     fclose(f01);
     fclose(f02);
+}
+
+inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double rj1[],double rj2[],
+                       int n,int m,double t,double h,int ncon,int *nbad,int ip[])
+{
+    f[1] = px[1] + ki[1] * z[1] * z[5] - kAl[1] * z[6] * z[3];
+    rj1[1 * n + 1] = 1e0;
+    rj2[1 * n + 1] = ki[1] * z[5];
+    rj2[1 * n + 2] = 0;
+    rj2[1 * n + 3] = - kAl[1] * z[6];
+    rj2[1 * n + 5] = ki[1] * z[1];
+    rj2[1 * n + 6] = - kAl[1] * z[3];
+
+    f[2] = px[2] + ki[2] * z[2] * z[5] - kAl[2] * z[6] * z[3];
+    rj1[2 * n + 2] = 1.0;
+    rj2[2 * n + 2] = ki[2] * z[5];
+    rj2[2 * n + 3] = - kAl[2] * z[6];
+    rj2[2 * n + 5] = ki[2] * z[2];
+    rj2[2 * n + 6] = - kAl[2] * z[3];
+
+
+    f[3] = px[3] - ki[1] * z[1] * z[5] +
+            kd[1] * z[3] + kAl[1] * z[6] * z[3];
+    rj1[3 * n + 3] = 1.0;
+    rj2[3 * n + 1] = - ki[1] * z[5];
+    rj2[3 * n + 3] = kd[1] + kAl[1] * z[6];
+    rj2[3 * n + 5] = - ki[1] * z[1];
+    rj2[3 * n + 6] = kAl[1] * z[3];
+
+    f[4] = px[4] - ki[2] * z[2] * z[5] +
+            kd[2] * z[4] + kAl[2] * z[6] * z[4];
+    rj1[4 * n + 4] = 1.0;
+    rj2[4 * n + 2] = - ki[2] * z[5];
+    rj2[4 * n + 4] = kd[2] + kAl[2] * z[6];
+    rj2[4 * n + 5] = - ki[2] * z[2];
+    rj2[4 * n + 6] = kAl[2] * z[4];
+
+
+    double Sum1 = 0;
+    Sum1 = ki[1] * z[1] * z[5] + ki[2] * z[2] * z[5];
+
+    double Sum2 = 0;
+    Sum2 = kp[1] * z[3] * z[5] + kp[2] * z[4] * z[5];
+
+    f[5] = px[5] + ki[1] * z[1] * z[5] + ki[2] * z[2] * z[5] + kp[1] * z[3] * z[5] + kp[2] * z[4] * z[5];
+    rj1[5 * n + 5] = 1.0;
+    rj2[5 * n + 1] = ki[1] * z[5];
+    rj2[5 * n + 2] = ki[2] * z[5];
+    rj2[5 * n + 3] = kp[1] * z[5];
+    rj2[5 * n + 4] = kp[2] * z[5];
+    rj2[5 * n + 5] = ki[1] * z[1] + ki[2] * z[2] + kp[1] * z[3] + kp[2] * z[4];
+
+
+    double Sum = 0;
+    Sum += kAl[1] * z[3] * z[4];
+    Sum += kAl[2] * z[4] * z[6];
+
+    f[6] = px[6] + kAl[1] * z[3] * z[4] + kAl[2] * z[4] * z[6];
+    rj1[6 * n + 6] = 1.0;
+    rj2[6 * n + 3] = kAl[1] * z[4];
+    rj2[6 * n + 4] = kAl[1] * z[3] + kAl[2] * z[6];
+    rj2[6 * n + 6] = kAl[2] * z[4];
+
+
+    f[7] = px[7] - kp[1] * z[3] * z[5];
+    rj1[7 * n + 7] = 1.0;
+    rj2[7 * n + 3] = - kp[1] * z[5];
+    // rj2[7 * n + 7] = 1.0;
+    rj2[7 * n + 5] = - kp[1] * z[3];
+
+    f[8] = px[8] - kp[2] * z[4] * z[5];
+    rj1[8 * n + 8] = 1.0;
+    rj2[8 * n + 4] = - kp[2] * z[5];
+    rj2[8 * n + 5] = - kp[2] * z[4];
+    // rj2[8 * n + 8] = 1.0;
+
+
+    f[9] = px[9] - ki[1] * z[1] * z[5] + kp[1] * z[9] * z[5] + kAl[1] * z[6] * z[9] + kd[1] * z[9];
+    rj1[9 * n + 9] = 1.0;
+    rj2[9 * n + 1] = - ki[1] * z[5];
+    rj2[9 * n + 5] = kp[1] * z[9] - ki[1] * z[1];
+    rj2[9 * n + 6] = kAl[1] * z[9];
+    rj2[9 * n + 9] = kp[1] * z[5] + kAl[1] * z[6] + kd[1];
+
+    f[10] = px[10] - ki[2] * z[2] * z[5] + kp[2] * z[10] * z[5] + kAl[2] * z[6] * z[10] + kd[2] * z[10];
+    rj1[10 * n + 10] = 1.0;
+    rj2[10 * n + 2] = - ki[2] * z[5];
+    rj2[10 * n + 5] = - ki[2] * z[2] + kp[2] * z[10];
+    rj2[10 * n + 6] = kAl[2] * z[10];
+    rj2[10 * n + 10] = kp[2] * z[5] + kAl[2] * z[6] + kd[2];
+
+
+    // ii = 1, i = 11
+    f[11] = px[11] - ki[1] * z[9] * z[5] + kp[1] * z[11] * z[5] + kAl[1] * z[6] * z[11] + kd[1] * z[11];
+    rj1[11 * n + 11] = 1.0;
+    rj2[11 * n + 5] = - ki[1] * z[9] + kp[1] * z[11];
+    rj2[11 * n + 6] = kAl[1] * z[11];
+    rj2[11 * n + 9] = - ki[1] * z[5];
+    rj2[11 * n + 11] = kp[1] * z[5] + kAl[1] * z[6] + kd[1];
+
+    // ii = 1, i = 12
+    f[12] = px[12] - ki[2] * z[10] * z[5] + kp[2] * z[12] * z[5] + kAl[2] * z[6] * z[12] + kd[2] * z[12];
+    rj1[12 * n + 12] = 1.0;
+    rj2[12 * n + 5] = - ki[2] * z[10] + kp[2] * z[12];
+    rj2[12 * n + 6] = kAl[2] * z[12];
+    rj2[12 * n + 10] = - ki[2] * z[5];
+    rj2[12 * n + 12] = kp[2] * z[5] + kAl[2] * z[6] + kd[2];
+
+    // ii = 2, i = 13
+    // f[13] = px[13] - ki[3] * z[11] * z[5] + kp[3] * z[13] * z[5] + kAl[3] * z[6] * z[13] + kd[3] * z[13];
+    // ii = 2, i = 14
+    // f[14] = px[14] - ki[4] * z[12] * z[5] + kp[4] * z[14] * z[5] + kAl[4] * z[6] * z[14] + kd[4] * z[14];
+
+    f[13] = px[13] - kAl[1] * z[6] * z[11] - kd[1] * z[11];
+    rj1[13 * n + 13] = 1.0;
+    rj2[13 * n + 6]  = - kAl[1] * z[11];
+    rj2[13 * n + 11] = - kAl[1] * z[6] - kd[1];
+
+    f[14] = px[14] - kAl[2] * z[6] * z[12] - kd[2] * z[12];
+    rj1[14 * n + 14] = 1.0;
+    rj2[14 * n + 6]  = - kAl[2] * z[12];
+    rj2[14 * n + 12] = - kAl[2] * z[6] - kd[2];
+
+    int AA, BB;
+    AA = 15;
+    BB = 16;
+
+    f[15] = px[15] - kAl[1] * z[6] * z[13] - kd[1] * z[13];
+    rj1[15 * n + 15] = 1.0;
+    rj2[15 * n + 6] = - kAl[1] * z[13];
+    rj2[15 * n + 13] = - kAl[1] * z[6] - kd[1];
+
+    f[16] = px[16] - kAl[2] * z[6] * z[14] - kd[2] * z[14];
+    rj1[16 * n + 16] = 1.0;
+    rj2[16 * n + 6] = - kAl[2] * z[14];
+    rj2[16 * n + 14] = - kAl[2] * z[6] - kd[2];
 }
 
 void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],double rj2[],
