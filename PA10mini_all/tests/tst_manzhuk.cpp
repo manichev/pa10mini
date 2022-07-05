@@ -409,7 +409,7 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
 
     for (int i = Jdib + 1; i <= 2 * Jdib; ++i) {
         // xp(i)-ki(i-j)*x(i-j)*x(2*j+1)+kd(i-j)*x(i)+kAl(i-j)*x(2*j+2)*x(i)];
-        f[k++] = z[i] - ki[i - Jdib] * z[i - Jdib] * z[2 * Jdib + 1] +
+        f[k++] = px[i] - ki[i - Jdib] * z[i - Jdib] * z[2 * Jdib + 1] +
                 kd[i - Jdib] * z[i] + kAl[i - Jdib] * z[2 * Jdib + 2] * z[i];
     }
     double Sum1 = 0;
@@ -439,7 +439,7 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
                 kAl[i - 3 * Jdib - 2] * z[2 * Jdib + 2] * z[i] + kd[i - 3 * Jdib - 2] * z[i];
     }
 
-    for (int ii = 1; i <= IZv; ++ii) {
+    for (int ii = 1; ii <= IZv; ++ii) {
         for (int i = (3 + ii) * Jdib + 3; i <= ((4 + ii) * Jdib + 2); ++i) {
             f[k++] = px[i] - ki[i - (3 + ii) * Jdib - 2] * z[i - Jdib] * z[2 * Jdib + 1] +
                     kp[i - (3 + ii) * Jdib - 2] * z[i] * z[2 * Jdib + 1] +
