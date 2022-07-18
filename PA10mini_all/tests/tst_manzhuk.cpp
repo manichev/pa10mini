@@ -22,7 +22,11 @@ void global_fcttask(double z[], double px[], double f[], double rj1[], double rj
         ManZhukTest.fcttaskLC(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
         break;
     case Dib15i:
-        ManZhukTest.fcttaskDibI1J2(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
+        ManZhukTest.fcttaskDib(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
+        /*if (ManZhukTest.Jdib == 1)
+            ManZhukTest.fcttaskDibI1J1(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
+        else if (ManZhukTest.Jdib == 2)
+            ManZhukTest.fcttaskDibI1J2(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);*/
         break;
     default:
         break;
@@ -255,41 +259,28 @@ m20:
 
 void tst_ManZhuk::tstDIB()
 {
-    double param[12] = {2, 0.01, 0.05, 3.5, 1.2, 0.01, 0.05, 600, 1500, 0.000025, 0.000045, 0.22};
+    double param[13] = {0, 2, 0.01, 0.05, 3.5, 1.2, 0.01, 0.05, 600, 1500, 0.000025, 0.000045, 0.22};
 
     int k = 1;
-    for (int i = 2; i <= (1 + Jdib); ++i) {
-        ki[k++] = param[i-1];
+    int Jdib_ini = 2;
+    for (int i = 2; i <= (1 + Jdib_ini); ++i) {
+        ki[k++] = param[i];
     }
-    for (int i = (2 + Jdib), k = 1; i <= (1 + 2 * Jdib); ++i) {
-        kAl[k++] = param[i-1];
-    }
-
-    for (int i = (2 + 2 * Jdib) , k = 1; i <= (1 + 3 * Jdib); ++i) {
-        kd[k++] = param[i-1];
+    for (int i = (2 + Jdib_ini), k = 1; i <= (1 + 2 * Jdib_ini); ++i) {
+        kAl[k++] = param[i];
     }
 
-    for (int i = (2 + 3 * Jdib), k = 1; i <= (1 + 4 * Jdib); ++i) {
-        kp[k++] = param[i-1];
+    for (int i = (2 + 2 * Jdib_ini) , k = 1; i <= (1 + 3 * Jdib_ini); ++i) {
+        kd[k++] = param[i];
     }
 
-    for (int i = (2 + 4 * Jdib), k = 1; i <= (1 + 5 * Jdib); ++i) {
-        C0[k++] = param[i-1];
+    for (int i = (2 + 3 * Jdib_ini), k = 1; i <= (1 + 4 * Jdib_ini); ++i) {
+        kp[k++] = param[i];
     }
 
-    // if (Jdib == 1)
-        // f = [1];
-    // else
-    /*double f[20];
-    double Sum = 0;
-    for (int i = 0, k = 0; i < Jdib; ++i, ++k) {
-        if (i != Jdib) {
-            f[k] = 0.1;
-            Sum = Sum + 0.1;
-        } else {
-          f[k] = 1 - Sum;
-        }
-    }*/
+    for (int i = (2 + 4 * Jdib_ini), k = 1; i <= (1 + 5 * Jdib_ini); ++i) {
+        C0[k++] = param[i];
+    }
 
     k = 1;
     for (int i = 1; i <= Jdib; ++i) {
@@ -354,19 +345,18 @@ void tst_ManZhuk::tstDIB()
     f02 = fopen("grtaskDib15i.csv", "wt");
     om = 1e0;
     fprintf(f01, "        relative tolerance - eps=%e pi4=%e\n", eps, pi4);
-    nm = 1;
+    nm = 3;
     fprintf(f01, "        number of method - nm=%d\n", nm);
     t0 = 0e0;
-    tk = 10e0;
+    tk = 100e0;
     tstartp = 0e0;//time for start printing
-    tendp = 10e0;//time for end printing
+    tendp = 100e0;//time for end printing
     deltatp = 1e0;//step for printing
     fprintf(f01, " tstartp=%e deltatp=%e tendp=%e\n", tstartp, deltatp, tendp);
     hmn = 1e-10;
     // h = 1e-6;
     hmx = tk;
-    n = 20;
-    m = 20;
+    m = n = 2 + (2 * IZv + 3) * Jdib;
     ncon = 2;
     ier = -1;
     z1[0] = 0; //fabs(z[0]);
@@ -490,7 +480,7 @@ inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double
 
 
     // ii = 1, i = 11
-    f[11] = px[11] - ki[1] * z[9] * z[5] + kp[1] * z[11] * z[5] + kAl[1] * z[6] * z[11] + kd[1] * z[11];
+    /*f[11] = px[11] - ki[1] * z[9] * z[5] + kp[1] * z[11] * z[5] + kAl[1] * z[6] * z[11] + kd[1] * z[11];
     rj1[11 * n + 11] = 1.0;
     rj2[11 * n + 5] = - ki[1] * z[9] + kp[1] * z[11];
     rj2[11 * n + 6] = kAl[1] * z[11];
@@ -503,24 +493,24 @@ inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double
     rj2[12 * n + 5] = - ki[2] * z[10] + kp[2] * z[12];
     rj2[12 * n + 6] = kAl[2] * z[12];
     rj2[12 * n + 10] = - ki[2] * z[5];
-    rj2[12 * n + 12] = kp[2] * z[5] + kAl[2] * z[6] + kd[2];
+    rj2[12 * n + 12] = kp[2] * z[5] + kAl[2] * z[6] + kd[2];*/
 
     // ii = 2, i = 13
     // f[13] = px[13] - ki[3] * z[11] * z[5] + kp[3] * z[13] * z[5] + kAl[3] * z[6] * z[13] + kd[3] * z[13];
     // ii = 2, i = 14
     // f[14] = px[14] - ki[4] * z[12] * z[5] + kp[4] * z[14] * z[5] + kAl[4] * z[6] * z[14] + kd[4] * z[14];
 
-    f[13] = px[13] - kAl[1] * z[6] * z[11] - kd[1] * z[11];
-    rj1[13 * n + 13] = 1.0;
-    rj2[13 * n + 6]  = - kAl[1] * z[11];
-    rj2[13 * n + 11] = - kAl[1] * z[6] - kd[1];
+    f[11] = px[11] - kAl[1] * z[6] * z[9] - kd[1] * z[9];
+    rj1[11 * n + 11] = 1.0;
+    rj2[11 * n + 6]  = - kAl[1] * z[9];
+    rj2[11 * n + 9] = - kAl[1] * z[6] - kd[1];
 
-    f[14] = px[14] - kAl[2] * z[6] * z[12] - kd[2] * z[12];
-    rj1[14 * n + 14] = 1.0;
-    rj2[14 * n + 6]  = - kAl[2] * z[12];
-    rj2[14 * n + 12] = - kAl[2] * z[6] - kd[2];
+    f[12] = px[12] - kAl[2] * z[6] * z[10] - kd[2] * z[10];
+    rj1[12 * n + 12] = 1.0;
+    rj2[12 * n + 6]  = - kAl[2] * z[10];
+    rj2[12 * n + 10] = - kAl[2] * z[6] - kd[2];
 
-    int AA, BB;
+    /*int AA, BB;
     AA = 15;
     BB = 16;
 
@@ -532,7 +522,62 @@ inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double
     f[16] = px[16] - kAl[2] * z[6] * z[14] - kd[2] * z[14];
     rj1[16 * n + 16] = 1.0;
     rj2[16 * n + 6] = - kAl[2] * z[14];
-    rj2[16 * n + 14] = - kAl[2] * z[6] - kd[2];
+    rj2[16 * n + 14] = - kAl[2] * z[6] - kd[2];*/
+}
+
+void tst_ManZhuk::fcttaskDibI1J1(double z[], double px[], double f[], double rj1[], double rj2[], int n, int m, double t, double h, int ncon, int* nbad, int ip[])
+{
+    // z[1]=C1, z[2]=y01,z[3]=M, z[4]=AL, z[5]=Y1, z[6]=P11, z[7]=P1d1
+    f[1] = px[1] + ki[1] * z[1]*z[3] - kAl[1] * z[4] * z[2] ;
+    rj1[1 * n + 1] = 1.0;
+
+    rj2[1 * n + 1] = ki[1] * z[3];
+    rj2[1 * n + 2] = -kAl[1] * z[4];
+    rj2[1 * n + 3] = ki[1] * z[1];
+    rj2[1 * n + 4] = -kAl[1] * z[2];
+
+    f[2] = px[2] - ki[1] * z[1]*z[3] + kd[1]  * z[2] + kAl[1] * z[4] * z[2];
+    rj1[2 * n + 2] = 1.0;
+
+    rj2[2 * n + 1] = -ki[1] * z[3];
+    rj2[2 * n + 2] = kd[1] + kAl[1] * z[4];
+    rj2[2 * n + 3] = -ki[1] * z[1];
+    rj2[2 * n + 4] = kAl[1] * z[2];
+
+    f[3] = px[3] + ki[1] * z[1] * z[3] + kp[1] * z[2] * z[3];
+    rj1[3 * n + 3] = 1.0;
+
+    rj2[3 * n + 1] = ki[1] * z[3];
+    rj2[3 * n + 2] = kp[1] * z[3];
+    rj2[3 * n + 3] = kp[1] * z[2];
+
+    f[4] = px[4] + kAl[1] * z[2] * z[4];
+    rj1[4 * n + 4] = 1.0;
+
+    rj2[4 * n + 2] = kAl[1] * z[4];
+    rj2[4 * n + 4] = kAl[1] * z[2];
+
+    f[5] = px[5] - kp[1] * z[2] * z[3];
+    rj1[5 * n + 5] = 1.0;
+
+    rj2[5 * n + 2] = -kp[1] * z[3];
+    rj2[5 * n + 3] = -kp[1] * z[2];
+
+    f[6] = px[6] - ki[1] * z[1] * z[3] + kp[1] * z[3] + kAl[1] * z[4] * z[6] + kd[1] * z[6];
+    rj1[6 * n + 6] = 1.0;
+
+    rj2[6 * n + 1] = -ki[1] * z[3];
+    rj2[6 * n + 3] = -ki[1] * z[1] + kp[1];
+    rj2[6 * n + 4] = kAl[1] * z[6];
+    rj2[6 * n + 6] = kAl[1] * z[4]+ kd[1];
+
+    f[7] = px[7] - kAl[1] * z[6] * z[4] - kd[1] * z[6];
+    rj1[7 * n + 7] = 1.0;
+
+    rj2[7 * n + 4] = -kAl[1] * z[6];
+    rj2[7 * n + 6] = -kAl[1] * z[4]-kd[1];
+
+    return;
 }
 
 void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],double rj2[],
@@ -575,7 +620,7 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
                 kAl[i - 3 * Jdib - 2] * z[2 * Jdib + 2] * z[i] + kd[i - 3 * Jdib - 2] * z[i];
     }
 
-    for (int ii = 1; ii <= IZv; ++ii) {
+    for (int ii = 1; ii <= IZv - 1; ++ii) {
         for (int i = (3 + ii) * Jdib + 3; i <= ((4 + ii) * Jdib + 2); ++i) {
             f[k++] = px[i] - ki[i - (3 + ii) * Jdib - 2] * z[i - Jdib] * z[2 * Jdib + 1] +
                     kp[i - (3 + ii) * Jdib - 2] * z[i] * z[2 * Jdib + 1] +
@@ -584,9 +629,9 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
         }
     }
 
-    for (int i = (4 + IZv) * Jdib + 3; i <= ((5 + IZv) * Jdib + 2); ++i) {
-        f[k++] = px[i] - kAl[i-(4 + IZv) * Jdib - 2] * z[2 * Jdib + 2] * z[i - IZv * Jdib] -
-                kd[i - (4 + IZv) * Jdib - 2] * z[i - IZv * Jdib];
+    for (int i = (3 + IZv) * Jdib + 3; i <= ((4 + IZv) * Jdib + 2); ++i) {
+        f[k++] = px[i] - kAl[i-(3 + IZv) * Jdib - 2] * z[2 * Jdib + 2] * z[i - IZv * Jdib] -
+                kd[i - (3 + IZv) * Jdib - 2] * z[i - IZv * Jdib];
     }
 
     rj1[1] = 1e0;
@@ -611,20 +656,13 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
     rj1[19*n+19] = 1e0;
 
     int AA, BB;
-    for (int ii = 1; ii <= IZv; ii++) {
-        /*if (ii > 6378)
-           IZv=int32(IZv);%количество звеньев мономера
-           j = int32(j);
-           AA = int32(((4+IZv+ii)*j+3));
-           BB = int32(((5+IZv+ii)*j+2));
-        else*/
-           AA = (4 + IZv + ii) * Jdib + 3; // 3;
-           BB = (5 + IZv + ii) * Jdib + 2;
-        // }
+    for (int ii = 1; ii <= IZv - 1; ii++) {
+        AA = (3 + IZv + ii) * Jdib + 3;
+        BB = (4 + IZv + ii) * Jdib + 2;
 
         for (int i = AA; i < BB; ++i) {
-            f[k++] = px[i] - kAl[i - (4 + IZv + ii) * Jdib - 2] * z[2 * Jdib + 2] * z[i - Jdib] -
-                    kd[i - (4 + IZv + ii) * Jdib - 2] * z[i - Jdib];
+            f[k++] = px[i] - kAl[i - (3 + IZv + ii) * Jdib - 2] * z[2 * Jdib + 2] * z[i - IZv * Jdib] -
+                    kd[i - (3 + IZv + ii) * Jdib - 2] * z[i - IZv * Jdib];
         }
     }
 }
@@ -632,25 +670,10 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
 void tst_ManZhuk::outtaskDib(double z[],double px[],int n,int m,double t,double t0,
                        double tk,double h,double *tkv,int ncon,int ip[])
 {
-    int Kol_Ur = 20;
+    Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
 
-    /*for zac=1:1:Kol_Ur
-       fprintf(out_X,'x(%d) ',zac);
-       fprintf(out_X,'\n');
-       fprintf(out_X,'Time  ');
-       fprintf(out_X,'x(%d) ',zac);
-       fprintf(out_X,'\n');
-       for zac1=1:1:length(x(:,1))
-         fprintf(out_X, '%d ', t(zac1));
-         fprintf(out_X, '%d ', x(zac1,zac));
-         fprintf(out_X,'\n');
-       end
-       fprintf(out_X,'\n');
-    end*/
-    /*Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
-
-    if (ncon == 0) fprintf(f01, "LC ODE, t, x1, x2, px1, px2\n");
-    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"px1\",  \"px2\"\n");
+    if (ncon == 0) fprintf(f01, "t, x1, x2, x3, x4, x5, x6, x7\n");
+    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\"\n");
     // Start print of tabulation results
     if (ncon == 0) tkp = deltatp;
     if (deltatp == 0) goto m20;
@@ -661,13 +684,11 @@ m10:
     if ((tkp < *tkv) && (*tkv >= t)) *tkv = tkp;
     if (t < tstartp) goto m20;
     if (t > tendp) goto m20;
-    if (t == *tkv) fprintf(f01, "  %e   %e  %e  %e  %e\n", t, z[1], z[2], px[1], px[2]);
+    if (t == *tkv) fprintf(f01, " %e %e %e %e %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
 
 m20:
     // End print of tabulation results
-    fprintf(f02, "%e,   %e,  %e,  %e,  %e,   %e,  %e,  %e,  %e,   %e,  %e,  %e,  %e,   %e,  %e,  %e,  %e\n",
-            t, z[1], z[2], z[3], z[4], z[5], z[6], z[7], z[8],
-            px[1], px[2], px[3], px[4], px[5], px[6], px[7], px[8]);*/
+    fprintf(f02, " %e   %e  %e  %e  %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
     return;
 }
 
@@ -678,19 +699,3 @@ int main(int argc, char *argv[])
     QTEST_SET_MAIN_SOURCE_PATH
     return QTest::qExec(&ManZhukTest, argc, argv);
 }
-
-//#if QT_CONFIG(library)
-    /*
-     * Set custom path since CI doesn't install test plugins
-     */
-    //QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath()
-    //                                 + QStringLiteral("/../../../plugins"));
-//#ifdef Q_OS_WIN
-    //QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath()
-    //                                 + QStringLiteral("/../../../../plugins"));
-//#endif
-//#endif // QT_CONFIG(library)
-    /*bus = QCanBus::instance();
-    QVERIFY(bus);
-    QCanBus *sameInstance = QCanBus::instance();
-    QCOMPARE(bus, sameInstance);*/

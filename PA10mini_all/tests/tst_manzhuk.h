@@ -47,8 +47,13 @@ private:
     inline void fcttaskDibI1J2(double z[],double px[],double f[],double rj1[],double rj2[],
                            int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
 
+    inline void fcttaskDibI1J1(double z[],double px[],double f[],double rj1[],double rj2[],
+                           int n,int m,double t,double h,int ncon,int *nbad,int ip[]);
+
 public:
     TestName m_currentTest = Notest;
+    int IZv = 2;
+    int Jdib = 2;
 
 private:
     // Common variables for manzhuk ODE systems solver
@@ -66,8 +71,6 @@ private:
     double b, g, a1, a11, a12, a13, a21, a22, a23, a31, a32, a33;
 
     // Dib problem
-    int IZv = 1;
-    int Jdib = 2;
     double ki[20], kAl[20], kd[20], kp[20], C0[20], Cp0[20];
     double M0 = 1.5, Mp0 = 0;
     double Al0 = 0.012;
