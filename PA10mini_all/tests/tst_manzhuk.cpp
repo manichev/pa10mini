@@ -670,10 +670,16 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
 void tst_ManZhuk::outtaskDib(double z[],double px[],int n,int m,double t,double t0,
                        double tk,double h,double *tkv,int ncon,int ip[])
 {
-    Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
+    Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
 
-    if (ncon == 0) fprintf(f01, "t, x1, x2, x3, x4, x5, x6, x7\n");
-    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\"\n");
+    if (ncon == 0) { // fprintf(f01, "t, x1, x2, x3, x4, x5, x6, x7\n");
+        fprintf(f01, "t");
+        for (int i = 1; i <= n; ++i) {
+            fprintf(f01, ", x%d", i);
+        }
+        fprintf(f01, "\n");
+    }
+    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\",  \"x5\",  \"x6\",  \"x7\"\n");
     // Start print of tabulation results
     if (ncon == 0) tkp = deltatp;
     if (deltatp == 0) goto m20;
@@ -684,7 +690,13 @@ m10:
     if ((tkp < *tkv) && (*tkv >= t)) *tkv = tkp;
     if (t < tstartp) goto m20;
     if (t > tendp) goto m20;
-    if (t == *tkv) fprintf(f01, " %e %e %e %e %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
+    if (t == *tkv) {
+        fprintf(f01, " %e", t);
+        for (int i = 1; i <= n; ++i) {
+            fprintf(f01, " %e", z[i]);
+        }
+        fprintf(f01, "\n");
+    }
 
 m20:
     // End print of tabulation results
