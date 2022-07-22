@@ -536,7 +536,7 @@ void tst_ManZhuk::fcttaskDibI1J1(double z[], double px[], double f[], double rj1
     rj2[1 * n + 3] = ki[1] * z[1];
     rj2[1 * n + 4] = -kAl[1] * z[2];
 
-    f[2] = px[2] - ki[1] * z[1]*z[3] + kd[1]  * z[2] + kAl[1] * z[4] * z[2];
+    f[2] = px[2] - ki[1] * z[1]*z[3] + kd[1] * z[2] + kAl[1] * z[4] * z[2];
     rj1[2 * n + 2] = 1.0;
 
     rj2[2 * n + 1] = -ki[1] * z[3];
@@ -563,13 +563,13 @@ void tst_ManZhuk::fcttaskDibI1J1(double z[], double px[], double f[], double rj1
     rj2[5 * n + 2] = -kp[1] * z[3];
     rj2[5 * n + 3] = -kp[1] * z[2];
 
-    f[6] = px[6] - ki[1] * z[1] * z[3] + kp[1] * z[3] + kAl[1] * z[4] * z[6] + kd[1] * z[6];
+    f[6] = px[6] - ki[1] * z[1] * z[3] + kp[1] * z[6] * z[3] + kAl[1] * z[4] * z[6] + kd[1] * z[6];
     rj1[6 * n + 6] = 1.0;
 
     rj2[6 * n + 1] = -ki[1] * z[3];
-    rj2[6 * n + 3] = -ki[1] * z[1] + kp[1];
+    rj2[6 * n + 3] = -ki[1] * z[1] + kp[1] * z[6];
     rj2[6 * n + 4] = kAl[1] * z[6];
-    rj2[6 * n + 6] = kAl[1] * z[4]+ kd[1];
+    rj2[6 * n + 6] = kp[1] * z[3] + kAl[1] * z[4]+ kd[1];
 
     f[7] = px[7] - kAl[1] * z[6] * z[4] - kd[1] * z[6];
     rj1[7 * n + 7] = 1.0;
@@ -660,7 +660,7 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
         AA = (3 + IZv + ii) * Jdib + 3;
         BB = (4 + IZv + ii) * Jdib + 2;
 
-        for (int i = AA; i < BB; ++i) {
+        for (int i = AA; i <= BB; ++i) {
             f[k++] = px[i] - kAl[i - (3 + IZv + ii) * Jdib - 2] * z[2 * Jdib + 2] * z[i - IZv * Jdib] -
                     kd[i - (3 + IZv + ii) * Jdib - 2] * z[i - IZv * Jdib];
         }
