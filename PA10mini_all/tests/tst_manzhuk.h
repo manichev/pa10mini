@@ -52,7 +52,7 @@ private:
 
 public:
     TestName m_currentTest = Notest;
-    int IZv = 2;
+    int IZv = 10;
     int Jdib = 2;
 
 private:

@@ -634,26 +634,9 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
                 kd[i - (3 + IZv) * Jdib - 2] * z[i - IZv * Jdib];
     }
 
-    rj1[1] = 1e0;
-    rj1[1*n+1] = 1e0;
-    rj1[2*n+2] = 1e0;
-    rj1[3*n+3] = 1e0;
-    rj1[4*n+4] = 1e0;
-    rj1[5*n+5] = 1e0;
-    rj1[6*n+6] = 1e0;
-    rj1[7*n+7] = 1e0;
-    rj1[8*n+8] = 1e0;
-    rj1[9*n+9] = 1e0;
-    rj1[10*n+10] = 1e0;
-    rj1[11*n+11] = 1e0;
-    rj1[12*n+12] = 1e0;
-    rj1[13*n+13] = 1e0;
-    rj1[14*n+14] = 1e0;
-    rj1[15*n+15] = 1e0;
-    rj1[16*n+16] = 1e0;
-    rj1[17*n+17] = 1e0;
-    rj1[18*n+18] = 1e0;
-    rj1[19*n+19] = 1e0;
+    for (int i = 1; i <= n; i++) {
+        rj1[i * n + i] = 1e0;
+    }
 
     int AA, BB;
     for (int ii = 1; ii <= IZv - 1; ii++) {
