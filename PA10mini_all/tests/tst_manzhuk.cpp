@@ -10,7 +10,7 @@
 #include <locale.h>
 
 static tst_ManZhuk ManZhukTest;
-FILE *f01,*f02;
+FILE *f01,*f02,*f03;
 
 void global_fcttask(double z[], double px[], double f[], double rj1[], double rj2[], int n,
                     int m, double t, double h, int ncon, int *nbad, int ip[])
@@ -343,7 +343,8 @@ void tst_ManZhuk::tstDIB()
 
     m_currentTest = Dib15i;
     f01 = fopen("taskDib15i.rez", "wt");
-    f02 = fopen("grtaskDib15i.csv", "wt");
+    f02 = fopen("taskDib15i.csv", "wt");
+    f03 = fopen("grtaskDib15i.csv", "wt");
     om = 1e0;
     fprintf(f01, "        relative tolerance - eps=%e pi4=%e\n", eps, pi4);
     nm = 3;
@@ -388,6 +389,7 @@ void tst_ManZhuk::tstDIB()
     printf("\n");
     fclose(f01);
     fclose(f02);
+    fclose(f03);
 }
 
 inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double rj1[],double rj2[],
@@ -658,12 +660,15 @@ void tst_ManZhuk::outtaskDib(double z[],double px[],int n,int m,double t,double 
 
     if (ncon == 0) { // fprintf(f01, "t, x1, x2, x3, x4, x5, x6, x7\n");
         fprintf(f01, "t");
+        fprintf(f02, "t");
         for (int i = 1; i <= n; ++i) {
             fprintf(f01, ", x%d", i);
+            fprintf(f02, ",x%d", i);
         }
         fprintf(f01, "\n");
+        fprintf(f02, "\n");
     }
-    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\",  \"x5\",  \"x6\",  \"x7\"\n");
+    if (ncon == 0) fprintf(f03, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\",  \"x5\",  \"x6\",  \"x7\"\n");
     // Start print of tabulation results
     if (ncon == 0) tkp = deltatp;
     if (deltatp == 0) goto m20;
@@ -675,16 +680,20 @@ m10:
     if (t < tstartp) goto m20;
     if (t > tendp) goto m20;
     if (t == *tkv) {
-        fprintf(f01, " %e", t);
-        for (int i = 1; i <= n; ++i) {
+        fprintf(f01, "%e,", t);
+        for (int i = 1; i < n; ++i) {
             fprintf(f01, " %e", z[i]);
+            fprintf(f02, "%e,", z[i]);
         }
+        fprintf(f01, " %e", z[n]);
+        fprintf(f02, "%e", z[n]);
         fprintf(f01, "\n");
+        fprintf(f02, "\n");
     }
 
 m20:
     // End print of tabulation results
-    fprintf(f02, " %e   %e  %e  %e  %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
+    fprintf(f03, " %e   %e  %e  %e  %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
     return;
 }
 
