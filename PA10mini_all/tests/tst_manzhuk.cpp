@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <QObject>
 #include <QtTest/qtest.h>
+#include <locale.h>
 
 static tst_ManZhuk ManZhukTest;
 FILE *f01,*f02;
@@ -690,6 +691,7 @@ m20:
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+    setlocale(LC_ALL, "C");
     app.setAttribute(Qt::AA_Use96Dpi, true);
     QTEST_SET_MAIN_SOURCE_PATH
     return QTest::qExec(&ManZhukTest, argc, argv);
