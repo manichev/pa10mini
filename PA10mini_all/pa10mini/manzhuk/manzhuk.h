@@ -1,12 +1,12 @@
 
 void manzhuk(//Решатель ДАУ на полных матрицах
-    double z[], //! Вектор алгебраических и дифференциальных переменных
-    double px[], //! Производные дифференциальных переменных
-    double z1[], //! То же для средней точки (в методах 4-го порядка)
-    double px1[], //! То же для средней точки (в методах 4-го порядка)
-    double f[], //! Вектор-функция ОДУ
-    double rj1[], //! Матрица Якоби по px
-    double rj2[], //! Матрица Якоби по z
+    double *z, //! Вектор алгебраических и дифференциальных переменных
+    double *px, //! Производные дифференциальных переменных
+    double *z1, //! То же для средней точки (в методах 4-го порядка)
+    double *px1, //! То же для средней точки (в методах 4-го порядка)
+    double *f, //! Вектор-функция ОДУ
+    double *rj1, //! Матрица Якоби по px
+    double *rj2, //! Матрица Якоби по z
     double t, //! Текущее время
     double t0, //! Начальное время интегрирования
     double tk, //! Конечное время интегрирования
@@ -24,9 +24,9 @@ void manzhuk(//Решатель ДАУ на полных матрицах
     int ncon, //! Признак для продолжения расчета
     int *nbad, //! Анализ разрыва производных, переполнения и т.п.
     int *ier, //! Код ошибки
-    int ip[], //! Счетчики шагов интегрирования, возвратов и т.п.
-    void fct(double z[],double px[],double f[],double rj1[],double rj2[],
-                int n,int m,double t,double h, int ncon,int *nbad,int ip[]), //! Функция описания ОДУ
-    void out(double z[],double xp[],int n,int m,double t,double t0,double tk,
-                double h,double *tkv,int ncon,int ip[]) //! Функция для выдачи результатов
+    int *ip, //! Счетчики шагов интегрирования, возвратов и т.п.
+    void fct(double *z,double *px,double *f,double *rj1,double *rj2,
+                int n,int m,double t,double h, int ncon,int *nbad,int *ip), //! Функция описания ОДУ
+    void out(double *z,double *xp,int n,int m,double t,double t0,double tk,
+                double h,double *tkv,int ncon,int *ip) //! Функция для выдачи результатов
 );

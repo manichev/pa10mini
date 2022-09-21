@@ -9,9 +9,9 @@
 
 
 //common variables for manzhuk ODE systems solver
-extern	double rj1[],rj2[];//,ar[];
-extern  double z[],px[],z1[],px1[],f[],t,t0,tk,h,hmn,hmx,eps,tkv;
-extern  int n,nm,m,ncon,nbad,ier,ip[];
+extern	double *rj1, *rj2;//,ar[];
+extern  double *z,*px,*z1,*px1,*f,t,t0,tk,h,hmn,hmx,eps,tkv;
+extern  int n,nm,m,ncon,nbad,ier,*ip;
 extern	FILE *f01,*f02;
 
 /*_____________________________________________________________________
@@ -19,16 +19,16 @@ extern	FILE *f01,*f02;
       procedure           manzhuk
   _____________________________________________________________________*/
 
-void manzhuk(double z[],double px[],double z1[],double px1[],double f[],
-                   double rj1[],double rj2[],double t, double t0,double tk,
+void manzhuk(double *z,double *px,double *z1,double *px1,double *f,
+                   double *rj1,double *rj2,double t, double t0,double tk,
                    double h,double hmn,double hmx,double eps,double *tkv,
-                   int n,int m,int nm,int ncon,int *nbad,int *ier,int ip[],
-     void fct(double z[],double px[],double f[],double rj1[],double rj2[],
-     int n,int m,double t,double h, int ncon,int *nbad,int ip[]),
-     void out(double z[],double px[],int n,int m,double t,double t0,double tk,
-     double h,double *tkv,int ncon,int ip[]))
+                   int n,int m,int nm,int ncon,int *nbad,int *ier,int *ip,
+     void fct(double *z,double *px,double *f,double *rj1,double *rj2,
+     int n,int m,double t,double h, int ncon,int *nbad,int *ip),
+     void out(double *z,double *px,int n,int m,double t,double t0,double tk,
+     double h,double *tkv,int ncon,int *ip))
 {
- double ar[100000];
+ double *ar = new double[10000 * n * m];
  int i,j,nmz,nzn,nxn,nxnm2,nxnm3,nzt,nzt1,nzt2,nzt3,nzt4,nzt5;
  int nmz1,na11,nj,na22,nj1,nbxp,nbxp1,nb,nb1,na12,na21,nxr,nxr1;
  int nzr,nzr1,ndx,ndx1,ndz,ndz1,ndar,ndar1,ndarx,nfs,ndzs,ndxs;
@@ -157,9 +157,11 @@ fprintf(f01," conm14 = %15.8e \n\n",conm14);
           for(i=1;i<=m;i++) px[i]=con0;
        };
       for(i=1;i<=n;i++)
-        for(j=1;j<=m;j++) rj1[i*n+j]=con0;
+        for(j=1;j<=m;j++)
+            rj1[i*n+j]=con0;
       for(i=1;i<=n;i++)
-        for(j=1;j<=n;j++) rj2[i*n+j]=con0;
+        for(j=1;j<=n;j++)
+            rj2[i*n+j]=con0;
       for(i=1;i<=n;i++)
        {f[i]=conmd;
         if(fabs(z[i])>conmst) f[i]=conmd*fabs(z[i]);};
@@ -1189,10 +1191,14 @@ d590:      ;
      f[0]=t;
      ar[0]=h;
 
-     if((*ier)==0) return;
+     if((*ier)==0){
+         delete [] ar;
+         return;
+     }
      ncon=-1;
      out(z,px,n,m,t,t0,tk,h,tkv,ncon,ip);
-         return;
+     delete [] ar;
+     return;
 }
 /*_____________________________________________________________________
 
@@ -1351,7 +1357,7 @@ u1000:       (*ier) = 8;
     return;
 }
 
-void dlur1(int n, int m, int na11, int nj, int nip, int na22, int nj1, int nip1, int na21, int na12, double ar[], int ip[], double a11, double a12, double a21, double a22, double ah, int* ier)
+void dlur1(int n, int m, int na11, int nj, int nip, int na22, int nj1, int nip1, int na21, int na12, double *ar, int *ip, double a11, double a12, double a21, double a22, double ah, int* ier)
 {
     double rm, ra, r1, con0, conmst;
     int ki1, ki2, i, n1n, m1n, k, kn, k1n, kl1, kk, nal, nl2, ir1, kl2, nu1;
@@ -1629,7 +1635,7 @@ r190:;
 r1000:      (*ier) = 8;
     return;
 }
-void dpoh(int n, int m, int na11, int nj, int nb, int nbxp, int ndz, int nzr, int ndx, int nxr, int nip, int na22, int nj1, int nb1, int nbxp1, int ndz1, int nzr1, int ndx1, int nxr1, int nip1, int na21, int na12, double ar[], int ip[], double a11, double a12, double a21, double a22, double ah, int* ier)
+void dpoh(int n, int m, int na11, int nj, int nb, int nbxp, int ndz, int nzr, int ndx, int nxr, int nip, int na22, int nj1, int nb1, int nbxp1, int ndz1, int nzr1, int ndx1, int nxr1, int nip1, int na21, int na12, double *ar, int *ip, double a11, double a12, double a21, double a22, double ah, int* ier)
 {
     int n1n, n2, i, inz, inb, in1, ik1, in2, ina, i1, ir, inzr, kk, ia12, ia;
     double r1, con0, conmst;

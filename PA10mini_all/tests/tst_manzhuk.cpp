@@ -12,12 +12,12 @@
 static tst_ManZhuk ManZhukTest;
 FILE *f01,*f02,*f03;
 
-void global_fcttask(double z[], double px[], double f[], double rj1[], double rj2[], int n,
-                    int m, double t, double h, int ncon, int *nbad, int ip[])
+void global_fcttask(double *z, double *px, double *f, double *rj1, double *rj2, int n,
+                    int m, double t, double h, int ncon, int *nbad, int *ip)
 {
     switch (ManZhukTest.m_currentTest) {
     case Duffing:
-        ManZhukTest.fcttask001(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
+        ManZhukTest.fcttaskDuff(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
         break;
     case LC:
         ManZhukTest.fcttaskLC(z, px, f, rj1, rj2, n, m, t, h, ncon, nbad, ip);
@@ -34,12 +34,12 @@ void global_fcttask(double z[], double px[], double f[], double rj1[], double rj
     }
 }
 
-void global_outtask(double z[], double px[], int n, int m, double t, double t0,
-                    double tk, double h, double *tkv, int ncon, int ip[])
+void global_outtask(double *z, double *px, int n, int m, double t, double t0,
+                    double tk, double h, double *tkv, int ncon, int *ip)
 {
     switch (ManZhukTest.m_currentTest) {
     case Duffing:
-        ManZhukTest.outtask001(z, px, n, m, t, t0, tk, h, tkv, ncon, ip);
+        ManZhukTest.outtaskDuff(z, px, n, m, t, t0, tk, h, tkv, ncon, ip);
         break;
     case LC:
         ManZhukTest.outtaskLC(z, px, n, m, t, t0, tk, h, tkv, ncon, ip);
@@ -63,11 +63,69 @@ void tst_ManZhuk::initTestCase()
 
 }
 
+// "Static size" * factor
+void tst_ManZhuk::memalloc(int factor)
+{
+    rj1 = new double[250 * factor * factor];
+    rj2 = new double[250 * factor * factor];
+    ip = new int[10000 * factor];
+    z = new double[50 * factor];
+    px = new double[50 * factor];
+    z1 = new double[50 * factor];
+    xp1 = new double[50 * factor];
+    f = new double[50 * factor];
+
+    ki = new double[20 * factor];
+    kAl = new double[20 * factor];
+    kd = new double[20 * factor];
+    kp = new double[20 * factor];
+    C0 = new double[20 * factor];
+    Cp0 = new double[20 * factor];
+
+    y0 = new double[20 * factor];
+    Y = new double[20 * factor];
+    y1 = new double[20 * factor];
+    y2 = new double[20 * factor];
+    v0 = new double[20 * factor];
+    v1 = new double[20 * factor];
+    v2 = new double[20 * factor];
+    P1 = new double[20 * factor];
+    Pp1 = new double[20 * factor];
+    P1I = new double[20 * factor];
+    P1dI = new double[20 * factor];
+    P1d = new double[20 * factor];
+}
+
+void tst_ManZhuk::memfree()
+{
+    delete [] rj1;
+    delete [] rj2;
+    delete [] ip;
+    delete [] z;
+    delete [] px;
+    delete [] z1;
+    delete [] xp1;
+    delete [] f;
+    delete [] y0;
+    delete [] Y;
+    delete [] y1;
+    delete [] y2;
+    delete [] v0;
+    delete [] v1;
+    delete [] v2;
+    delete [] P1;
+    delete [] Pp1;
+    delete [] P1I;
+    delete [] P1dI;
+    delete [] P1d;
+}
+
 void tst_ManZhuk::tstDuffing()
 {
     m_currentTest = Duffing;
     f01 = fopen("task001.rez", "wt");
     f02 = fopen("grtask001.csv", "wt");
+    memalloc();
     om = 1e0;
     fprintf(f01, "        relative tolerance - eps=%e pi4=%e\n", eps, pi4);
     nm = 1;
@@ -100,6 +158,7 @@ void tst_ManZhuk::tstDuffing()
     printf("\n");
     fclose(f01);
     fclose(f02);
+    memfree();
 }
 /*
  * k1:=0.5
@@ -112,8 +171,8 @@ x1==0
 x2==0
  */
 //task001 task002 - Duffing equation
-void tst_ManZhuk::fcttask001(double z[], double px[], double f[], double rj1[],
-                             double rj2[], int n, int m, double t, double h, int ncon, int *nbad, int ip[])
+void tst_ManZhuk::fcttaskDuff(double z[], double px[], double f[], double rj1[],
+                             double rj2[], int n, int m, double t, double h, int ncon, int *nbad, int *ip)
 {
     Q_UNUSED(h); Q_UNUSED(ncon); Q_UNUSED(nbad); Q_UNUSED(m); Q_UNUSED(ip)
 
@@ -130,8 +189,8 @@ void tst_ManZhuk::fcttask001(double z[], double px[], double f[], double rj1[],
         rj1[2*n+2] = 1;
     return;
 }
-void tst_ManZhuk::outtask001(double z[], double px[], int n, int m, double t, double t0,
-                             double tk, double h, double *tkv, int ncon, int ip[])
+void tst_ManZhuk::outtaskDuff(double *z, double *px, int n, int m, double t, double t0,
+                             double tk, double h, double *tkv, int ncon, int *ip)
 {
     Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
 
@@ -160,6 +219,7 @@ void tst_ManZhuk::tstLC()
     m_currentTest = LC;
     f01 = fopen("taskLC.rez", "wt");
     f02 = fopen("grtaskLC.csv", "wt");
+    memalloc();
     om = 1e0;
     fprintf(f01, "        relative tolerance - eps=%e pi4=%e\n", eps, pi4);
     nm = 3;
@@ -198,10 +258,11 @@ void tst_ManZhuk::tstLC()
     printf("\n");
     fclose(f01);
     fclose(f02);
+    memfree();
 }
 
-void tst_ManZhuk::fcttaskLC(double z[],double px[],double f[],double rj1[],double rj2[],
-                       int n,int m,double t,double h,int ncon,int *nbad,int ip[])
+void tst_ManZhuk::fcttaskLC(double *z,double *px,double *f,double *rj1,double *rj2,
+                       int n,int m,double t,double h,int ncon,int *nbad,int *ip)
 {
 /*k1:=1.0
 k2:=1.0
@@ -233,8 +294,8 @@ x2==0*/
     f[8] = z[3]-z[1];*/
 }
 
-void tst_ManZhuk::outtaskLC(double z[],double px[],int n,int m,double t,double t0,
-                       double tk,double h,double *tkv,int ncon,int ip[])
+void tst_ManZhuk::outtaskLC(double *z,double *px,int n,int m,double t,double t0,
+                       double tk,double h,double *tkv,int ncon,int *ip)
 {
     Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
 
@@ -261,6 +322,8 @@ m20:
 void tst_ManZhuk::tstDIB()
 {
     double param[13] = {0, 2, 0.01, 0.05, 3.5, 1.2, 0.01, 0.05, 600, 1500, 0.000025, 0.000045, 0.22};
+
+    memalloc(IZv);
 
     int k = 1;
     int Jdib_ini = 2;
@@ -390,10 +453,11 @@ void tst_ManZhuk::tstDIB()
     fclose(f01);
     fclose(f02);
     fclose(f03);
+    memfree();
 }
 
-inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double rj1[],double rj2[],
-                       int n,int m,double t,double h,int ncon,int *nbad,int ip[])
+inline void tst_ManZhuk::fcttaskDibI1J2(double *z,double *px,double *f,double *rj1,double *rj2,
+                       int n,int m,double t,double h,int ncon,int *nbad,int *ip)
 {
     f[1] = px[1] + ki[1] * z[1] * z[5] - kAl[1] * z[6] * z[3];
     rj1[1 * n + 1] = 1e0;
@@ -528,7 +592,7 @@ inline void tst_ManZhuk::fcttaskDibI1J2(double z[],double px[],double f[],double
     rj2[16 * n + 14] = - kAl[2] * z[6] - kd[2];*/
 }
 
-void tst_ManZhuk::fcttaskDibI1J1(double z[], double px[], double f[], double rj1[], double rj2[], int n, int m, double t, double h, int ncon, int* nbad, int ip[])
+void tst_ManZhuk::fcttaskDibI1J1(double *z, double *px, double *f, double *rj1, double *rj2, int n, int m, double t, double h, int ncon, int* nbad, int ip[])
 {
     // z[1]=C1, z[2]=y01,z[3]=M, z[4]=AL, z[5]=Y1, z[6]=P11, z[7]=P1d1
     f[1] = px[1] + ki[1] * z[1]*z[3] - kAl[1] * z[4] * z[2] ;
@@ -583,8 +647,8 @@ void tst_ManZhuk::fcttaskDibI1J1(double z[], double px[], double f[], double rj1
     return;
 }
 
-void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],double rj2[],
-                       int n,int m,double t,double h,int ncon,int *nbad,int ip[])
+void tst_ManZhuk::fcttaskDib(double *z,double *px,double *f,double *rj1,double *rj2,
+                             int n,int m,double t,double h,int ncon,int *nbad,int *ip)
 {
     int k = 1;
     for (int i = 1; i <= Jdib; ++i) {
@@ -653,8 +717,8 @@ void tst_ManZhuk::fcttaskDib(double z[],double px[],double f[],double rj1[],doub
     }
 }
 
-void tst_ManZhuk::outtaskDib(double z[],double px[],int n,int m,double t,double t0,
-                       double tk,double h,double *tkv,int ncon,int ip[])
+void tst_ManZhuk::outtaskDib(double *z,double *px,int n,int m,double t,double t0,
+                       double tk,double h,double *tkv,int ncon,int *ip)
 {
     Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
 
@@ -681,6 +745,7 @@ m10:
     if (t > tendp) goto m20;
     if (t == *tkv) {
         fprintf(f01, "%e,", t);
+        fprintf(f02, "%e,", t);
         for (int i = 1; i < n; ++i) {
             fprintf(f01, " %e", z[i]);
             fprintf(f02, "%e,", z[i]);
@@ -703,5 +768,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "C");
     app.setAttribute(Qt::AA_Use96Dpi, true);
     QTEST_SET_MAIN_SOURCE_PATH
+    qputenv("QTEST_FUNCTION_TIMEOUT", "2000000000");
+    //QTest::qWaitFor([&]() { return QTest::qExec(&ManZhukTest, argc, argv); }, 2000000000);//QTest::qExec(&ManZhukTest, argc, argv);
     return QTest::qExec(&ManZhukTest, argc, argv);
 }
