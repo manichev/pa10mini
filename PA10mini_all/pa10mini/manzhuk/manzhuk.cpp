@@ -28,7 +28,7 @@ void manzhuk(double *z,double *px,double *z1,double *px1,double *f,
      void out(double *z,double *px,int n,int m,double t,double t0,double tk,
      double h,double *tkv,int ncon,int *ip))
 {
- double *ar = new double[10000 * n * m];
+ double *ar = new double[(3*(n+1)*(m+1) + 5*(n+1)*(n+1) + 9*(n+1) + 25*(m+1) + 3)];
  int i,j,nmz,nzn,nxn,nxnm2,nxnm3,nzt,nzt1,nzt2,nzt3,nzt4,nzt5;
  int nmz1,na11,nj,na22,nj1,nbxp,nbxp1,nb,nb1,na12,na21,nxr,nxr1;
  int nzr,nzr1,ndx,ndx1,ndz,ndz1,ndar,ndar1,ndarx,nfs,ndzs,ndxs;
