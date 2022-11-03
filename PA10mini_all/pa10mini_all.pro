@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS = \
-    sources/pa10mini.pro \
+    pa10mini \
     tests

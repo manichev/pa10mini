@@ -4,10 +4,10 @@ CONFIG += testcase
 CONFIG -= app_bundle
 
 HEADERS += tst_manzhuk.h \
-           ../sources/manzhuk/manzhuk.h
+           ../pa10mini/manzhuk/manzhuk.h
 
 SOURCES += tst_manzhuk.cpp \
-           ../sources/manzhuk/manzhuk.cpp
+           ../pa10mini/manzhuk/manzhuk.cpp
 
-INCLUDEPATH += ../sources \
-               ../sources/manzhuk
+INCLUDEPATH += ../pa10mini \
+               ../pa10mini/manzhuk
