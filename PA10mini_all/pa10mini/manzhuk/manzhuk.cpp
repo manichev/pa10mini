@@ -12,7 +12,9 @@
 extern	double *rj1, *rj2;//,ar[];
 extern  double *z,*px,*z1,*px1,*f,t,t0,tk,h,hmn,hmx,eps,tkv;
 extern  int n,nm,m,ncon,nbad,ier,*ip;
+#ifdef MANZHUK_TEST
 extern	FILE *f01,*f02;
+#endif
 
 /*_____________________________________________________________________
 
@@ -75,7 +77,10 @@ a11=-2e0;a12=-0.5e0;a21=8e0;a22=-4e0;b1=2.5e0;b2=-4e0;
          t=t0;
      tn=t0;
      iprp=0;
+
+#ifdef MANZHUK_TEST
 fprintf(f01," ier = %d \n\n",*ier);
+#endif
      if((*ier)==-1) iprp=1;
          (*ier)=0;
          if(n<=0||m<0||m>n) (*ier)=1;
@@ -107,7 +112,9 @@ fprintf(f01," ier = %d \n\n",*ier);
          ra0=ra0+ra2;
      };
       conm14=con16*(fabs(ra1)+fabs(ra2))/2e0;
+#ifdef MANZHUK_TEST
 fprintf(f01," conm14 = %15.8e \n\n",conm14);
+#endif
       conm7=sqrt(conm14);
       conmd=conm7;
       nmz=3;
@@ -207,7 +214,9 @@ d10:       ;
          };
     };
 printf("ee=%15.8e ,h=%15.8e ,ip[1]=%d\n ",ee,h,ip[1]);
+#ifdef MANZHUK_TEST
 fprintf(f01,"ee=%15.8e ,h=%15.8e ,ip[1]=%d\n ",ee,h,ip[1]);
+#endif
      h=h/con2;
      if(ee>conm3) goto d5;
      fp=fconp;

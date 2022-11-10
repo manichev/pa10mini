@@ -3,6 +3,8 @@ TARGET = tst_manzhuk
 CONFIG += testcase
 CONFIG -= app_bundle
 
+DEFINES += MANZHUK_TEST
+
 HEADERS += tst_manzhuk.h \
            ../pa10mini/manzhuk/manzhuk.h
 
