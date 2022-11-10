@@ -1,6 +1,14 @@
-# pa10project
+# ПА 10 "Мини"
+Позволяет вводить схемное и текстовое описание системы обыкновенных дифференциальных уравнений или дифференциально-алгебраических систем, с возможность ее решения и вывода результата на графики:
+![image](https://user-images.githubusercontent.com/19983888/201083592-39b3b945-f0ba-4632-8add-3b1104e4679f.png)
+![image](https://user-images.githubusercontent.com/19983888/201084970-a4c9907c-7b93-4e94-a605-a5d2330e9de1.png)
+![image](https://user-images.githubusercontent.com/19983888/201083799-862dc67f-adc6-4a20-beaa-c72db9d53064.png)
 
-В данном репозитории анализируется ТЗ проекта.
+![image](https://user-images.githubusercontent.com/19983888/201086828-daed3283-8536-4e83-a59c-d97d5bc9824f.png)
+![image](https://user-images.githubusercontent.com/19983888/201086736-a265b1b5-2569-42d3-9890-2a6a3da63f46.png)
+![image](https://user-images.githubusercontent.com/19983888/201086665-831fecd5-a6ae-4e04-8c76-148b5e1db92a.png)
+
+В данном репозитории анализируется ТЗ проекта ПА 10.
 
 Прототипы ПА10мини были разработаны на С++ и C#
 
