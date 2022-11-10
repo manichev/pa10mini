@@ -32,4 +32,5 @@ https://yadi.sk/d/S7yNYGJA5WRCZg
 https://yadi.sk/d/dRNygY-HirlE0Q
 Это старые коды требуют отладки, подробные оптсания в дилломах Баженова и Алиева
 
-Все исходники по предыдущему проекту ПА9 можно скачать по ссылке https://disk.yandex.ru/d/n-1FFnff1hmnFg 
+Также выложены исходники предыдущего проекта ПА9:
+https://disk.yandex.ru/d/BIEPc6IpCKaWqQ
