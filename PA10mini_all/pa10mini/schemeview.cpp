@@ -197,6 +197,11 @@ void SchemeView::initMainMenu()
     connect(addIAction, SIGNAL(triggered()), this, SLOT(addI()));
     mainMenu->addAction(addIAction);
 
+    QAction* addUsinAction;
+    addUsinAction = new QAction("Add Usin", this);
+    connect(addUsinAction, SIGNAL(triggered()), this, SLOT(addUsin()));
+    mainMenu->addAction(addUsinAction);
+
     QAction* selectAllAction;
     selectAllAction = new QAction("Select all", this);
     selectAllAction->setShortcut(QKeySequence::SelectAll);
@@ -520,7 +525,7 @@ int SchemeView::recieveElementId(CircuitElementType type)
     CircuitItem* element;
     int newId = 1;
     bool stop = false;
-    while(!stop) {
+    while (!stop) {
         stop = true;
         foreach (element, elements)
             if (newId == element->getId() && element->elementType() == type)
@@ -543,7 +548,7 @@ void SchemeView::setScale (qreal s)
 
 void SchemeView::addR(const QPointF &pos, int id)
 {
-    RItem* tmp = new RItem(id, pos);
+    RItem *tmp = new RItem(id, pos);
     // scene()->addItem(reinterpret_cast<QGraphicsLineItem*>(tmp));
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
@@ -551,35 +556,42 @@ void SchemeView::addR(const QPointF &pos, int id)
 
 void SchemeView::addG(const QPointF &pos, int id)
 {
-    GItem* tmp = new GItem(id, pos);
+    GItem *tmp = new GItem(id, pos);
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
 }
 
 void SchemeView::addL(const QPointF &pos, int id)
 {
-    LItem* tmp = new LItem(id, pos);
+    LItem *tmp = new LItem(id, pos);
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
 }
 
 void SchemeView::addC(const QPointF &pos, int id)
 {
-    CItem* tmp = new CItem(id, pos);
+    CItem *tmp = new CItem(id, pos);
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
 }
 
 void SchemeView::addU(const QPointF &pos, int id)
 {
-    EItem* tmp = new EItem(id, pos);
+    EItem *tmp = new EItem(id, pos);
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
 }
 
 void SchemeView::addI(const QPointF &pos, int id)
 {
-    IItem* tmp = new IItem(id, pos);
+    IItem *tmp = new IItem(id, pos);
+    scene()->addItem(tmp);
+    elements.push_back(static_cast<CircuitItem*>(tmp));
+}
+
+void SchemeView::addUsin(const QPointF &pos, int id)
+{
+    USinItem *tmp = new USinItem(id, pos);
     scene()->addItem(tmp);
     elements.push_back(static_cast<CircuitItem*>(tmp));
 }
@@ -638,6 +650,15 @@ void SchemeView::addI(const QPointF &pos)
     checkgrid();
 }
 
+void SchemeView::addUsin(const QPointF &pos)
+{
+    int id = recieveElementId(CircuitElementType::Usin);
+
+    addUsin(pos, id);
+
+    checkgrid();
+}
+
 void SchemeView::addR()
 {
     addR(mapToScene(lastMousePos).toPoint());
@@ -668,4 +689,8 @@ void SchemeView::addI()
     addI(mapToScene(lastMousePos).toPoint());
 }
 
+void SchemeView::addUsin()
+{
+    addUsin(mapToScene(lastMousePos).toPoint());
+}
 

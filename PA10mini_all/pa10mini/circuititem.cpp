@@ -440,6 +440,35 @@ QPainterPath EItem::shape() const
     return path;
 }
 
+void USinItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    // Q_UNUSED(option)
+    // Q_UNUSED(widget)
+    CircuitItem::paint(painter, option, widget);
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setPen(m_pen);
+    //voltage
+
+    painter->drawLine(QLineF(-1.0, 0.0, 1.0, 0.0));
+
+    painter->drawEllipse(QRectF(-0.25, -0.25, 0.5, 0.5));
+
+    painter->drawLine(QLineF(-0.05, -0.1, -0.2, 0.0));
+    painter->drawLine(QLineF(-0.05, 0.1, -0.2, 0.0));
+
+    drawContacts(painter);
+}
+
+QPainterPath USinItem::shape() const
+{
+    QPainterPath path;
+    path.addEllipse(QRectF(-0.25, -0.25, 0.5, 0.5));
+
+    contactsShape(path);
+    return path;
+}
+
 void IItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
     // Q_UNUSED(option)
@@ -581,6 +610,19 @@ EItem::EItem(int id_, QPointF pos_, QGraphicsItem *parent)
     setFUnit("V");
     setFName("E");
     m_elemType = CircuitElementType::E;
+    setPos(pos_);
+}
+
+USinItem::USinItem(int id_, QPointF pos_, QGraphicsItem *parent)
+    : CircuitItem(parent)
+{
+    setId(id_);
+    setName("USin" + QString::number(id_));
+    eq = "u=f";
+    setF("1.0 * sin(1.0 * t - 1.0)");
+    setFUnit("V");
+    setFName("USin");
+    m_elemType = CircuitElementType::Usin;
     setPos(pos_);
 }
 

@@ -15,7 +15,7 @@
 class QJsonObject;
 
 enum class CircuitElementType {
-    R, G, L, C, I, E
+    R, G, L, C, I, E, Usin
 };
 
 class CircuitItem : public QGraphicsItem
@@ -176,6 +176,17 @@ class EItem : public CircuitItem
 {
 public:
     EItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
+    QString equal();
+    QPainterPath shape() const override;
+
+protected:
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+};
+
+class USinItem : public CircuitItem
+{
+public:
+    USinItem(int id, QPointF pos, QGraphicsItem *parent = nullptr);
     QString equal();
     QPainterPath shape() const override;
 
