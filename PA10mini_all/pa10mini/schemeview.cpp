@@ -211,16 +211,14 @@ void SchemeView::initMainMenu()
 
 void SchemeView::selectAllAction() const
 {
-    for (auto item : items()) {
+    for (auto &item : items()) {
         item->setSelected(true);
     }
 }
 
 void SchemeView::deleteItem()
 {
-    CircuitItem* element;
-
-    foreach (element, elements) {
+    for (auto &element : elements) {
         if (element->isSelected()) {
             elements.removeOne(element);
             delete element;
@@ -257,15 +255,12 @@ SchemeView::~SchemeView()
 
 void SchemeView::checkgrid()
 {
-    QList<QGraphicsItem*> items;
-    QGraphicsItem* item;
-    CircuitNodeItem* node;
     for (int i = 0; i <= gridH; ++i) {
         for (int j = 0; j <= gridW; ++j) {
             int counter = 0;
-            items = scene()->items(CircuitItem::contactRect().translated(j, i));
+            auto items = scene()->items(CircuitItem::contactRect().translated(j, i));
             int id = -1;
-            foreach (item, items) {
+            for (const auto &item : items) {
                 if (item->type() == CircuitItem::CircuitItemType) {
                     if (reinterpret_cast<CircuitItem*>(item)->contact(QPointF(j, i)) != -1)
                         counter++;
@@ -277,7 +272,7 @@ void SchemeView::checkgrid()
             if (id == -1 && counter >= 2) {
                 addNode(QPointF(j, i));
             } else if (id != -1 && counter < 2) {
-                foreach (node, nodes) {
+                for (const auto node : nodes) {
                     if (node->getId() == id) {
                         nodes.removeOne(node);
                         delete node;
@@ -296,12 +291,11 @@ void SchemeView::addNode(const QPointF &pos, int id)
 
 void SchemeView::addNode(const QPointF &pos)
 {
-    CircuitNodeItem* node;
     int newId = 1;
     bool stop = false;
     while (!stop) {
         stop = true;
-        foreach (node, nodes)
+        for (const auto &node : nodes)
             if (newId == node->getId())
                 stop = false;
         if (!stop)
@@ -314,14 +308,12 @@ void SchemeView::addNode(const QPointF &pos)
 QString SchemeView::getSystem()
 {
     QString result;
-    CircuitItem* element;
-    CircuitNodeItem* node;
 //dPhi and element equals
-    foreach (element, elements) {
+    for (const auto element : elements) {
         result.append(element->equal() + "\n");
         result.append(element->getU() + "=");
         bool isFirstInLine = true;
-        foreach (node, nodes) {
+        for (const auto node : nodes) {
             if (!node->isGrounded()) {
                 int contact = element->contact(node->scenePos());
                 qDebug() << contact;
@@ -341,10 +333,10 @@ QString SchemeView::getSystem()
         result.append("\n");
     }
 //Kirchhoff
-    foreach (node, nodes) {
+    for (const auto node : nodes) {
         bool isFirstInLine = true;
         if (!node->isGrounded()) {
-            foreach(element, elements) {
+            for (const auto element : elements) {
                 int contact = element->contact(node->scenePos());
                 if (contact == 0) {
                     if (isFirstInLine)
@@ -362,7 +354,7 @@ QString SchemeView::getSystem()
         }
     }
 
-    foreach (element, elements) {
+    for (const auto element : elements) {
         if (element->getU0().toDouble() != 0) {
             result.append(element->getU());
             result.append("==");
@@ -522,12 +514,11 @@ qreal SchemeView::fullScale()
 
 int SchemeView::recieveElementId(CircuitElementType type)
 {
-    CircuitItem* element;
     int newId = 1;
     bool stop = false;
     while (!stop) {
         stop = true;
-        foreach (element, elements)
+        for (const auto element : elements)
             if (newId == element->getId() && element->elementType() == type)
                 stop = false;
 

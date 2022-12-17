@@ -248,9 +248,9 @@ void PAX_Prototype::saveScheme(const QString &path)
     QJsonObject schemeObject;
     QJsonArray itemsArray;
     QJsonArray nodesArray;
-    QJsonArray connectionArray;
+    // QJsonArray connectionArray;
 
-    foreach (auto item, items) {
+    for (const auto item : items) {
         CircuitItem *citem = nullptr;
         CircuitNodeItem *nitem = nullptr;
         citem = dynamic_cast<CircuitItem*>(item);

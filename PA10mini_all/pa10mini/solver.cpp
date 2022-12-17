@@ -37,13 +37,11 @@ void Solver::setSystem(DAESystem* system_)
 {
     system = system_;
     system->updateAllIds();
-    Variable variable;
     names.clear();
     trace.clear();
     dims.clear();
     QVector<QString> dnames;
-    foreach(variable, system->variables)
-    {
+    for (auto &variable : system->variables) {
         names.append(QString::fromStdString(variable.name));
         if (variable.isDerivative)
             dnames.append(QString::fromStdString(variable.name) + "'");
