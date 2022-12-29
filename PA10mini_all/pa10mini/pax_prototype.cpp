@@ -17,7 +17,7 @@
 // Versions
 static const int major = 10;
 static const int minor = 2;
-static const int patch = 0;
+static const int patch = 1;
 
 extern Solver* solver;
 
@@ -198,9 +198,9 @@ void PAX_Prototype::showAboutDialog()
               "простых электрических схем и расчета систем ОДУ.\n");
 
     st.append(tr("\nАвторы:\n"));
-    const QStringList authors{tr("Маничев В.Б."), tr("Игнатович А.")};
+    const QStringList authors{tr("Маничев В.Б."), tr("Игнатович А.В.")};
 
-    for (auto author : authors)
+    for (const auto &author : authors)
         st.append(author + "\n");
 
     QMessageBox box;
