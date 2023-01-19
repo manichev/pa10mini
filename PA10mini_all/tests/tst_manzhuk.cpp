@@ -198,20 +198,27 @@ void tst_ManZhuk::outtaskDuff(double *z, double *px, int n, int m, double t, dou
     if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"px1\",  \"px2\"\n");
     // Start print of tabulation results
     if (ncon == 0) tkp = deltatp;
-    if (deltatp == 0) goto m20;
-    if (t <= tkp) goto m10;
+
+    auto endPrint = [&]() {
+        // End print of tabulation results
+        fprintf(f02, "%e,   %e,  %e,  %e,  %e\n", t, z[1], z[2], px[1], px[2]);
+        return;
+    };
+
+    if (deltatp == 0) {
+        endPrint();
+    }
+    if (t <= tkp) {
+        if ((tkp < *tkv) && (*tkv >= t))
+            *tkv = tkp;
+        if (t < tstartp)
+            endPrint();
+        if (t > tendp)
+            endPrint();
+        if (t == *tkv)
+            fprintf(f01, "  %e   %e  %e  %e  %e\n", t, z[1], z[2], px[1], px[2]);
+    }
     tkp = tkp + deltatp;
-
-m10:
-    if ((tkp < *tkv) && (*tkv >= t)) *tkv = tkp;
-    if (t < tstartp) goto m20;
-    if (t > tendp) goto m20;
-    if (t == *tkv) fprintf(f01, "  %e   %e  %e  %e  %e\n", t, z[1], z[2], px[1], px[2]);
-
-m20:
-    // End print of tabulation results
-    fprintf(f02, "%e,   %e,  %e,  %e,  %e\n", t, z[1], z[2], px[1], px[2]);
-    return;
 }
 
 void tst_ManZhuk::tstLC()
@@ -299,24 +306,37 @@ void tst_ManZhuk::outtaskLC(double *z,double *px,int n,int m,double t,double t0,
 {
     Q_UNUSED(n); Q_UNUSED(m); Q_UNUSED(tk); Q_UNUSED(t0); Q_UNUSED(h); Q_UNUSED(ip)
 
-    if (ncon == 0) fprintf(f01, "LC ODE, t, x1, x2, px1, px2\n");
-    if (ncon == 0) fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"px1\",  \"px2\"\n");
+    if (ncon == 0)
+        fprintf(f01, "LC ODE, t, x1, x2, px1, px2\n");
+    if (ncon == 0)
+        fprintf(f02, "\"t\",  \"x1\",  \"x2\",  \"px1\",  \"px2\"\n");
     // Start print of tabulation results
-    if (ncon == 0) tkp = deltatp;
-    if (deltatp == 0) goto m20;
-    if (t <= tkp) goto m10;
+    if (ncon == 0)
+        tkp = deltatp;
+
+    auto endPrint = [&]() {
+        // End print of tabulation results
+        fprintf(f02, "%e,   %e,  %e,  %e,  %e\n", t, z[1], z[2], px[1], px[2]);
+        return;
+    };
+
+    if (deltatp == 0)
+        endPrint();
+
+    if (t <= tkp) {
+        if ((tkp < *tkv) && (*tkv >= t))
+            *tkv = tkp;
+
+        if (t < tstartp)
+            endPrint();
+
+        if (t > tendp)
+            endPrint();
+
+        if (t == *tkv)
+            fprintf(f01, "  %e   %e  %e  %e  %e\n", t, z[1], z[2], px[1], px[2]);
+    }
     tkp = tkp + deltatp;
-
-m10:
-    if ((tkp < *tkv) && (*tkv >= t)) *tkv = tkp;
-    if (t < tstartp) goto m20;
-    if (t > tendp) goto m20;
-    if (t == *tkv) fprintf(f01, "  %e   %e  %e  %e  %e\n", t, z[1], z[2], px[1], px[2]);
-
-m20:
-    // End print of tabulation results
-    fprintf(f02, "%e,   %e,  %e,  %e,  %e\n", t, z[1], z[2], px[1], px[2]);
-    return;
 }
 
 void tst_ManZhuk::tstDIB()
@@ -732,34 +752,47 @@ void tst_ManZhuk::outtaskDib(double *z,double *px,int n,int m,double t,double t0
         fprintf(f01, "\n");
         fprintf(f02, "\n");
     }
-    if (ncon == 0) fprintf(f03, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\",  \"x5\",  \"x6\",  \"x7\"\n");
-    // Start print of tabulation results
-    if (ncon == 0) tkp = deltatp;
-    if (deltatp == 0) goto m20;
-    if (t <= tkp) goto m10;
-    tkp = tkp + deltatp;
+    if (ncon == 0)
+        fprintf(f03, "\"t\",  \"x1\",  \"x2\",  \"x3\",  \"x4\",  \"x5\",  \"x6\",  \"x7\"\n");
 
-m10:
-    if ((tkp < *tkv) && (*tkv >= t)) *tkv = tkp;
-    if (t < tstartp) goto m20;
-    if (t > tendp) goto m20;
-    if (t == *tkv) {
-        fprintf(f01, "%e,", t);
-        fprintf(f02, "%e,", t);
-        for (int i = 1; i < n; ++i) {
-            fprintf(f01, " %e", z[i]);
-            fprintf(f02, "%e,", z[i]);
+    // Start print of tabulation results
+    if (ncon == 0)
+        tkp = deltatp;
+
+    auto endPrint = [&]() {
+        // End print of tabulation results
+        fprintf(f03, " %e   %e  %e  %e  %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
+        return;
+    };
+
+    if (deltatp == 0)
+        endPrint();
+
+    if (t <= tkp) {
+        if ((tkp < *tkv) && (*tkv >= t))
+            *tkv = tkp;
+
+        if (t < tstartp)
+            endPrint();
+
+        if (t > tendp)
+            endPrint();
+
+        if (t == *tkv) {
+            fprintf(f01, "%e,", t);
+            fprintf(f02, "%e,", t);
+            for (int i = 1; i < n; ++i) {
+                fprintf(f01, " %e", z[i]);
+                fprintf(f02, "%e,", z[i]);
+            }
+            fprintf(f01, " %e", z[n]);
+            fprintf(f02, "%e", z[n]);
+            fprintf(f01, "\n");
+            fprintf(f02, "\n");
         }
-        fprintf(f01, " %e", z[n]);
-        fprintf(f02, "%e", z[n]);
-        fprintf(f01, "\n");
-        fprintf(f02, "\n");
     }
 
-m20:
-    // End print of tabulation results
-    fprintf(f03, " %e   %e  %e  %e  %e %e  %e  %e\n", t, z[1], z[2], z[3], z[4], z[5], z[6], z[7]);
-    return;
+    tkp = tkp + deltatp;
 }
 
 int main(int argc, char *argv[])
