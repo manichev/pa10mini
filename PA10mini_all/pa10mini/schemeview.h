@@ -51,6 +51,7 @@ public slots:
     void addC(const QPointF &pos, int id);
     void addU(const QPointF &pos, int id);
     void addI(const QPointF &pos, int id);
+    void addUsin(const QPointF &pos, int id);
 
     void addR(const QPointF &pos);
     void addG(const QPointF &pos);
@@ -58,6 +59,7 @@ public slots:
     void addC(const QPointF &pos);
     void addU(const QPointF &pos);
     void addI(const QPointF &pos);
+    void addUsin(const QPointF &pos);
     void addNode(const QPointF &pos);
     void addNode(const QPointF &pos, int id);
 
@@ -68,6 +70,7 @@ private slots:
     void addC();
     void addU();
     void addI();
+    void addUsin();
     void selectAllAction() const;
 
 protected:
