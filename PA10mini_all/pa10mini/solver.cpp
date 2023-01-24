@@ -4,7 +4,9 @@
 #include <cstdlib>
 #include <cmath>
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
+#include <QProcess>
 
 #if _MSC_VER && !__INTEL_COMPILER
 #include <io.h>
@@ -177,7 +179,22 @@ void Solver::create_fcttask(const QString &pathToCompiler)
     remove("fcttask.obj");
 #else
     remove("manzhuk/fcttask/fcttask.so");
-    std::system("sh manzhuk/fcttask/build_linux.sh");
+    // std::system("sh manzhuk/fcttask/build_linux.sh");
+    QProcess proc;
+    //proc.setWorkingDirectory(".");
+    // proc.start("/bin/sh manzhuk/fcttask/build_linux.sh");
+    auto args = QString("%1/%2").arg(QDir::currentPath()).arg("manzhuk/fcttask/build_linux.sh");
+    // proc.start("/bin/sh", QStringList() << "manzhuk/fcttask/build_linux.sh");
+    proc.start("/bin/sh", QStringList() << args);
+    proc.waitForFinished();
+    int code = proc.exitCode();
+    auto procEnvList = proc.processEnvironment().toStringList();
+    qDebug() << "sh manzhuk/fcttask/build_linux.sh, code: " << code << ", " << proc.processEnvironment().toStringList();
+    std::cout << "sh manzhuk/fcttask/build_linux.sh, code: " << code << ", ";
+    qDebug() << "Current path = " << QDir::currentPath();
+    std::cout << "Current path = " << QDir::currentPath().toStdString();
+    for (auto envElem : proc.processEnvironment().toStringList())
+        std::cout << envElem.toStdString();
 #endif
 }
 
@@ -189,7 +206,15 @@ void Solver::solve(const QString &pathToCompiler)
 
     int ncon, nbad, ier, *ip = nullptr;
     if (writeFile) {
-        std::system("mkdir output");
+        //std::system("mkdir output");
+        QFileInfo info("output");
+        if (!info.exists()) {
+            QDir dir("output");
+            auto ok = info.dir().mkdir("output");
+            if (!ok)
+                qCritical() << "Cannot create log dir!";
+        }
+
         outFile = new QFile(outFileName);
         if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
             auto str = QString("Output file %1 wasn't opened on write").arg(outFileName);
