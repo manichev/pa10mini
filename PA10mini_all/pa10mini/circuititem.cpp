@@ -195,7 +195,7 @@ void CircuitItem::drawContacts(QPainter* painter)
     font.setPointSizeF(2);
     painter->setFont(font);
     painter->scale(1 / scale, 1 / scale);
-    painter->drawText(QRectF(-scale * 0.5, -scale * 0.5, scale * 1.0, scale * 0.2), Qt::AlignCenter, getF());
+    painter->drawText(QRectF(-scale * 0.5, -scale * 0.5, scale * 1.0, scale * 0.2), Qt::AlignCenter, QString("%1%2").arg(getF()).arg(fPrefix()));
     painter->drawText(QRectF(-scale * 0.5, scale * 0.3, scale * 1.0, scale * 0.2), Qt::AlignCenter, m_name);
 }
 
@@ -230,6 +230,8 @@ QJsonObject CircuitItem::toJSON() const
     jitem["name"] = m_name;
     jitem["rot"] = rotation();
     jitem["value"] = getF();
+    jitem["multiplier"] = fMult();
+    jitem["prefix"] = fPrefix();
 
     //for (auto contact : contacts) {
     for (int i = 0; i < m_contacts.size(); ++i) {
@@ -257,6 +259,8 @@ void CircuitItem::fromJSON(const QJsonObject &jo)
     m_id = jo["id"].toInt();
     setRotation(jo["rot"].toDouble());
     setF(jo["value"].toString());
+    setFMult(jo["multiplier"].toDouble());
+    setFPrefix(jo["prefix"].toString());
 
     QJsonArray contactArray = jo["contacts"].toArray();
     for (int i = 0; i < contactArray.size(); ++i) {
@@ -511,7 +515,10 @@ QString CircuitItem::equal() const
     QString tmp = eq;
     tmp.replace("$u", getU());
     tmp.replace("$i", getI());
-    tmp.replace("$f", getF());
+    if (fPrefix().isEmpty())
+        tmp.replace("$f", getF());
+    else
+        tmp.replace("$f", QString("%1").arg(QString("%1").arg(getF()).toDouble() * fMult()));
     return tmp;
 }
 

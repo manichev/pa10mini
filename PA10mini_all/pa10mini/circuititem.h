@@ -42,7 +42,7 @@ public:
     QString getI() const;
     QString getI0() const;
     QString getU0() const;
-    QString getF() const { return m_f; } //!< Value e.g. resistance, voltage, current
+    QString getF() const { return m_f; } //!< Value e.g. in resistance, voltage, current, capacity etc
     void setF(const QString &f) { m_f = f; }
     void setI0(const QString &i0) { m_i0 = i0; }
     void setU0(const QString &u0) { m_u0 = u0; }
@@ -64,6 +64,10 @@ public:
     void fromQVariant(const QVariantHash &hash);
     QString fUnit() const { return m_fUnit; }
     void setFUnit(const QString &uName) { m_fUnit = uName; }
+    QString fPrefix() const { return m_fPrefix; }
+    void setFPrefix(const QString &uPrefix) { m_fPrefix = uPrefix; }
+    double fMult() const { return m_fMultiplier; }
+    void setFMult(double uMult) { m_fMultiplier = uMult; }
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
@@ -98,6 +102,8 @@ private:
     QString m_f;
     QString m_fName;
     QString m_fUnit;
+    QString m_fPrefix; // a, f, p, n, u, m, k, M, G, T, P
+    double m_fMultiplier;
     QString m_name;
     bool m_isItemGrabbed;
     int m_contactGrabbed;
