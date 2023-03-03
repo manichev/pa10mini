@@ -107,14 +107,14 @@ SchemeView::SchemeView(QWidget *parent)
     isGrabbed = false;
     isScaled = false;
 
-    //setRenderHint(QPainter::Antialiasing);
+    // setRenderHint(QPainter::Antialiasing);
 
-//numbers...
+    // Numbers...
     gridW = 15;
     gridH = 10;
     scaleStep = 0.05;
 
-//drawing grid
+    // Draw grid
     setSceneRect(-1, -1, gridW + 2, gridH + 2);
     QList<QGraphicsLineItem *> gridLines;
     QPen gridPen;
@@ -122,10 +122,14 @@ SchemeView::SchemeView(QWidget *parent)
     gridPen.setStyle(Qt::DashLine);
     gridPen.setWidthF(0.01);
 
-    for (double x = 0; x <= gridW; x += 1.0)
+    for (int x = 0; x <= gridW; x++)
         gridLines.push_back(scene()->addLine(x, 0.0, x, gridH, gridPen));
-    for (double y = 0; y <= gridH; y+=1.0)
+    for (int y = 0; y <= gridH; y++)
         gridLines.push_back(scene()->addLine(0.0, y, gridW, y, gridPen));
+    for (auto line : gridLines) {
+        // Disable any events for the Grid lines
+        line->setEnabled(false);
+    }
     installEventFilter(this);
 
     //settin up menus
@@ -212,7 +216,8 @@ void SchemeView::initMainMenu()
 void SchemeView::selectAllAction() const
 {
     for (auto &item : items()) {
-        item->setSelected(true);
+        if (item->isEnabled())
+            item->setSelected(true);
     }
 }
 
@@ -231,6 +236,7 @@ void SchemeView::deleteItem()
     }
     checkgrid();
 }
+
 void SchemeView::editCircuitItem()
 {
     CircuitItemEdit *tmp = new CircuitItemEdit(reinterpret_cast<CircuitItem*>(hoveredItem));
@@ -258,7 +264,7 @@ void SchemeView::checkgrid()
     for (int i = 0; i <= gridH; ++i) {
         for (int j = 0; j <= gridW; ++j) {
             int counter = 0;
-            auto items = scene()->items(CircuitItem::contactRect().translated(j, i));
+            const auto items = scene()->items(CircuitItem::contactRect().translated(j, i));
             int id = -1;
             for (const auto &item : items) {
                 if (item->type() == CircuitItem::CircuitItemType) {
@@ -295,7 +301,7 @@ void SchemeView::addNode(const QPointF &pos)
     bool stop = false;
     while (!stop) {
         stop = true;
-        for (const auto &node : nodes)
+        for (auto &node : nodes)
             if (newId == node->getId())
                 stop = false;
         if (!stop)
@@ -309,11 +315,11 @@ QString SchemeView::getSystem()
 {
     QString result;
 //dPhi and element equals
-    for (const auto element : elements) {
+    for (auto &element : elements) {
         result.append(element->equal() + "\n");
         result.append(element->getU() + "=");
         bool isFirstInLine = true;
-        for (const auto node : nodes) {
+        for (auto &node : nodes) {
             if (!node->isGrounded()) {
                 int contact = element->contact(node->scenePos());
                 qDebug() << contact;
@@ -333,10 +339,10 @@ QString SchemeView::getSystem()
         result.append("\n");
     }
 //Kirchhoff
-    for (const auto node : nodes) {
+    for (auto &node : nodes) {
         bool isFirstInLine = true;
         if (!node->isGrounded()) {
-            for (const auto element : elements) {
+            for (auto &element : elements) {
                 int contact = element->contact(node->scenePos());
                 if (contact == 0) {
                     if (isFirstInLine)
@@ -354,7 +360,7 @@ QString SchemeView::getSystem()
         }
     }
 
-    for (const auto element : elements) {
+    for (auto &element : elements) {
         if (element->getU0().toDouble() != 0) {
             result.append(element->getU());
             result.append("==");
@@ -430,9 +436,10 @@ void SchemeView:: mouseReleaseEvent(QMouseEvent * event)
         QGraphicsItem* item = scene()->itemAt(mapToScene(event->pos()), QTransform());
         if (item)
             item->setSelected(true);
+
         if (event->modifiers() != Qt::KeyboardModifier::ControlModifier) {
-            for (auto other : items())
-                if (other != item)
+            for (auto &other : items())
+                if (other->isEnabled() && other != item)
                     other->setSelected(false);
         }
     } else if (event->button() == Qt::RightButton) {
