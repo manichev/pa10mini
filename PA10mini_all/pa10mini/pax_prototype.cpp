@@ -17,7 +17,7 @@
 // Versions
 static const int major = 10;
 static const int minor = 2;
-static const int patch = 1;
+static const int patch = 2;
 
 extern Solver* solver;
 
