@@ -232,6 +232,8 @@ QJsonObject CircuitItem::toJSON() const
     jitem["value"] = getF();
     jitem["multiplier"] = fMult();
     jitem["prefix"] = fPrefix();
+    jitem["u0"] = getU0();
+    jitem["i0"] = getI0();
 
     //for (auto contact : contacts) {
     for (int i = 0; i < m_contacts.size(); ++i) {
@@ -261,6 +263,8 @@ void CircuitItem::fromJSON(const QJsonObject &jo)
     setF(jo["value"].toString());
     setFMult(jo["multiplier"].toDouble());
     setFPrefix(jo["prefix"].toString());
+    setU0(jo["u0"].toString());
+    setI0(jo["i0"].toString());
 
     QJsonArray contactArray = jo["contacts"].toArray();
     for (int i = 0; i < contactArray.size(); ++i) {
