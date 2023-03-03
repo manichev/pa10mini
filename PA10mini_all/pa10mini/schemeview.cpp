@@ -223,7 +223,9 @@ void SchemeView::selectAllAction() const
 
 void SchemeView::deleteItem()
 {
-    for (auto &element : elements) {
+    auto elementsCopy = elements;
+
+    for (auto &element : elementsCopy) {
         if (element->isSelected()) {
             elements.removeOne(element);
             delete element;
@@ -278,7 +280,8 @@ void SchemeView::checkgrid()
             if (id == -1 && counter >= 2) {
                 addNode(QPointF(j, i));
             } else if (id != -1 && counter < 2) {
-                for (const auto node : nodes) {
+                auto nodesCopy = nodes;
+                for (const auto node : nodesCopy) {
                     if (node->getId() == id) {
                         nodes.removeOne(node);
                         delete node;
