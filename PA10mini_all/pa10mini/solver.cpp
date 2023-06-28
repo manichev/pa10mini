@@ -17,6 +17,10 @@
 
 #include "solver.h"
 
+#ifdef _WIN32
+#include <qt_windows.h>
+#endif
+
 //global variable;
 Solver* solver;
 
@@ -168,15 +172,42 @@ void Solver::create_fcttask(const QString &pathToCompiler)
 #endif
 
     QFileInfo MingwDir(pathToCompiler);
-    auto str1 = QString("set PATH=%PATH%;%1").arg(MingwDir.path());
+    auto str1 = QString("set PATH=%PATH%;%1;").arg(QDir::toNativeSeparators(MingwDir.path()));
     auto str2 = MingwDir.filePath();
     auto str3 = "-shared -static manzhuk/fcttask/fcttask.cpp -o manzhuk/fcttask/fcttask.dll";
-    std::system(QString("%1 && %2 %3").arg(str1).arg(str2).arg(str3).toStdString().data());
+    auto str = QString("%1 && %2 %3").arg(str1).arg(str2).arg(str3);
+    auto curr_dir_str = QDir::currentPath();
+    auto cdCmd = QString("cd %1 && ").arg(curr_dir_str);
+// #ifdef QT_DEBUG
+  //  str = "cd .. && " + str;
+// #endif
+    // auto retVal = std::system(str.toStdString().data());
+
+    QProcess proc;
+    auto runCmd = QStringList()<<"/c"<< cdCmd + str;
+    // proc.start("C:\\windows\\system32\\cmd.exe", runCmd);//QStringList() << cdCmd << str);
+    QString fullCMD = QString("C:\\windows\\system32\\cmd.exe /c %1 %2").arg(cdCmd).arg(str);
+
+    proc.start(fullCMD);//QStringList() << cdCmd << str);
+    proc.waitForFinished();
+    int code = proc.exitCode();
 
     // Removing extra files
     remove("manzhuk/fcttask/fcttask.lib");
     remove("manzhuk/fcttask/fcttask.exp");
     remove("fcttask.obj");
+
+    /*QProcess process;
+    process.setCreateProcessArgumentsModifier([] (QProcess::CreateProcessArguments *args)
+    {
+        args->flags |= CREATE_NEW_CONSOLE;
+        args->startupInfo->dwFlags &= ~STARTF_USESTDHANDLES;
+        args->startupInfo->dwFlags |= STARTF_USEFILLATTRIBUTE;
+        args->startupInfo->dwFillAttribute = BACKGROUND_BLUE | FOREGROUND_RED
+                                           | FOREGROUND_INTENSITY;
+    });
+    process.start("C:\\Windows\\System32\\cmd.exe", QStringList() << "/k" << "title" << "The Child Process");*/
+
 #else
     remove("manzhuk/fcttask/fcttask.so");
     // std::system("sh manzhuk/fcttask/build_linux.sh");
@@ -285,7 +316,7 @@ void Solver::solve(const QString &pathToCompiler)
 #endif
 
     if (!handle) {
-        auto str = QString("Can't open library: %1 \n").arg(dlerror());
+        auto str = tr("Can't open library: %1 \n").arg(dlerror());
         cerr << str.toStdString().data();
         emit statusMessage(str);
         return;
@@ -309,7 +340,7 @@ void Solver::solve(const QString &pathToCompiler)
 
 #endif
 
-// Solving with manzhuk
+    // Solving with manzhuk
     std::list<Variable>::iterator it;
     std::cout.precision(3);
     for (int i = 1; i <= n; ++i)
@@ -323,15 +354,15 @@ void Solver::solve(const QString &pathToCompiler)
     for (int i = 1; i <= m; ++i)
         px[i] = px1[i] = 0.0;
 
-//int stdout_copy = _dup(1);
-//_close(1);
-//int file1 = open("out.txt", 0);
+    //int stdout_copy = _dup(1);
+    //_close(1);
+    //int file1 = open("out.txt", 0);
 
     manzhuk(z, px, z1, px1, f, rj1, rj2, t, t0, tk, h, hmn, hmx, eps, &tkv, n, m, nm, ncon, &nbad, &ier, ip, fcttask, global_outtask);
 
-//_close(file1);
-//_dup2(stdout_copy, 1);
-//_close(stdout_copy);
+    //_close(file1);
+    //_dup2(stdout_copy, 1);
+    //_close(stdout_copy);
 
 //free dll
 #if _MSC_VER && !__INTEL_COMPILER
