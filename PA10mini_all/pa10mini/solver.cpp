@@ -239,7 +239,7 @@ void Solver::solve(const QString &pathToCompiler)
     rj2 = new double[(n + 1) * (n + 1)];
     ip = new int[20 + 2 * (n + 1) + 6 * (m + 1)];
     paxData.clear();
-    paxData.resize(trace.size()+1);
+    paxData.resize(trace.size() + 1);
 
     //initializing values
     t = 0.0;
@@ -254,6 +254,8 @@ void Solver::solve(const QString &pathToCompiler)
     tp = t0 + (tk - t0) / 100;
 
     create_fcttask(pathToCompiler);
+
+    return;
 
     // Applying dll
 #if _MSC_VER && !__INTEL_COMPILER
@@ -318,7 +320,7 @@ void Solver::solve(const QString &pathToCompiler)
     for (it = system->variables.begin(); it != system->variables.end(); ++it) {
         z[it->id] = it->initial;
         z1[it->id] = fabs(z[it->id]);
-        std::cout<<it->name<< " ["<<it->id<<"] "<<" = "<<it->initial<<"\n";
+        std::cout << it->name << " [" << it->id << "] " << " = " << it->initial<<"\n";
     }
     for (int i = 1; i <= m; ++i)
         px[i] = px1[i] = 0.0;

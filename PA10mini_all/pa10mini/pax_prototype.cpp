@@ -101,6 +101,14 @@ void PAX_Prototype::solve()
     grammar::TextDriver textDriver(&daeSystem);
     std::string daeStr;
 
+    QString fname = "/home/evgeny/workspace/bmstu/DIBAH/printDIB15i_param_PA10style_i8000j2.txt";
+    QFile inputFile(fname);
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QTextStream in(&inputFile);
+
+    ui.equalEdit->setPlainText(in.readAll());
+
     if (sender()->objectName() == "solveButton") {
         daeStr = ui.equalEdit->toPlainText().toStdString();
     } else {
