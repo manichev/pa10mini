@@ -394,9 +394,9 @@ bool SchemeView::eventFilter(QObject *object, QEvent *event)
 }
 
 
-void SchemeView::mousePressEvent(QMouseEvent * event)
+void SchemeView::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::MidButton) {
+    if (event->button() == Qt::MiddleButton) {
         setCursor(Qt::ClosedHandCursor);
         isGrabbed = true;
     } else {
@@ -410,7 +410,7 @@ void SchemeView::rotateItem()
     static_cast<CircuitItem*>(hoveredItem)->rotateRight();
     checkgrid();
 }
-void SchemeView::mouseMoveEvent(QMouseEvent * event)
+void SchemeView::mouseMoveEvent(QMouseEvent *event)
 {
     if (isGrabbed) {
         int dx  = lastMousePos.x() - event->pos().x();
