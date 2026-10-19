@@ -1,0 +1,105 @@
+{
+    "Elements": [
+        {
+            "contacts": [
+                {
+                    "id": 0,
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "id": 1,
+                    "x": 1,
+                    "y": -2
+                }
+            ],
+            "fName": "E",
+            "i0": "0",
+            "id": 1,
+            "multiplier": 8.995,
+            "name": "E1",
+            "prefix": "",
+            "rot": 90,
+            "type": "CircuitItem",
+            "u0": "0",
+            "value": "1.0",
+            "x": 7,
+            "y": 4
+        },
+        {
+            "contacts": [
+                {
+                    "id": 0,
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "id": 1,
+                    "x": 1,
+                    "y": 0
+                }
+            ],
+            "fName": "R",
+            "i0": "0",
+            "id": 1,
+            "multiplier": 9.995,
+            "name": "R1",
+            "prefix": "",
+            "rot": 0,
+            "type": "CircuitItem",
+            "u0": "0",
+            "value": "1.0",
+            "x": 8,
+            "y": 3
+        },
+        {
+            "contacts": [
+                {
+                    "id": 0,
+                    "x": -1,
+                    "y": 0
+                },
+                {
+                    "id": 1,
+                    "x": 1,
+                    "y": 0
+                }
+            ],
+            "fName": "C",
+            "i0": "0",
+            "id": 1,
+            "multiplier": 9.995,
+            "name": "C1",
+            "prefix": "",
+            "rot": 90,
+            "type": "CircuitItem",
+            "u0": "0",
+            "value": "1.0",
+            "x": 9,
+            "y": 4
+        }
+    ],
+    "Nodes": [
+        {
+            "ground": true,
+            "id": 3,
+            "type": "CircuitNodeItem",
+            "x": 9,
+            "y": 5
+        },
+        {
+            "ground": false,
+            "id": 2,
+            "type": "CircuitNodeItem",
+            "x": 7,
+            "y": 3
+        },
+        {
+            "ground": false,
+            "id": 1,
+            "type": "CircuitNodeItem",
+            "x": 9,
+            "y": 3
+        }
+    ]
+}

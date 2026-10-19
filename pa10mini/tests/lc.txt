@@ -1,0 +1,6 @@
+uL1=iL1'*1.0
+uL1=phi0
+iC2=uC2'*1.0
+uC2=phi0
+iL1+iC2=0
+uC2==10

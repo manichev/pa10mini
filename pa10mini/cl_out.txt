@@ -1,0 +1,16 @@
+	cl /Ot /I"C:\Program Files\Microsoft Visual Studio 9.0\VC\include"  /Tp"manzhuk/fcttask/fcttask.cpp" libcpmt.lib libcmt.lib oldnames.lib Kernel32.lib /link /LIBPATH:"C:\Program Files\Microsoft Visual Studio 9.0\VC\lib" /LIBPATH:"manzhuk\fcttask" /DLL /out:"manzhuk/fcttask/fcttask.dll"
+fcttask.cpp
+Microsoft (R) Incremental Linker Version 9.00.21022.08
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:fcttask.exe 
+"/LIBPATH:C:\Program Files\Microsoft Visual Studio 9.0\VC\lib" 
+/LIBPATH:manzhuk\fcttask 
+/DLL 
+/out:manzhuk/fcttask/fcttask.dll 
+fcttask.obj 
+libcpmt.lib 
+libcmt.lib 
+oldnames.lib 
+Kernel32.lib 
+   Creating library manzhuk/fcttask/fcttask.lib and object manzhuk/fcttask/fcttask.exp

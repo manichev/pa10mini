@@ -1,0 +1,10 @@
+uR1=iR1*1.0
+uR1=-phi1+phi0
+uL2=iL2'*1.0
+uL2=phi1
+iC3=uC3'*1.0
+uC3=phi1
+uE4=1.0
+uE4=phi0
+-iR1+iL2+iC3=0
+iR1+iE4=0
