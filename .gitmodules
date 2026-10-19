@@ -1,0 +1,8 @@
+[submodule "third_party/qwt"]
+	path = third_party/qwt
+	url = https://github.com/xantares/qwt-cmake.git
+	branch = cmake
+
+[submodule "third_party/libdl"]
+	path = third_party/libdl
+	url = https://github.com/dlfcn-win32/dlfcn-win32.git
