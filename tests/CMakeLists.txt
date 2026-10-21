@@ -26,10 +26,34 @@ target_include_directories(tst_manzhuk PRIVATE
 )
 target_link_libraries(tst_manzhuk PRIVATE Qt5::Core Qt5::Test)
 
+add_executable(fcttask_process_fixture fcttask_process_fixture.cpp)
+target_link_libraries(fcttask_process_fixture PRIVATE Qt5::Core)
+
+add_executable(tst_fcttaskcompiler
+    tst_fcttaskcompiler.cpp
+    ../pa10mini/fcttaskcompiler.cpp
+    ../pa10mini/fcttaskcompiler.h
+)
+set_target_properties(tst_fcttaskcompiler PROPERTIES
+    AUTOMOC ON
+    CXX_STANDARD 14
+    CXX_STANDARD_REQUIRED ON
+)
+target_include_directories(tst_fcttaskcompiler PRIVATE ../pa10mini)
+target_link_libraries(tst_fcttaskcompiler PRIVATE Qt5::Core Qt5::Test)
+add_dependencies(tst_fcttaskcompiler fcttask_process_fixture)
+
 # Use the same prebuilt solver as the application on Windows.
 if(WIN32)
+    if(MINGW)
+        set(PA10MINI_MANZHUK_TEST_DEFAULT_LIBRARY
+            "${CMAKE_CURRENT_LIST_DIR}/../pa10mini/manzhuk/libmanzhuk.a")
+    else()
+        set(PA10MINI_MANZHUK_TEST_DEFAULT_LIBRARY
+            "${CMAKE_CURRENT_LIST_DIR}/../pa10mini/manzhuk/manzhuk.lib")
+    endif()
     set(PA10MINI_MANZHUK_LIBRARY
-        "${CMAKE_CURRENT_LIST_DIR}/../pa10mini/manzhuk/manzhuk.lib"
+        "${PA10MINI_MANZHUK_TEST_DEFAULT_LIBRARY}"
         CACHE FILEPATH "Prebuilt Manzhuk library for the selected Windows compiler and architecture"
     )
     if(NOT EXISTS "${PA10MINI_MANZHUK_LIBRARY}")
@@ -47,6 +71,7 @@ else()
 endif()
 
 if(BUILD_TESTING)
+    add_test(NAME tst_fcttaskcompiler COMMAND tst_fcttaskcompiler)
     add_test(NAME tst_manzhuk COMMAND tst_manzhuk)
     set_tests_properties(tst_manzhuk PROPERTIES
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"

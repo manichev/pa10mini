@@ -4,9 +4,12 @@
 #include <QFile>
 #include <QTextStream>
 #include <QProgressBar>
+#include <QLibrary>
+#include <memory>
 #include "daesystem.h"
 #include "solverparam.h"
 #include "manzhuk/manzhuk.h"
+#include "fcttaskcompiler.h"
 
 class Solver : public QObject
 {
@@ -17,6 +20,7 @@ public:
     Solver(QObject *parent);
     ~Solver(void);
 
+    bool isBusy() const { return busy_; }
     void solve(const QString &pathToCompiler);
     void setSystem(DAESystem* system_);
 
@@ -58,12 +62,16 @@ signals:
     int progressChanged(int);
     // Including error messages
     void statusMessage(const QString &msg);
+    void solveFinished(bool success, const QString &message);
 
 private:
-    QFile* outFile;
-    QTextStream* outTextStream;
+    std::unique_ptr<QFile> outFile;
+    std::unique_ptr<QTextStream> outTextStream;
 
     DAESystem* system = nullptr;
+    FcttaskCompiler fcttaskCompiler_;
+    QLibrary fcttaskLibrary_;
+    QString workingDirectory_;
     double t0, tk, hmn, hmx, eps;
     double tp, tout; //progress bar signal timing
     int n, m, nm;
@@ -71,6 +79,11 @@ private:
     bool rj2_before;
     QString outFileName;
     bool writeFile;
+    bool busy_ = false;
 
     void create_fcttask(const QString &pathToCompiler);
+    void continueSolve();
+    void runCalculation(void (*fcttask)(double*, double*, double*, double*, double*,
+                                        int, int, double, double, int, int*, int*));
+    void finishSolve(bool success, const QString &message = QString());
 };

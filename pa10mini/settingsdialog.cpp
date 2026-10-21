@@ -10,6 +10,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle(tr("Диалог настроек"));
+#if defined(Q_OS_WIN)
+    ui->label->setText(tr("Компилятор задания: g++ (MinGW)"));
+#else
+    ui->label->setText(tr("Компилятор задания: g++ (пустой путь — поиск в PATH)"));
+#endif
 
     connect(ui->pathToMinGWToolButton, &QToolButton::clicked, this, &SettingsDialog::onPathToMingwToolButtonClick);
 }
@@ -31,7 +36,13 @@ void SettingsDialog::setMinGWPath(const QString &path)
 
 void SettingsDialog::onPathToMingwToolButtonClick()
 {
-    auto str = QFileDialog::getOpenFileName(this, tr("Укажите путь к g++"), ui->pathToMinGWEdit->text(), tr("Исполняемый файл (*.exe)"));
+#if defined(Q_OS_WIN)
+    const QString filter = tr("Исполняемый файл (*.exe);;Все файлы (*)");
+#else
+    const QString filter = tr("Все файлы (*)");
+#endif
+    const QString str = QFileDialog::getOpenFileName(
+        this, tr("Укажите путь к g++"), ui->pathToMinGWEdit->text(), filter);
 
     if (!str.isEmpty())
         ui->pathToMinGWEdit->setText(str);

@@ -5,7 +5,6 @@
 #include "solver.h"
 #include "textdriver.h"
 
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -40,9 +39,9 @@ PAX_Prototype::PAX_Prototype(QWidget *parent, Qt::WindowFlags flags)
     connect(ui.settingButton, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
     connect(ui.settingButton_2, &QPushButton::clicked, this, &PAX_Prototype::showSettingsDialog);
     connect(solver, &Solver::statusMessage, this, &PAX_Prototype::showStatusBarMessage);
+    connect(solver, &Solver::solveFinished, this, &PAX_Prototype::onSolveFinished);
     connect(ui.pushButtonAbout, &QPushButton::pressed, this, &PAX_Prototype::showAboutDialog);
 
-    installEventFilter(this);
     plot = new PlotWindow;
 
     QSettings settings("PAXMINI", "CADCAMCAE6BMSTU");
@@ -71,18 +70,10 @@ void PAX_Prototype::showErr(const QString& message)
     msgBox.exec();
 }
 
-bool PAX_Prototype::eventFilter(QObject *object, QEvent *event)
-{
-    Q_UNUSED(object)
-
-    if ( event->type() == QEvent::Close )
-        exit(0);
-
-    return false;
-}
-
 void PAX_Prototype::openPlot()
 {
+    if (solver && solver->isBusy())
+        return;
     plot->show();
     plot->populate();
 }
@@ -96,8 +87,11 @@ void PAX_Prototype::schemeToText()
 
 void PAX_Prototype::solve()
 {
-    DAESystem daeSystem;
-    grammar::TextDriver textDriver(&daeSystem);
+    if (solver->isBusy())
+        return;
+
+    m_activeSystem.reset(new DAESystem);
+    grammar::TextDriver textDriver(m_activeSystem.get());
     std::string daeStr;
 
     if (sender()->objectName() == "solveButton") {
@@ -110,14 +104,15 @@ void PAX_Prototype::solve()
         textDriver.parse_string(daeStr);
     } catch (TextDriverException e) {
         showErr(e.reason());
+        m_activeSystem.reset();
         return ;
     }
 
-    SolverParam*  param = new SolverParam;
-    param->exec();
-
-    if (param->result() != QDialog::Accepted)
+    SolverParam param;
+    if (param.exec() != QDialog::Accepted) {
+        m_activeSystem.reset();
         return;
+    }
 
     QString name;
     if (sender()->objectName() == "solveButton") {
@@ -135,35 +130,39 @@ void PAX_Prototype::solve()
     }
 
     solver->set_outFileName(name);
-    solver->setSystem(&daeSystem);
-    VariableChooser* vc = new VariableChooser;
-    vc->exec();
+    solver->setSystem(m_activeSystem.get());
+    {
+        VariableChooser vc;
+        vc.exec();
+    }
 
     ui.solveButton->setDisabled(true);
+    ui.solveSchemeButton->setDisabled(true);
     ui.plotButton->setDisabled(true);
     ui.plotButton_2->setDisabled(true);
     ui.progressBar->setValue(0);
     ui.progressBar->show();
 
-    try {
-        solver->solve(m_pathToMinGW);
-    } catch (const std::invalid_argument& e) {
-        showErr(QString::fromStdString(e.what()));
-        ui.progressBar->hide();
-        ui.solveButton->setEnabled(true);
-        ui.plotButton->setEnabled(true);
-        ui.plotButton_2->setEnabled(true);
-        delete param;
-        return;
-    }
+    const QString compilerPath = m_pathToMinGW;
+    solver->solve(compilerPath);
+}
 
+void PAX_Prototype::onSolveFinished(bool success, const QString &message)
+{
     ui.progressBar->hide();
     ui.solveButton->setEnabled(true);
+    ui.solveSchemeButton->setEnabled(true);
     ui.plotButton->setEnabled(true);
     ui.plotButton_2->setEnabled(true);
 
-    delete param;
-    openPlot();
+    if (!success)
+        showErr(message);
+
+    solver->setSystem(nullptr);
+    m_activeSystem.reset();
+
+    if (success)
+        openPlot();
 }
 
 void PAX_Prototype::activateSchemeMode()

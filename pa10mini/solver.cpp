@@ -1,19 +1,15 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
+#include <locale>
+#include <memory>
+#include <sstream>
 #include <cstdlib>
 #include <cmath>
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
-#include <QProcess>
-
-#if _MSC_VER && !__INTEL_COMPILER
-#include <io.h>
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
+#include <QFile>
 
 #include "solver.h"
 
@@ -33,11 +29,25 @@ Solver::Solver(QObject *parent)
     rj2_before = false;
     writeFile = true;
     maxMemSize = 1024*1024*2;
+
+    connect(&fcttaskCompiler_, &FcttaskCompiler::started, this, [this]() {
+        emit statusMessage(tr("Compiling fcttask with MinGW g++..."));
+    });
+    connect(&fcttaskCompiler_, &FcttaskCompiler::finished, this,
+            [this](bool success, const QString &report) {
+                if (!success) {
+                    finishSolve(false, report);
+                    return;
+                }
+                continueSolve();
+            });
 }
 
 void Solver::setSystem(DAESystem* system_)
 {
     system = system_;
+    if (system == nullptr)
+        return;
     system->updateAllIds();
     names.clear();
     trace.clear();
@@ -117,261 +127,220 @@ int progressChanged(int value)
 
 void Solver::create_fcttask(const QString &pathToCompiler)
 {
-    ofstream file;
-    file.open("manzhuk/fcttask/fcttask.cpp");
+    const QString taskDirectory = QDir(workingDirectory_).absoluteFilePath("manzhuk/fcttask");
+    const QFileInfo taskDirectoryInfo(taskDirectory);
+    if (!taskDirectoryInfo.exists() || !taskDirectoryInfo.isDir())
+        throw std::runtime_error(tr("fcttask directory does not exist: %1").arg(taskDirectory).toUtf8().constData());
 
-    file << "#include \"fcttask.h\"\n";
-    file << "#include <cmath>\n\n";
-    file << "void fcttask(double z[], double px[], double f[], double rj1[], double rj2[], int n, int m, double t, double h, int ncon, int *nbad, int ip[])\n";
-    file << "{\n";
+    std::ostringstream generatedSource;
+    generatedSource.imbue(std::locale::classic());
+    generatedSource << "#include \"fcttask.h\"\n";
+    generatedSource << "#include <cmath>\n\n";
+    generatedSource << "void fcttask(double z[], double px[], double f[], double rj1[], double rj2[], int n, int m, double t, double h, int ncon, int *nbad, int ip[])\n";
+    generatedSource << "{\n";
 
-    std::list<Expression*>::iterator eqIt;
-    Expression* der;
     int i = 1;
-    for (eqIt = system->equals.begin(); eqIt != system->equals.end(); ++eqIt) {
-        file << "\tf[" << i << "] = ";
+    for (auto eqIt = system->equals.begin(); eqIt != system->equals.end(); ++eqIt, ++i) {
+        generatedSource << "\tf[" << i << "] = ";
         (*eqIt)->simplify();
-        (*eqIt)->print_c_ostream(file);
-        file << ";\n";
+        (*eqIt)->print_c_ostream(generatedSource);
+        generatedSource << ";\n";
 
         for (int j = 1; j <= m; ++j) {
-            der = (*eqIt)->derivative(-j);
-            if (!der->isConst(0.0)) {
-                file << "\trj1[" << i << "*n+"<< + j << "] = ";
-                der->print_c_ostream(file);
-                file << ";\n";
+            std::unique_ptr<Expression> derivative((*eqIt)->derivative(-j));
+            if (!derivative->isConst(0.0)) {
+                generatedSource << "\trj1[" << i << "*n+" << j << "] = ";
+                derivative->print_c_ostream(generatedSource);
+                generatedSource << ";\n";
             }
         }
 
         if (rj2_before) {
             for (int j = 1; j <= n; ++j) {
-                der = (*eqIt)->derivative(j);
-                if (!der->isConst(0.0)) {
-                    file << "\trj2[" << i << "*n+"<< + j << "] = ";
-                    der->print_c_ostream(file);
-                    file << ";\n";
+                std::unique_ptr<Expression> derivative((*eqIt)->derivative(j));
+                if (!derivative->isConst(0.0)) {
+                    generatedSource << "\trj2[" << i << "*n+" << j << "] = ";
+                    derivative->print_c_ostream(generatedSource);
+                    generatedSource << ";\n";
                 }
             }
         }
-        ++i;
     }
-    file << "}";
-    file.close();
+    generatedSource << "}\n";
 
-#ifdef WIN32
-    // Compiling fcttask.dll
-    remove("manzhuk/fcttask/fcttask.dll");
-#if _MSC_VER && !__INTEL_COMPILER
-    // std::system("manzhuk\\fcttask\\build_vc.bat");
+    const QString sourcePath = QDir(taskDirectory).absoluteFilePath("fcttask.cpp");
+    QFile sourceFile(sourcePath);
+    if (!sourceFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        throw std::runtime_error(tr("Cannot write generated fcttask source %1: %2")
+                                     .arg(sourcePath, sourceFile.errorString()).toUtf8().constData());
+
+    const QByteArray sourceBytes = QByteArray::fromStdString(generatedSource.str());
+    if (sourceFile.write(sourceBytes) != sourceBytes.size())
+        throw std::runtime_error(tr("Cannot write generated fcttask source %1: %2")
+                                     .arg(sourcePath, sourceFile.errorString()).toUtf8().constData());
+    if (!sourceFile.flush())
+        throw std::runtime_error(tr("Cannot finish writing generated fcttask source %1: %2")
+                                     .arg(sourcePath, sourceFile.errorString()).toUtf8().constData());
+    sourceFile.close();
+
+#if defined(Q_OS_WIN)
+    const QString outputPath = QDir(taskDirectory).absoluteFilePath("fcttask.dll");
 #else
-    // std::system("manzhuk\\fcttask\\build.cmd");
+    const QString outputPath = QDir(taskDirectory).absoluteFilePath("fcttask.so");
 #endif
 
-    QFileInfo MingwDir(pathToCompiler);
-    auto str1 = QString("set PATH=%PATH%;%1").arg(MingwDir.path());
-    auto str2 = MingwDir.filePath();
-    auto str3 = "-shared -static manzhuk/fcttask/fcttask.cpp -o manzhuk/fcttask/fcttask.dll";
-    std::system(QString("%1 && %2 %3").arg(str1).arg(str2).arg(str3).toStdString().data());
-
-    // Removing extra files
-    remove("manzhuk/fcttask/fcttask.lib");
-    remove("manzhuk/fcttask/fcttask.exp");
-    remove("fcttask.obj");
-#else
-    remove("manzhuk/fcttask/fcttask.so");
-    // std::system("sh manzhuk/fcttask/build_linux.sh");
-    QProcess proc;
-    //proc.setWorkingDirectory(".");
-    // proc.start("/bin/sh manzhuk/fcttask/build_linux.sh");
-    auto args = QString("%1/%2").arg(QDir::currentPath()).arg("manzhuk/fcttask/build_linux.sh");
-    // proc.start("/bin/sh", QStringList() << "manzhuk/fcttask/build_linux.sh");
-    proc.start("/bin/sh", QStringList() << args);
-    proc.waitForFinished();
-    int code = proc.exitCode();
-    auto procEnvList = proc.processEnvironment().toStringList();
-    qDebug() << "sh manzhuk/fcttask/build_linux.sh, code: " << code << ", " << proc.processEnvironment().toStringList();
-    std::cout << "sh manzhuk/fcttask/build_linux.sh, code: " << code << ", ";
-    qDebug() << "Current path = " << QDir::currentPath();
-    std::cout << "Current path = " << QDir::currentPath().toStdString();
-    for (auto envElem : proc.processEnvironment().toStringList())
-        std::cout << envElem.toStdString();
-#endif
+    QString errorMessage;
+    if (!fcttaskCompiler_.start(pathToCompiler, workingDirectory_, sourcePath,
+                                outputPath, &errorMessage)) {
+        throw std::runtime_error(errorMessage.toUtf8().constData());
+    }
 }
-
 
 void Solver::solve(const QString &pathToCompiler)
 {
-    double *z=nullptr, *px=nullptr, *z1=nullptr, *px1=nullptr, *f=nullptr, *rj1=nullptr, *rj2=nullptr;
-    double t, h, tkv;
+    if (busy_)
+        return;
 
-    int ncon, nbad, ier, *ip = nullptr;
+    busy_ = true;
+    workingDirectory_ = QDir::currentPath();
+    if (outFileName.isEmpty())
+        outFileName = QDir(workingDirectory_).absoluteFilePath("output/fcttask.csv");
+    else if (QFileInfo(outFileName).isRelative())
+        outFileName = QDir(workingDirectory_).absoluteFilePath(outFileName);
 
-    if (system == nullptr)
-        throw std::invalid_argument("DAE system is not set");
+    try {
+        if (system == nullptr)
+            throw std::invalid_argument("DAE system is not set");
 
-    n = system->countEquals();
-    m = system->countDerivatives();
-    const int variableCount = system->countVariables();
-    if (variableCount != n) {
-        throw std::invalid_argument(
-            "Invalid DAE system: number of variables (" + std::to_string(variableCount)
-            + ") must match number of equations (" + std::to_string(n) + ")");
-    }
-
-    if (writeFile) {
-        //std::system("mkdir output");
-        QFileInfo info("output");
-        if (!info.exists()) {
-            QDir dir("output");
-            auto ok = info.dir().mkdir("output");
-            if (!ok)
-                qCritical() << "Cannot create log dir!";
+        n = system->countEquals();
+        m = system->countDerivatives();
+        const int variableCount = system->countVariables();
+        if (variableCount != n) {
+            throw std::invalid_argument(
+                "Invalid DAE system: number of variables (" + std::to_string(variableCount)
+                + ") must match number of equations (" + std::to_string(n) + ")");
         }
 
-        outFile = new QFile(outFileName);
-        if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
-            auto str = QString("Output file %1 wasn't opened on write").arg(outFileName);
-            qCritical() << str;
-            emit statusMessage(str);
-            // return;
-        }
-        outTextStream = new QTextStream(outFile);
+        emit statusMessage(tr("Preparing fcttask source..."));
+        create_fcttask(pathToCompiler);
+    } catch (const std::exception &error) {
+        finishSolve(false, QString::fromUtf8(error.what()));
+    } catch (...) {
+        finishSolve(false, tr("Unexpected error while preparing fcttask."));
     }
+}
 
-    // allocating memory
-    z = new double[n + 1];
-    px = new double[m + 1];
-    z1 = new double[n + 1];
-    px1 = new double[m + 1];
-    f = new double[n + 1];
-    rj1 = new double[(n + 1) * (n + 1)];
-    rj2 = new double[(n + 1) * (n + 1)];
-    ip = new int[20 + 2 * (n + 1) + 6 * (m + 1)];
+void Solver::continueSolve()
+{
+    try {
+        QString libraryPath = QDir(workingDirectory_).absoluteFilePath("manzhuk/fcttask/fcttask");
+#if defined(Q_OS_WIN)
+        libraryPath += QStringLiteral(".dll");
+#else
+        libraryPath += QStringLiteral(".so");
+#endif
+        fcttaskLibrary_.setFileName(libraryPath);
+        if (!fcttaskLibrary_.load())
+            throw std::runtime_error(tr("Cannot load fcttask library %1: %2")
+                                         .arg(libraryPath, fcttaskLibrary_.errorString()).toUtf8().constData());
+
+        using FcttaskFunction = void (*)(double*, double*, double*, double*, double*,
+                                         int, int, double, double, int, int*, int*);
+        FcttaskFunction fcttask = reinterpret_cast<FcttaskFunction>(fcttaskLibrary_.resolve("fcttask"));
+        if (fcttask == nullptr)
+            throw std::runtime_error(tr("Library %1 does not export fcttask: %2")
+                                         .arg(libraryPath, fcttaskLibrary_.errorString()).toUtf8().constData());
+
+        if (writeFile) {
+            const QFileInfo outputInfo(outFileName);
+            QDir outputDirectory = outputInfo.dir();
+            if (!outputDirectory.exists() && !outputDirectory.mkpath(QStringLiteral(".")))
+                throw std::runtime_error(tr("Cannot create output directory: %1")
+                                             .arg(outputDirectory.absolutePath()).toUtf8().constData());
+
+            outFile.reset(new QFile(outFileName));
+            if (!outFile->open(QIODevice::WriteOnly | QIODevice::Text))
+                throw std::runtime_error(tr("Cannot open output file %1: %2")
+                                             .arg(outFileName, outFile->errorString()).toUtf8().constData());
+            outTextStream.reset(new QTextStream(outFile.get()));
+        }
+
+        emit statusMessage(tr("Running numerical solver..."));
+        runCalculation(fcttask);
+        finishSolve(true);
+    } catch (const std::exception &error) {
+        finishSolve(false, QString::fromUtf8(error.what()));
+    } catch (...) {
+        finishSolve(false, tr("Unexpected error while running the solver."));
+    }
+}
+
+void Solver::runCalculation(void (*fcttask)(double*, double*, double*, double*, double*,
+                                            int, int, double, double, int, int*, int*))
+{
+    std::unique_ptr<double[]> zStorage(new double[n + 1]);
+    std::unique_ptr<double[]> pxStorage(new double[m + 1]);
+    std::unique_ptr<double[]> z1Storage(new double[n + 1]);
+    std::unique_ptr<double[]> px1Storage(new double[m + 1]);
+    std::unique_ptr<double[]> fStorage(new double[n + 1]);
+    std::unique_ptr<double[]> rj1Storage(new double[(n + 1) * (n + 1)]);
+    std::unique_ptr<double[]> rj2Storage(new double[(n + 1) * (n + 1)]);
+    std::unique_ptr<int[]> ipStorage(new int[20 + 2 * (n + 1) + 6 * (m + 1)]);
+
+    double *z = zStorage.get();
+    double *px = pxStorage.get();
+    double *z1 = z1Storage.get();
+    double *px1 = px1Storage.get();
+    double *f = fStorage.get();
+    double *rj1 = rj1Storage.get();
+    double *rj2 = rj2Storage.get();
+    int *ip = ipStorage.get();
+    double t = 0.0;
+    double h = 0.0;
+    double tkv = 0.0;
+    int ncon = 0;
+    int nbad = 1;
+    int ier = rj2_before ? 0 : -1;
+
     paxData.clear();
-    paxData.resize(trace.size()+1);
-
-    //initializing values
-    t = 0.0;
-    h = 0.0;
-    ncon = 0;
-    nbad = 1;
-
-    ier = rj2_before ? 0 : -1;
-
-    maxPoints = maxMemSize / (sizeof(double) * paxData.size());
+    paxData.resize(trace.size() + 1);
+    maxPoints = qMax(1, maxMemSize / (static_cast<int>(sizeof(double)) * paxData.size()));
     tout = t0 + (tk - t0) / maxPoints;
     tp = t0 + (tk - t0) / 100;
 
-    create_fcttask(pathToCompiler);
-
-    // Applying dll
-#if _MSC_VER && !__INTEL_COMPILER
-
-#ifdef UNICODE
-    CONST WCHAR * fcttaskDllPath = L"manzhuk/fcttask/fcttask.dll";
-#else
-    CONST CHAR * fcttaskDllPath = "manzhuk/fcttask/fcttask.dll";
-#endif
-    HINSTANCE dll = LoadLibrary(fcttaskDllPath);
-    DWORD dwError = 0;
-    if (dll == nullptr) {
-        dwError = GetLastError();
-        cout << "Cannot load " << fcttaskDllPath << ", WinError: " << dwError;
-        return;
-    } else {
-        cout << fcttaskDllPath << " Successfully loaded " << std::endl;
-    }
-
-    void (* fcttask)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*) =
-        (void (*)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*))GetProcAddress(dll, "fcttask");
-
-#else
-
-#ifdef WIN32
-    void *handle = dlopen("manzhuk/fcttask/fcttask.dll", RTLD_LAZY);
-#else
-    void *handle = dlopen("manzhuk/fcttask/fcttask.so", RTLD_LAZY);
-#endif
-
-    if (!handle) {
-        auto str = QString("Can't open library: %1 \n").arg(dlerror());
-        cerr << str.toStdString().data();
-        emit statusMessage(str);
-        return;
-    }
-
-    // load the symbol
-    cout << "Loading symbol fcttask...\n";
-    typedef void (*fcttask_t)(double*, double*, double*, double*, double*, int, int, double, double, int, int*, int*);
-
-    // reset errors
-    dlerror();
-    fcttask_t fcttask = (fcttask_t) dlsym(handle, "fcttask");
-    const char *dlsym_error = dlerror();
-    if (dlsym_error) {
-        auto str = QString("Cannot load symbol 'fcttask': %1 \n").arg(dlsym_error);
-        cerr << str.toStdString().data();
-        emit statusMessage(str);
-        dlclose(handle);
-        return;
-    }
-
-#endif
-
-// Solving with manzhuk
-    std::list<Variable>::iterator it;
-    std::cout.precision(3);
     for (int i = 1; i <= n; ++i)
         z1[i] = z[i] = 0.0;
 
-    for (it = system->variables.begin(); it != system->variables.end(); ++it) {
-        z[it->id] = it->initial;
-        z1[it->id] = fabs(z[it->id]);
-        std::cout<<it->name<< " ["<<it->id<<"] "<<" = "<<it->initial<<"\n";
+    for (const auto &variable : system->variables) {
+        z[variable.id] = variable.initial;
+        z1[variable.id] = fabs(z[variable.id]);
+        std::cout << variable.name << " [" << variable.id << "] = " << variable.initial << "\n";
     }
     for (int i = 1; i <= m; ++i)
         px[i] = px1[i] = 0.0;
 
-//int stdout_copy = _dup(1);
-//_close(1);
-//int file1 = open("out.txt", 0);
-
-    manzhuk(z, px, z1, px1, f, rj1, rj2, t, t0, tk, h, hmn, hmx, eps, &tkv, n, m, nm, ncon, &nbad, &ier, ip, fcttask, global_outtask);
-
-//_close(file1);
-//_dup2(stdout_copy, 1);
-//_close(stdout_copy);
-
-//free dll
-#if _MSC_VER && !__INTEL_COMPILER
-    if (dll != nullptr)
-        FreeLibrary(dll);
-#else
-    dlclose(handle);
-#endif
-//free memory
-
-    if (z)
-        delete[] z;
-    if (px)
-        delete[] px;
-    if (z1)
-        delete[] z1;
-    if (px1)
-        delete[] px1;
-    if (f)
-        delete[] f;
-    if (rj1)
-        delete[] rj1;
-    if (rj2)
-        delete[] rj2;
-    if (writeFile) {
-        outFile->close();
-        delete outFile;
-        delete outTextStream;
-    }
+    manzhuk(z, px, z1, px1, f, rj1, rj2, t, t0, tk, h, hmn, hmx, eps,
+            &tkv, n, m, nm, ncon, &nbad, &ier, ip, fcttask, global_outtask);
 }
 
+void Solver::finishSolve(bool success, const QString &message)
+{
+    if (!busy_)
+        return;
+
+    outTextStream.reset();
+    if (outFile) {
+        if (outFile->isOpen())
+            outFile->close();
+        outFile.reset();
+    }
+    if (fcttaskLibrary_.isLoaded())
+        fcttaskLibrary_.unload();
+
+    busy_ = false;
+    emit solveFinished(success, message);
+}
 Solver::~Solver(void)
 {
+    // FcttaskCompiler stops the child process when Solver is destroyed.
 }

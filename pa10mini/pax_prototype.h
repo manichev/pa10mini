@@ -7,7 +7,9 @@
 #include <QListWidget>
 #include <QDebug>
 #include <QMessageBox>
+#include <memory>
 #include "ui_pax_prototype.h"
+#include "daesystem.h"
 #include "solverparam.h"
 #include "variablechooser.h"
 #include "plotwindow.h"
@@ -27,9 +29,6 @@ public slots:
 	void openPlot();
     void showErr(const QString &message);
 
-protected:
-    bool eventFilter(QObject *object, QEvent *event) override;
-
 private slots:
     void saveSchemeSlot();
     void saveSchemeAsSlot();
@@ -37,6 +36,7 @@ private slots:
     void showSettingsDialog();
     void showStatusBarMessage(const QString &mesg);
     void showAboutDialog();
+    void onSolveFinished(bool success, const QString &message);
 
 private:
     void saveScheme(const QString &path);
@@ -48,6 +48,7 @@ private:
     QString m_schemePath;
     QString m_pathToMinGW;
     QStatusBar *m_statusBar;
+    std::unique_ptr<DAESystem> m_activeSystem;
 };
 
 #endif // PAX_PROTOTYPE_H

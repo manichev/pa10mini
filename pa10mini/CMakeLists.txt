@@ -153,6 +153,8 @@ if(WIN32)
 endif()
 
 list(APPEND pa10_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/fcttaskcompiler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/fcttaskcompiler.h
     ${CMAKE_CURRENT_LIST_DIR}/solver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/textdriver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/plot.cpp
